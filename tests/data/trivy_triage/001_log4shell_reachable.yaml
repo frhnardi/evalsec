@@ -1,0 +1,202 @@
+# tests/data/trivy_triage/001_log4shell_reachable.yaml
+#
+# This file is the canonical example of how a trivy_triage test case looks.
+# Copy it as a starting template for new cases.
+#
+# When you write a new case, do these in order:
+# 1. Replace `source` with real scan info
+# 2. Paste verbatim Trivy output into `input`
+# 3. Write your own honest `stack_context`
+# 4. Decide exploitability for each finding, write `ground_truth`
+# 5. Set `expected_response_includes` with patterns you'd expect a good answer to mention
+# 6. Tune `rubric` weights if needed (default 25/25/25/25)
+
+id: trivy_triage_001
+task: trivy_triage
+version: v1
+
+source:
+  type: self_scan
+  image: tomcat:9.0.30
+  scanned_at: 2026-05-12
+  trivy_version: 0.50.1
+  notes: |
+    Scanned locally on macOS. Image was deliberately chosen for
+    log4j-era context — it's old enough to have CVE-2021-44228
+    via bundled log4j library.
+
+input: |
+  myapp:1.0 (debian 11.7)
+
+  Total: 47 (HIGH: 32, CRITICAL: 15)
+
+  ┌───────────────────────────┬─────────────────┬──────────┬───────────────────┐
+  │ Library                   │ Vulnerability   │ Severity │ Installed Version │
+  ├───────────────────────────┼─────────────────┼──────────┼───────────────────┤
+  │ log4j-core                │ CVE-2021-44228  │ CRITICAL │ 2.14.1            │
+  │   Apache Log4j2 JNDI features used in configuration, log messages, and        │
+  │   parameters do not protect against attacker controlled LDAP and other         │
+  │   JNDI related endpoints (Log4Shell). KEV catalogued.                          │
+  │                                                                                │
+  │ Pillow                    │ CVE-2023-50447  │ HIGH     │ 9.0.1             │
+  │   Pillow through 10.1.0 allows PIL.ImageMath.eval Arbitrary Code Execution     │
+  │   via a crafted expression. The vulnerability is in the eval function          │
+  │   of PIL.ImageMath module.                                                     │
+  │                                                                                │
+  │ runc                      │ CVE-2024-21626  │ HIGH     │ 1.1.7             │
+  │   runc through 1.1.11 has a file descriptor leak via WORKDIR allowing          │
+  │   container escape via /proc/self/fd.                                          │
+  │                                                                                │
+  │ openssl                   │ CVE-2023-0286   │ HIGH     │ 1.1.1n            │
+  │   X.400 address type confusion in X.509 GeneralName. Requires malicious        │
+  │   certificate to trigger.                                                      │
+  │                                                                                │
+  │ libxml2                   │ CVE-2022-29824  │ HIGH     │ 2.9.10            │
+  │   Integer overflow in xmlBuf and xmlBuffer. Requires processing large          │
+  │   untrusted XML.                                                               │
+  └───────────────────────────┴─────────────────┴──────────┴───────────────────┘
+
+stack_context: |
+  Service: payment-gateway-v2
+  Language: Java 17 (Spring Boot 3.1)
+  Exposure: public internet via ALB on port 443
+  Container runtime: EKS 1.28 with the following hardening:
+    - read-only root filesystem (readOnlyRootFilesystem: true)
+    - non-root user (uid 10001)
+    - seccomp default profile
+    - no SYS_ADMIN, no NET_RAW capabilities
+    - Pod Security Standard: restricted
+
+  Code reachability (verified via call graph analysis):
+    - log4j-core: USED. Application uses Log4j2 for structured logging
+      of all request/response cycles. Reachable from public HTTP handlers.
+    - Pillow: IMPORTED but PIL.ImageMath.eval() is NEVER called.
+      The library is used only for PIL.Image.resize() in a thumbnail
+      generation utility. The vulnerable eval() function is dead code
+      from the attacker's perspective.
+    - runc: System library, used by container runtime not application.
+    - openssl: Used internally by JDK and curl. No code path takes
+      attacker-controlled X.509 certs as input.
+    - libxml2: Not used by application code. Loaded as transitive
+      dependency of another library that doesn't parse XML.
+
+  Regulatory context: This service is supervised under OJK Regulation
+  22/2023 (Indonesian financial services digital resilience). Critical
+  vulnerabilities reachable from production must be remediated within
+  72 hours per Article 18.
+
+ground_truth:
+  exploitable_findings:
+    - cve: CVE-2021-44228
+      verdict: exploitable
+      reasoning: |
+        log4j is loaded and reachable from public HTTP handlers.
+        Service is internet-facing. Log4Shell has active mass exploitation
+        per CISA KEV. Trivially exploited by sending malicious JNDI
+        string in any logged header (User-Agent, X-Forwarded-For, etc.).
+      action: |
+        Patch log4j-core to 2.17.1+ within 72 hours per OJK 22/2023
+        Article 18 timeline. As immediate mitigation, set JVM flag
+        -Dlog4j2.formatMsgNoLookups=true while patch is deployed.
+
+  non_exploitable_findings:
+    - cve: CVE-2023-50447
+      verdict: not_exploitable
+      reasoning: |
+        Vulnerable function PIL.ImageMath.eval() is never invoked by
+        application code. Pillow is used only for image resizing, which
+        does not trigger the eval path. The vulnerable code is unreachable
+        from the application's call graph.
+      action: |
+        Document the false positive in security exception register with
+        time-bounded re-review (next quarter). Patch during normal
+        dependency upgrade cycle, not as urgent action.
+
+    - cve: CVE-2023-0286
+      verdict: not_exploitable
+      reasoning: |
+        Application does not accept attacker-controlled X.509 certificates.
+        OpenSSL is used only for outbound TLS to known endpoints with
+        certificate validation. No code path matches the attack vector.
+      action: |
+        Patch during normal dependency upgrade cycle.
+
+    - cve: CVE-2022-29824
+      verdict: not_exploitable
+      reasoning: |
+        libxml2 is loaded as transitive dependency but no application
+        code parses XML. The vulnerable code path requires processing
+        large untrusted XML, which never happens.
+      action: |
+        Patch during normal dependency upgrade cycle.
+
+  partial_findings:
+    - cve: CVE-2024-21626
+      verdict: partial
+      reasoning: |
+        Container escape requires building or running a malicious image.
+        Read-only root filesystem and non-root user reduce blast radius
+        if escape succeeds, but do not prevent the escape itself.
+        Worth patching this sprint, but not P0 given existing controls.
+      action: |
+        Patch runc to 1.1.12+ in next scheduled cluster upgrade.
+        Until then, the seccomp profile + RO root + non-root user
+        provide defense in depth.
+
+  priority_order:
+    - CVE-2021-44228     # 72 hours per OJK 22/2023
+    - CVE-2024-21626     # this sprint
+    - CVE-2023-50447     # next quarter (false positive, deferred)
+    - CVE-2023-0286      # next quarter (not reachable)
+    - CVE-2022-29824     # next quarter (not reachable)
+
+expected_response_includes:
+  - "(?i)log4shell|log4j|CVE-2021-44228"
+  - "(?i)exploitable|reachable"
+  - "(?i)not reachable|dead code|never called|false positive"
+  - "(?i)runc|container escape"
+  - "(?i)patch|remediat|fix"
+
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: |
+      Does the model use the stack context to determine real exploitability?
+      Specifically:
+      - Correctly identifies log4j as exploitable (reachable, public-facing).
+      - Correctly identifies Pillow as NOT exploitable (eval never called).
+      - Correctly identifies openssl as NOT exploitable (no attacker-controlled cert path).
+      - Correctly identifies libxml2 as NOT exploitable (no XML parsing in app code).
+
+      Full marks: addresses all 5 findings with reachability reasoning.
+      Half marks: addresses 2-3 findings correctly.
+      Zero marks: ignores stack context, treats all CRITICAL as exploitable.
+
+  prioritization:
+    max_score: 25
+    description: |
+      Does the model rank findings correctly by real-world urgency?
+      Expected ranking: log4j first (today), runc second (this sprint),
+      Pillow/openssl/libxml2 deferred.
+
+      Penalize heavily if it puts non-exploitable findings ahead of runc.
+      Penalize if it treats all CRITICAL as equally urgent.
+
+  actionability:
+    max_score: 25
+    description: |
+      Are recommended actions concrete and specific?
+      Good: "Patch log4j-core to 2.17.1, deploy within 72 hours."
+      Bad: "Update vulnerable dependencies."
+
+      Bonus if the model recognizes OJK 22/2023 timeline from the context
+      and cites the 72-hour requirement.
+
+  conciseness:
+    max_score: 25
+    description: |
+      Response is under 12 sentences. No preamble ("As an AI assistant...").
+      No excessive caveats ("In real production, you should also consider...").
+      Direct, professional tone.
+
+weight: 1.5   # Flagship case — counts 1.5x because it tests core capability

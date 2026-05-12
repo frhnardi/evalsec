@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+*.egg
+*.so
+
+# Virtual environment
+.venv/
+.venv/**
+venv/
+venv/**
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Secrets — never commit
+.env
+!.env.example
+
+# Project outputs
+output/
+dist/
+
+# OS / WSL2 garbage
+.DS_Store
+Thumbs.db
+*.~*
+
+# Tooling
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.coverage
+htmlcov/
+.coverage
+
+# DiskCache (judge result cache)
+.cache/
+
+# Terraform
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/*.tfstate
+infra/*.tfstate.backup
+
+# Logs
+*.log
+logs/
+
+# OS files on Windows/WSL2 mount
+~$*

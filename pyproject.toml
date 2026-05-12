@@ -1,0 +1,120 @@
+[project]
+name = "evalsec"
+version = "0.1.0"
+description = "An open-source LLM benchmark for DevSecOps tasks"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+    { name = "Farhan Ngenz", email = "farhan@ngenz.org" },
+]
+keywords = ["devsecops", "llm", "benchmark", "security"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+
+dependencies = [
+    "typer>=0.15,<1",
+    "pydantic>=2.10,<3",
+    "pydantic-settings>=2.7,<3",
+    "pyyaml>=6.0,<7",
+    "httpx>=0.28,<1",
+    "openai>=1.58,<2",
+    "anthropic>=0.49,<1",
+    "structlog>=25.1,<26",
+    "tenacity>=9.0,<10",
+    "rich>=13.9,<14",
+    "jinja2>=3.1,<4",
+    "diskcache>=5.6,<6",
+]
+
+[project.urls]
+Homepage = "https://evalsec.farhan.ngenz.org"
+Repository = "https://github.com/farhan-ngenz/evalsec"
+Documentation = "https://github.com/farhan-ngenz/evalsec#readme"
+
+[project.scripts]
+evalsec = "evalsec.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/evalsec"]
+
+[tool.uv.sources]
+# All dependencies are from PyPI; no local sources for v0.1.0
+
+###############################################################################
+# Tool: ruff — linting + formatting (replaces black, isort, flake8)
+###############################################################################
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "W",   # pycodestyle warnings
+    "UP",  # pyupgrade
+    "RUF", # ruff-specific
+]
+ignore = [
+    "E501", # line-length handled by formatter
+]
+
+###############################################################################
+# Tool: mypy — strict type checking
+###############################################################################
+[tool.mypy]
+strict = true
+python_version = "3.12"
+namespace_packages = true
+explicit_package_bases = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_unimported = false
+disallow_any_expr = false
+disallow_any_decorated = false
+disallow_any_explicit = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "evalsec.*"
+ignore_missing_imports = false
+
+###############################################################################
+# Tool: pytest
+###############################################################################
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+filterwarnings = ["error"]
+
+###############################################################################
+# Dev dependencies (replaces deprecated tool.uv.dev-dependencies)
+###############################################################################
+[dependency-groups]
+dev = [
+    "ruff>=0.9,<1",
+    "mypy>=1.15,<2",
+    "pytest>=8.3,<9",
+    "pytest-asyncio>=0.25,<1",
+    "respx>=0.22,<1",
+    "pre-commit>=4.1,<5",
+]

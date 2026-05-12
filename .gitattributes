@@ -1,0 +1,17 @@
+# WSL2 CRLF protection — critical for CI compatibility
+# Windows editors may inject CRLF; this normalizes everything to LF
+* text=auto eol=lf
+
+# Binary files — do not attempt line-ending normalization
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.zip binary
+*.tar.gz binary
+*.tgz binary
