@@ -1,0 +1,101 @@
+id: trivy_triage_017
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: ubuntu:18.04
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: Scan ubuntu:18.04 di CI/CD pipeline non-produksi tanpa
+    CVE. Aman untuk build.'
+  total_cves_found: 0
+  cves_selected: 0
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: '
+
+  Report Summary
+
+
+  ┌─────────────────────────────┬────────┬─────────────────┬─────────┐
+
+  │           Target            │  Type  │ Vulnerabilities │ Secrets │
+
+  ├─────────────────────────────┼────────┼─────────────────┼─────────┤
+
+  │ ubuntu:18.04 (ubuntu 18.04) │ ubuntu │        0        │    -    │
+
+  └─────────────────────────────┴────────┴─────────────────┴─────────┘
+
+  Legend:
+
+  - ''-'': Not scanned
+
+  - ''0'': Clean (no security findings detected)
+
+
+  '
+stack_context: 'Service: ci-build-pipeline
+
+  Image: ubuntu:18.04
+
+  Exposure: NOT deployed to production
+
+  Container runtime: GitHub Actions ephemeral runner
+
+
+  Usage: Ubuntu 18.04 base image used in legacy CI/CD build pipeline.
+
+  Only used for CI/CD builds — NEVER deployed to production.
+
+  Compiled artifacts are copied to a fresh distroless image for production.
+
+  Isolated from production environment.
+
+
+  Regulatory context: Build-time only. No data processed.'
+ground_truth:
+  exploitable_findings: []
+  non_exploitable_findings:
+  - cve: NONE
+    verdict: not_exploitable
+    reasoning: Ubuntu 18.04 CI/CD builder image — clean scan. No vulnerabilities detected
+      by Trivy. Builder image tidak pernah di-deploy ke produksi.
+    action: null
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings: []
+  priority_order:
+  - NONE
+expected_response_includes:
+- (?i)no.*vulnerabilit
+- (?i)clean.*scan
+- (?i)ci.*pipeline
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability?
+      Full marks: correctly identifies which CVEs are reachable vs unreachable. Zero
+      marks: ignores deployment context, treats all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable
+      internet-facing CVEs must be prioritised over non-exploitable ones. Penalize
+      if the model treats all CRITICAL as equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library
+      X to version Y, deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable
+      dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats.
+      Direct, professional tone.
+weight: 1.0

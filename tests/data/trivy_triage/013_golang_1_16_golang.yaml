@@ -1,0 +1,198 @@
+id: trivy_triage_013
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: golang:1.16
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: Image golang:1.16 untuk CI/CD build Go microservices.
+    Tidak dipakai di production, ephemeral, dan terisolasi.
+
+    CVEs requiring manual review (2): CVE-2023-38408, CVE-2024-38428'
+  total_cves_found: 4
+  cves_selected: 2
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "\nReport Summary\n\n┌─────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐\n\
+  │                   Target                    │   Type   │ Vulnerabilities │ Secrets\
+  \ │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ golang:1.16 (debian 11.2)                   │  debian  │      1847       │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/bin/go                         │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/bin/gofmt                      │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/addr2line │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/asm       │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/buildid   │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/cgo       │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/compile   │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/cover     │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/dist      │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/doc       │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/fix       │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/link      │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/nm        │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/objdump   │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/pack      │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/pprof     │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/test2json │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/trace     │ gobinary │       51        │   \
+  \ -    │\n├─────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/go/pkg/tool/linux_amd64/vet       │ gobinary │       51        │   \
+  \ -    │\n└─────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\n\
+  golang:1.16 (debian 11.2)\n=========================\nTotal: 1847 (HIGH: 1778, CRITICAL:\
+  \ 69)\n\n  bash | CVE-2022-3715 | HIGH | affected | 5.1-2+b3 | https://avd.aquasec.com/nvd/cve-2022-3715\n\
+  \nusr/local/go/bin/go (gobinary)\n==============================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/bin/gofmt\
+  \ (gobinary)\n=================================\nTotal: 51 (HIGH: 47, CRITICAL:\
+  \ 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 -> 1.19.8, 1.20.3\
+  \ | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/addr2line\
+  \ (gobinary)\n======================================================\nTotal: 51\
+  \ (HIGH: 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15\
+  \ -> 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/asm\
+  \ (gobinary)\n================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/buildid\
+  \ (gobinary)\n====================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/cgo\
+  \ (gobinary)\n================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/compile\
+  \ (gobinary)\n====================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/cover\
+  \ (gobinary)\n==================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/dist\
+  \ (gobinary)\n=================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/doc\
+  \ (gobinary)\n================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/fix\
+  \ (gobinary)\n================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/link\
+  \ (gobinary)\n=================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/nm\
+  \ (gobinary)\n===============================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/objdump\
+  \ (gobinary)\n====================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/pack\
+  \ (gobinary)\n=================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/pprof\
+  \ (gobinary)\n==================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/test2json\
+  \ (gobinary)\n======================================================\nTotal: 51\
+  \ (HIGH: 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15\
+  \ -> 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/trace\
+  \ (gobinary)\n==================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n\nusr/local/go/pkg/tool/linux_amd64/vet\
+  \ (gobinary)\n================================================\nTotal: 51 (HIGH:\
+  \ 47, CRITICAL: 4)\n\n  stdlib | CVE-2023-24538 | CRITICAL | fixed | v1.16.15 ->\
+  \ 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538"
+stack_context: 'Service: go-build-pipeline
+
+  Image: golang:1.16 (Debian 11.3)
+
+  Exposure: NOT deployed to production
+
+  Container runtime: GitHub Actions ephemeral runner
+
+
+  Usage: Golang 1.16 toolchain in CI/CD build environment.
+
+  Used to compile Go microservices. Final binaries deployed via distroless.
+
+  Builder image NEVER runs in production. Ephemeral runner with restricted token.
+
+  Isolated from production AWS account.
+
+
+  Regulatory context: Build-time only. Toolchain CVEs do not affect compiled artifacts.'
+ground_truth:
+  exploitable_findings: []
+  non_exploitable_findings:
+  - cve: CVE-2023-24538
+    verdict: not_exploitable
+    reasoning: 'dan 50 CVE Go stdlib lainnya. Alasan: toolchain build, tidak serving
+      traffic.'
+    action: Upgrade Go ke versi patch terbaru.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2022-3715
+    verdict: not_exploitable
+    reasoning: 'dan 1846 CVE OS Debian lainnya. Alasan: image build-only, tidak terpapar
+      internet, ephemeral.'
+    action: Update base image ke versi lebih baru.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings: []
+  priority_order:
+  - CVE-2023-24538
+  - CVE-2022-3715
+expected_response_includes:
+- (?i)build-only
+- (?i)not.production
+- (?i)ephemeral
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability?
+      Full marks: correctly identifies which CVEs are reachable vs unreachable. Zero
+      marks: ignores deployment context, treats all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable
+      internet-facing CVEs must be prioritised over non-exploitable ones. Penalize
+      if the model treats all CRITICAL as equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library
+      X to version Y, deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable
+      dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats.
+      Direct, professional tone.
+weight: 1.0

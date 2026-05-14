@@ -309,6 +309,197 @@ PERSONA_DEFS: dict[str, dict[str, str]] = {
             "system architecture and security posture. Access is logged and audited."
         ),
     },
+    "node": {
+        "persona_short": "node",
+        "display_name": "Node.js 18 (Express REST API)",
+        "stack_context": (
+            "Service: customer-api-v2\n"
+            "Image: node:18 (Debian 11.8)\n"
+            "Exposure: internal ClusterIP on EKS, namespace: api-services\n"
+            "Container runtime: EKS 1.28 with:\n"
+            "  - read-only root filesystem\n"
+            "  - non-root user (uid 1000)\n"
+            "  - seccomp default profile\n"
+            "  - capabilities drop ALL\n"
+            "  - Pod Security Standard: restricted\n"
+            "  - NetworkPolicy: ingress from frontend namespace only\n"
+            "  - emptyDir for /tmp\n"
+            "\n"
+            "Usage: Express.js REST API handling customer data.\n"
+            "Libraries: Express, lodash, axios, jsonwebtoken.\n"
+            "devDependencies (jest, eslint) installed in image but NEVER invoked at runtime.\n"
+            "Stores customer auth tokens in memory.\n"
+            "\n"
+            "Regulatory context: UU PDP scope. Customer auth tokens are PII."
+        ),
+    },
+    "alpine": {
+        "persona_short": "alpine",
+        "display_name": "Alpine 3.14 (Base Image Evaluation)",
+        "stack_context": (
+            "Service: base-image-evaluation\n"
+            "Image: alpine:3.14\n"
+            "Exposure: Not deployed — security review phase\n"
+            "Container runtime: EKS 1.28 (planned) with:\n"
+            "  - restricted PSS\n"
+            "  - runAsNonRoot\n"
+            "  - no shell access in production\n"
+            "  - IRSA for AWS API access\n"
+            "\n"
+            "Usage: Empty Alpine base image being evaluated for use as base\n"
+            "for new microservices. Not yet deployed to production.\n"
+            "\n"
+            "Regulatory context: Pre-deployment review. No data processed."
+        ),
+    },
+    "elasticsearch": {
+        "persona_short": "elasticsearch",
+        "display_name": "Elasticsearch 7.17 (Search Backend)",
+        "stack_context": (
+            "Service: product-search-v1\n"
+            "Image: elasticsearch:7.17.28\n"
+            "Exposure: internal ClusterIP on EKS, namespace: search\n"
+            "Container runtime: EKS 1.28 with:\n"
+            "  - writable filesystem (required for ES data)\n"
+            "  - non-root user (uid 1000)\n"
+            "  - seccomp default profile\n"
+            "  - Pod Security Standard: baseline\n"
+            "  - NetworkPolicy: from api-services namespace only\n"
+            "  - Volume: 50 gp3 EBS (encrypted at rest)\n"
+            "\n"
+            "Usage: Full-text search backend for fintech product catalog.\n"
+            "X-Pack security with basic auth, TLS NOT configured on transport layer\n"
+            "(known gap, ticket #1023). Stores non-PII product data.\n"
+            "PCI-DSS adjacent (queries reference card brand mapping).\n"
+            "\n"
+            "Regulatory context: PCI-DSS adjacent (card brand mappings).\n"
+            "Credentials in cluster state."
+        ),
+    },
+    "prometheus": {
+        "persona_short": "prometheus",
+        "display_name": "Prometheus 2.30 (Metrics Scraper)",
+        "stack_context": (
+            "Service: cluster-monitoring-v1\n"
+            "Image: prom/prometheus:v2.30.0\n"
+            "Exposure: internal ClusterIP on EKS, namespace: monitoring\n"
+            "Container runtime: EKS 1.28 with:\n"
+            "  - read-only root filesystem\n"
+            "  - non-root user (uid 65534)\n"
+            "  - seccomp default profile\n"
+            "  - Pod Security Standard: baseline\n"
+            "  - NetworkPolicy: allow inbound from all namespaces\n"
+            "\n"
+            "Usage: Scrapes metrics from all namespaces in the cluster.\n"
+            "Service mesh: Istio with mTLS STRICT mode cluster-wide.\n"
+            "Pod identity via SPIFFE/IRSA. ClusterIP only, accessible via Grafana ingress.\n"
+            "No PII in metrics, but metric labels may contain internal service topology.\n"
+            "\n"
+            "Regulatory context: No PII. Internal service topology revealed."
+        ),
+    },
+    "ghost": {
+        "persona_short": "ghost",
+        "display_name": "Ghost 4 (Engineering Blog CMS)",
+        "stack_context": (
+            "Service: engineering-blog-v1\n"
+            "Image: ghost:4 (Ubuntu 22.04)\n"
+            "Exposure: public-facing via ALB + CloudFront\n"
+            "Container runtime: EKS 1.28 with:\n"
+            "  - read-only root filesystem\n"
+            "  - non-root user (uid 1000)\n"
+            "  - seccomp default profile\n"
+            "  - Pod Security Standard: restricted\n"
+            "  - NetworkPolicy: ingress from ALB only\n"
+            "\n"
+            "Usage: Company engineering blog CMS.\n"
+            "Admin panel can deploy arbitrary content. SSO via Auth0 for admin.\n"
+            "No customer data — marketing site only.\n"
+            "\n"
+            "Regulatory context: Non-financial, non-PII. Marketing site only."
+        ),
+    },
+    "wordpress": {
+        "persona_short": "wordpress",
+        "display_name": "WordPress 5.7 (Multi-tenant SaaS)",
+        "stack_context": (
+            "Service: wpmu-hosting-v1\n"
+            "Image: wordpress:5.7 (Ubuntu 20.04)\n"
+            "Exposure: public-facing via ALB\n"
+            "Container runtime: EKS 1.28 with:\n"
+            "  - read-only root filesystem (with uploads writable tmpfs)\n"
+            "  - non-root user (uid 33)\n"
+            "  - seccomp default profile\n"
+            "  - Pod Security Standard: baseline\n"
+            "  - NetworkPolicy: allow public ingress via ALB\n"
+            "\n"
+            "Layered defense:\n"
+            "  - AWS WAF on ALB with OWASP rules\n"
+            "  - ModSecurity in nginx sidecar\n"
+            "  - Wordfence plugin\n"
+            "\n"
+            "Usage: WordPress multi-tenant SaaS hosting 200+ customer sites.\n"
+            "Stores PII (names, emails, billing). Database is RDS Aurora separate from container.\n"
+            "\n"
+            "Regulatory context: UU PDP (PII), PCI-DSS scope for billing pages."
+        ),
+    },
+    "vault": {
+        "persona_short": "vault",
+        "display_name": "HashiCorp Vault 1.8 (Secrets Manager)",
+        "stack_context": (
+            "Service: platform-secrets-v1\n"
+            "Image: hashicorp/vault:1.8 (Alpine 3.14)\n"
+            "Exposure: internal ClusterIP only, namespace: security\n"
+            "Container runtime: EKS 1.28 with:\n"
+            "  - writable filesystem (required for Vault storage)\n"
+            "  - non-root user (uid 100)\n"
+            "  - seccomp default profile\n"
+            "  - Pod Security Standard: baseline\n"
+            "  - NetworkPolicy: allow inbound from all namespaces (infra)\n"
+            "\n"
+            "Usage: Manages secrets for all microservices via Vault Agent injector.\n"
+            "Storage backend: Consul on separate cluster. TLS enabled with internal CA.\n"
+            "Audit log to encrypted S3. Kubernetes auth method.\n"
+            "Critical infrastructure — compromise = total secrets disclosure.\n"
+            "\n"
+            "Regulatory context: OJK POJK 22/2023. Critical infrastructure."
+        ),
+    },
+    "ubuntu": {
+        "persona_short": "ubuntu",
+        "display_name": "Ubuntu 18.04 (CI/CD Builder)",
+        "stack_context": (
+            "Service: ci-build-pipeline\n"
+            "Image: ubuntu:18.04\n"
+            "Exposure: NOT deployed to production\n"
+            "Container runtime: GitHub Actions ephemeral runner\n"
+            "\n"
+            "Usage: Ubuntu 18.04 base image used in legacy CI/CD build pipeline.\n"
+            "Only used for CI/CD builds — NEVER deployed to production.\n"
+            "Compiled artifacts are copied to a fresh distroless image for production.\n"
+            "Isolated from production environment.\n"
+            "\n"
+            "Regulatory context: Build-time only. No data processed."
+        ),
+    },
+    "golang": {
+        "persona_short": "golang",
+        "display_name": "Golang 1.16 (Build-time Toolchain)",
+        "stack_context": (
+            "Service: go-build-pipeline\n"
+            "Image: golang:1.16 (Debian 11.3)\n"
+            "Exposure: NOT deployed to production\n"
+            "Container runtime: GitHub Actions ephemeral runner\n"
+            "\n"
+            "Usage: Golang 1.16 toolchain in CI/CD build environment.\n"
+            "Used to compile Go microservices. Final binaries deployed via distroless.\n"
+            "Builder image NEVER runs in production. Ephemeral runner with restricted token.\n"
+            "Isolated from production AWS account.\n"
+            "\n"
+            "Regulatory context: Build-time only. Toolchain CVEs do not affect compiled artifacts."
+        ),
+    },
 }
 
 # Maps scan filename prefix (e.g. ``redis`` from ``redis_5_0.txt``) to persona key.
@@ -321,6 +512,17 @@ PERSONA_PREFIX_MAP: dict[str, str] = {
     "mysql": "mysql",
     "rabbitmq": "rabbitmq",
     "grafana": "grafana",
+    # ── New cases (010–018) ────────────────────────────────────────────
+    "node": "node",
+    "alpine": "alpine",
+    "elasticsearch": "elasticsearch",
+    "prometheus": "prometheus",
+    "ghost": "ghost",
+    "wordpress": "wordpress",
+    "vault": "vault",
+    "hashicorp": "vault",          # future-proof: hashicorp/vault:1.8
+    "ubuntu": "ubuntu",
+    "golang": "golang",
 }
 
 # Maps scan filename stem to the Docker image tag for `source.image`.
@@ -335,6 +537,16 @@ FILENAME_TO_IMAGE: dict[str, str] = {
     "mysql_5_7": "mysql:5.7",
     "rabbitmq_3_8": "rabbitmq:3.8",
     "grafana_8_0_0": "grafana/grafana:8.0.0",
+    # ── New cases (010–018) ────────────────────────────────────────────
+    "node_18": "node:18",
+    "alpine_3_14": "alpine:3.14",
+    "elasticsearch_7_17_28": "elasticsearch:7.17.28",
+    "prometheus_v2_30_0": "prom/prometheus:v2.30.0",
+    "ghost_4": "ghost:4",
+    "wordpress_5_7": "wordpress:5.7",
+    "vault_1_8": "hashicorp/vault:1.8",
+    "ubuntu_18_04": "ubuntu:18.04",
+    "golang_1_16": "golang:1.16",
 }
 
 # ---------------------------------------------------------------------------
@@ -651,6 +863,78 @@ def _condense_cve_line(group_lines: list[str]) -> str:
         parts_out.append(url)
 
     return " | ".join(parts_out)
+
+
+def _pre_condense_scan(scan_text: str) -> str:
+    """Condense a large Trivy scan into compact single-line entries per CVE.
+
+    Keeps the Report-Summary table intact.  Each vulnerability-table row group
+    is condensed via :func:`_condense_cve_line` so the text is small enough
+    for DeepSeek to process without hitting the output token limit (~16K).
+
+    For scans under ~200 lines the text is returned as-is.
+    """
+    lines = scan_text.splitlines()
+    if len(lines) <= 200:
+        return scan_text
+
+    result: list[str] = []
+    i = 0
+
+    while i < len(lines):
+        line = lines[i]
+
+        # Detect start of any Trivy table
+        if line.startswith("\u250c"):  # ┌
+            table_lines: list[str] = []
+            while i < len(lines) and not lines[i].startswith("\u2514"):  # └
+                table_lines.append(lines[i])
+                i += 1
+            if i < len(lines):
+                table_lines.append(lines[i])  # closing └
+            i += 1
+
+            full_table = " ".join(table_lines)
+            is_summary = "Target" in full_table and "Vulnerabilities" in full_table
+
+            if is_summary:
+                result.extend(table_lines)
+                continue
+
+            # -- Vulnerability table -- condense every row group ---------------
+            # Find header separator
+            header_end = 1
+            for idx, tl in enumerate(table_lines):
+                if "\u253c" in tl[:3] or (tl.startswith("\u251c") and idx > 0):
+                    header_end = idx
+                    break
+
+            # Emit condensed header
+            result.append(f"  ── Vulnerability table ──")
+
+            data_start = header_end + 1
+            row_groups: list[list[str]] = []
+            current_group: list[str] = []
+
+            for dl in table_lines[data_start:-1]:
+                if dl.startswith("\u251c") or dl.startswith("\u253c"):
+                    if current_group:
+                        row_groups.append(current_group)
+                        current_group = []
+                else:
+                    current_group.append(dl)
+            if current_group:
+                row_groups.append(current_group)
+
+            for group in row_groups:
+                condensed = _condense_cve_line(group)
+                result.append(f"  {condensed}")
+
+        else:
+            result.append(line)
+            i += 1
+
+    return "\n".join(result)
 
 
 def _filter_scan_text(scan_text: str, selected_cves: set[str]) -> str:
@@ -1090,8 +1374,16 @@ async def _process_scan(
         # ── 2. Read scan file ───────────────────────────────────────────
         scan_text = scan_path.read_text(encoding=DEFAULT_ENCODING, errors="replace")
 
+        # ── 2b. Pre-condense large scans (DeepSeek has ~16K output limit) ──
+        condensed = _pre_condense_scan(scan_text)
+        if len(condensed) != len(scan_text):
+            _print_info(f"    Pre-condensed {len(scan_text)} chars → {len(condensed)} chars")
+            scan_text_for_prompt = condensed
+        else:
+            scan_text_for_prompt = scan_text
+
         # ── 3. Call DeepSeek ────────────────────────────────────────────
-        user_prompt = _build_user_prompt(scan_text, stack_context)
+        user_prompt = _build_user_prompt(scan_text_for_prompt, stack_context)
 
         try:
             parsed = await _call_deepseek(client, SYSTEM_PROMPT, user_prompt)
@@ -1340,9 +1632,28 @@ async def _main() -> None:
     scan_files = _discover_scan_files()
     _print_header(f"Found {len(scan_files)} scan file(s) in scans/")
 
+    # ── Skip scan files that already have a corresponding YAML ──────────
+    existing_stems: set[str] = set()
+    for yaml_file in OUTPUT_DIR.glob("*.yaml"):
+        existing_stems.add(yaml_file.stem)
+
+    def _has_matching_yaml(stem: str) -> bool:
+        """Check if any existing YAML filename contains this scan stem."""
+        for ystem in existing_stems:
+            if stem in ystem:
+                return True
+        return False
+
+    before = len(scan_files)
+    scan_files = [f for f in scan_files if not _has_matching_yaml(f.stem)]
+    skipped = before - len(scan_files)
+    if skipped:
+        _print_info(f"Skipped {skipped} scan file(s) with existing YAML output")
+
     # ── Compute sequence numbers ────────────────────────────────────────
     next_seq = _compute_next_seq(OUTPUT_DIR)
     _print_info(f"Sequence starts at #{next_seq:03d}")
+    _print_info(f"Will process {len(scan_files)} new scan file(s)")
 
     # ── Build DeepSeek client ───────────────────────────────────────────
     client = AsyncOpenAI(

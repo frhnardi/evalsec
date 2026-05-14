@@ -1,0 +1,198 @@
+id: trivy_triage_021
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: wordpress:5.7
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: WordPress multi-tenant di EKS dengan Ubuntu 20.04, public-facing via ALB,
+    menyimpan PII, perlu upgrade segera untuk CVE kritis.
+
+    CVEs requiring manual review (14): CVE-2021-26691, CVE-2022-32221, CVE-2021-3711, CVE-2023-28879,
+    CVE-2022-29155, CVE-2022-37434, CVE-2021-33574, CVE-2022-1664, CVE-2022-27404, CVE-2020-12268, CVE-2021-46848,
+    CVE-2020-35527, CVE-2023-25775, CVE-2019-8457'
+  total_cves_found: 39
+  cves_selected: 8
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "\nReport Summary\n\n┌──────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐\n\
+  │                              Target                              │   Type   │ Vulnerabilities │ Secrets\
+  \ │\n├──────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ wordpress:5.7 (debian 10.10)                                     │  debian  │       741       │  \
+  \  -    │\n├──────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/src/wordpress/wp-content/themes/twentynineteen/package.json  │ node-pkg │        0        │  \
+  \  -    │\n├──────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/src/wordpress/wp-content/themes/twentytwenty/package.json    │ node-pkg │        0        │  \
+  \  -    │\n├──────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/src/wordpress/wp-content/themes/twentytwentyone/package.json │ node-pkg │        0        │  \
+  \  -    │\n└──────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\nwordpress:5.7 (debian\
+  \ 10.10)\n============================\nTotal: 741 (HIGH: 654, CRITICAL: 87)\n\n  apache2 | CVE-2021-26691\
+  \ | CRITICAL | fixed | 2.4.38-3+deb10u4 -> 2.4.38-3+deb10u5 | https://avd.aquasec.com/nvd/cve-2021-26691\n\
+  \  apache2-bin | CVE-2021-26691 | CRITICAL | -> 2.4.38-3+deb10u5 | https://avd.aquasec.com/nvd/cve-2021-26691\n\
+  \  apache2-data | CVE-2021-26691 | CRITICAL | -> 2.4.38-3+deb10u5 | https://avd.aquasec.com/nvd/cve-2021-26691\n\
+  \  apache2-utils | CVE-2021-26691 | CRITICAL | -> 2.4.38-3+deb10u5 | https://avd.aquasec.com/nvd/cve-2021-26691\n\
+  \  curl | CVE-2022-32221 | CRITICAL | fixed | 7.64.0-4+deb10u2 -> 7.64.0-4+deb10u4 | https://avd.aquasec.com/nvd/cve-2022-32221\n\
+  \  ghostscript | CVE-2023-28879 | CRITICAL | fixed | 9.27~dfsg-2+deb10u4 -> 9.27~dfsg-2+deb10u7 | https://avd.aquasec.com/nvd/cve-2023-28879\n\
+  \  libcurl4 | CVE-2022-32221 | CRITICAL | 7.64.0-4+deb10u2 -> 7.64.0-4+deb10u4 | https://avd.aquasec.com/nvd/cve-2022-32221\n\
+  \  libexpat1 | CVE-2022-22822 | HIGH | 2.2.6-2+deb10u1 -> 2.2.6-2+deb10u2 | https://avd.aquasec.com/nvd/cve-2022-22822\n\
+  \  libgnutls30 | CVE-2022-2509 | 3.6.7-4+deb10u7 -> 3.6.7-4+deb10u9 | https://avd.aquasec.com/nvd/cve-2022-2509\n\
+  \  libgs9 | CVE-2023-28879 | CRITICAL | fixed | 9.27~dfsg-2+deb10u4 -> 9.27~dfsg-2+deb10u7 | https://avd.aquasec.com/nvd/cve-2023-28879\n\
+  \  libgs9-common | CVE-2023-28879 | CRITICAL | fixed | -> 9.27~dfsg-2+deb10u7 | https://avd.aquasec.com/nvd/cve-2023-28879\n\
+  \  libgssapi-krb5-2 | CVE-2021-36222 | fixed | 1.17-3+deb10u1 -> 1.17-3+deb10u2 | https://avd.aquasec.com/nvd/cve-2021-36222\n\
+  \  libk5crypto3 | CVE-2021-36222 | HIGH | 1.17-3+deb10u1 -> 1.17-3+deb10u2 | https://avd.aquasec.com/nvd/cve-2021-36222\n\
+  \  libkrb5-3 | CVE-2021-36222 | -> 1.17-3+deb10u2 | https://avd.aquasec.com/nvd/cve-2021-36222\n  libkrb5support0\
+  \ | CVE-2021-36222 | -> 1.17-3+deb10u2 | https://avd.aquasec.com/nvd/cve-2021-36222\n  libncurses6 |\
+  \ CVE-2021-39537 | fixed | 6.1+20181013-2+deb10u2 -> 6.1+20181013-2+deb10u5 | https://avd.aquasec.com/nvd/cve-2021-39537\n\
+  \  libncursesw6 | CVE-2021-39537 | https://avd.aquasec.com/nvd/cve-2021-39537\n  libssl1.1 | CVE-2021-3711\
+  \ | CRITICAL | 1.1.1d-0+deb10u6 -> 1.1.1d-0+deb10u7 | https://avd.aquasec.com/nvd/cve-2021-3711\n  libtinfo6\
+  \ | CVE-2021-39537 | 6.1+20181013-2+deb10u2 -> 6.1+20181013-2+deb10u5 | https://avd.aquasec.com/nvd/cve-2021-39537\n\
+  \  ncurses-base | CVE-2021-39537 | 6.1+20181013-2+deb10u2 -> 6.1+20181013-2+deb10u5 | https://avd.aquasec.com/nvd/cve-2021-39537\n\
+  \  ncurses-bin | CVE-2021-39537 | https://avd.aquasec.com/nvd/cve-2021-39537\n  openssl | CVE-2021-3711\
+  \ | CRITICAL | 1.1.1d-0+deb10u6 -> 1.1.1d-0+deb10u7 | https://avd.aquasec.com/nvd/cve-2021-3711"
+stack_context: "Service: wpmu-hosting-v1\nImage: wordpress:5.7 (Ubuntu 20.04)\nExposure: public-facing\
+  \ via ALB\nContainer runtime: EKS 1.28 with:\n  - read-only root filesystem (with uploads writable tmpfs)\n\
+  \  - non-root user (uid 33)\n  - seccomp default profile\n  - Pod Security Standard: baseline\n  - NetworkPolicy:\
+  \ allow public ingress via ALB\n\nLayered defense:\n  - AWS WAF on ALB with OWASP rules\n  - ModSecurity\
+  \ in nginx sidecar\n  - Wordfence plugin\n\nUsage: WordPress multi-tenant SaaS hosting 200+ customer\
+  \ sites.\nStores PII (names, emails, billing). Database is RDS Aurora separate from container.\n\nRegulatory\
+  \ context: UU PDP (PII), PCI-DSS scope for billing pages."
+ground_truth:
+  exploitable_findings:
+  - cve: CVE-2021-26691
+    verdict: exploitable
+    reasoning: Apache heap overflow via HTTP2, internet-facing, dapat mengeksekusi kode jarak jauh.
+    action: Segera upgrade apache2 ke versi 2.4.38-3+deb10u5.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2022-32221
+    verdict: exploitable
+    reasoning: Curl POST setelah PUT dapat menyebabkan heap overflow, eksploitasi jarak jauh.
+    action: Upgrade curl dan libcurl4 ke versi 7.64.0-4+deb10u4.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2021-3711
+    verdict: exploitable
+    reasoning: OpenSSL SM2 buffer overflow, dapat menyebabkan RCE pada koneksi TLS.
+    action: Upgrade openssl dan libssl1.1 ke versi 1.1.1d-0+deb10u7.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2023-28879
+    verdict: exploitable
+    reasoning: Ghostscript buffer overflow saat memproses file, dapat menyebabkan RCE.
+    action: Upgrade ghostscript dan libgs9 ke versi 9.27~dfsg-2+deb10u7.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  non_exploitable_findings:
+  - cve: CVE-2022-2509
+    verdict: not_exploitable
+    reasoning: GnuTLS double-free, DoS saja, tidak ada RCE, WAF mitigasi.
+    action: Tidak perlu tindakan segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2021-36222
+    verdict: not_exploitable
+    reasoning: Kerberos NULL dereference, DoS saja, tidak ada RCE, WAF mitigasi.
+    action: Tidak perlu tindakan segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2022-22822
+    verdict: not_exploitable
+    reasoning: Expat XML parsing issue, DoS saja, tidak ada RCE, WAF mitigasi.
+    action: Tidak perlu tindakan segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2021-39537
+    verdict: not_exploitable
+    reasoning: Ncurses heap overflow, DoS saja, tidak ada RCE, WAF mitigasi.
+    action: Tidak perlu tindakan segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings: []
+  priority_order:
+  - CVE-2021-26691
+  - CVE-2022-32221
+  - CVE-2021-3711
+  - CVE-2023-28879
+expected_response_includes:
+- (?i)apache2
+- (?i)curl
+- (?i)openssl
+- (?i)ghostscript
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly
+      identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats
+      all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing
+      CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as
+      equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y,
+      deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional
+      tone.
+weight: 1.0

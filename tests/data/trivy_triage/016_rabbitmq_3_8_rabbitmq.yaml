@@ -1,0 +1,87 @@
+id: trivy_triage_016
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: rabbitmq:3.8
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: RabbitMQ 3.8 di Ubuntu 20.04 EOL, internal ClusterIP,
+    non-root, RO FS, seccomp, NetworkPolicy ketat, TLS aktif.'
+  total_cves_found: 0
+  cves_selected: 0
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "2026-05-14T09:53:12+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n\
+  2026-05-14T09:53:12+07:00\tINFO\t[secret] Secret scanning is enabled\n2026-05-14T09:53:12+07:00\t\
+  INFO\t[secret] If your scanning is slow, please try '--scanners vuln' to disable\
+  \ secret scanning\n2026-05-14T09:53:12+07:00\tINFO\t[secret] Please see https://trivy.dev/docs/v0.70/guide/scanner/secret#recommendation\
+  \ for faster secret detection\n2026-05-14T09:53:22+07:00\tINFO\tDetected OS\tfamily=\"\
+  ubuntu\" version=\"20.04\"\n2026-05-14T09:53:22+07:00\tINFO\t[ubuntu] Detecting\
+  \ vulnerabilities...\tos_version=\"20.04\" pkg_num=94\n2026-05-14T09:53:22+07:00\t\
+  INFO\tNumber of language-specific files\tnum=0\n2026-05-14T09:53:22+07:00\tWARN\t\
+  This OS version is no longer supported by the distribution\tfamily=\"ubuntu\" version=\"\
+  20.04\"\n2026-05-14T09:53:22+07:00\tWARN\tThe vulnerability detection may be insufficient\
+  \ because security updates are not provided\n\nReport Summary\n\n┌─────────────────────────────┬────────┬─────────────────┬─────────┐\n\
+  │           Target            │  Type  │ Vulnerabilities │ Secrets │\n├─────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ rabbitmq:3.8 (ubuntu 20.04) │ ubuntu │        0        │    -    │\n└─────────────────────────────┴────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n"
+stack_context: "Service: event-bus-v2\nImage: rabbitmq:3.8 (Ubuntu 20.04 - EOL)\n\
+  Exposure: internal cluster network only via ClusterIP (ports 5672, 15672)\nContainer\
+  \ runtime: EKS 1.28 with:\n  - read-only root filesystem (with /var/lib/rabbitmq\
+  \ writable tmpfs)\n  - non-root user (uid 999)\n  - seccomp default profile\n  -\
+  \ no SYS_ADMIN capability\n  - Pod Security Standard: baseline\n  - NetworkPolicy:\
+  \ allow inbound from all namespaces in cluster (messaging infrastructure)\n\nUsage:\
+  \ Internal message broker for asynchronous communication between microservices.\n\
+  Manages: task queues, pub/sub topics, RPC request/reply patterns.\nManagement UI\
+  \ (port 15672) is ClusterIP only, not externally accessible.\nTLS enabled for inter-node\
+  \ and client connections.\nAuthentication: default credentials rotated (non-default\
+  \ vhost/user).\n\nRegulatory context: Underlying infrastructure for financial services\
+  \ (OJK).\nMessage queues carry transaction events and audit data across services.\n\
+  No direct handling of PII or cardholder data (payloads opaque to RabbitMQ)."
+ground_truth:
+  exploitable_findings: []
+  non_exploitable_findings:
+  - cve: NONE
+    verdict: not_exploitable
+    reasoning: RabbitMQ 3.8 (Ubuntu 20.04 EOL) — clean scan. No vulnerabilities detected
+      by Trivy. Namun OS EOL perlu dimitigasi dengan upgrade atau additional support.
+    action: null
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings: []
+  priority_order:
+  - NONE
+expected_response_includes:
+- (?i)rabbitmq
+- (?i)ubuntu.*20\.04
+- (?i)eol
+- (?i)clusterip
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability?
+      Full marks: correctly identifies which CVEs are reachable vs unreachable. Zero
+      marks: ignores deployment context, treats all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable
+      internet-facing CVEs must be prioritised over non-exploitable ones. Penalize
+      if the model treats all CRITICAL as equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library
+      X to version Y, deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable
+      dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats.
+      Direct, professional tone.
+weight: 1.0

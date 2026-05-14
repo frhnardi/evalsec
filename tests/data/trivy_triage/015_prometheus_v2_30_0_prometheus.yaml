@@ -1,0 +1,181 @@
+id: trivy_triage_015
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: prom/prometheus:v2.30.0
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: Prometheus v2.30.0 di EKS dengan mTLS, non-root, RO fs, dan NetworkPolicy.
+    81 CVE ditemukan, 15 exploitable.
+
+    CVEs requiring manual review (3): CVE-2022-41723, CVE-2023-39325, CVE-2022-27664'
+  total_cves_found: 78
+  cves_selected: 8
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "\nReport Summary\n\n┌────────────────┬──────────┬─────────────────┬─────────┐\n│     Target  \
+  \   │   Type   │ Vulnerabilities │ Secrets │\n├────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ bin/prometheus │ gobinary │       81        │    -    │\n├────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ bin/promtool   │ gobinary │       81        │    -    │\n└────────────────┴──────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\nbin/prometheus (gobinary)\n\
+  =========================\nTotal: 81 (HIGH: 73, CRITICAL: 8)\n\n  github.com/docker/distribution | CVE-2023-2253\
+  \ | v2.7.1+incompatible -> 2.8.2-beta.1 | https://avd.aquasec.com/nvd/cve-2023-2253\n  github.com/docker/docker\
+  \ | CVE-2024-41110 | CRITICAL | v20.10.8+incompatible -> 23.0.15, 26.1.5, 27.1.1, 25.0.6 | https://avd.aquasec.com/nvd/cve-2024-41110\n\
+  \  github.com/golang-jwt/jwt/v4 | CVE-2025-30204 | v4.0.0 -> 4.5.2 | https://avd.aquasec.com/nvd/cve-2025-30204\n\
+  \  github.com/prometheus/client_golang | CVE-2022-21698 | v1.11.0 -> 1.11.1 | https://avd.aquasec.com/nvd/cve-2022-21698\n\
+  \  github.com/sirupsen/logrus | CVE-2025-65637 | v1.7.0 -> 1.8.3, 1.9.1, 1.9.3 | https://avd.aquasec.com/nvd/cve-2025-65637\n\
+  \  stdlib | CVE-2022-23806 | CRITICAL | v1.17.1 -> 1.16.14, 1.17.7 | https://avd.aquasec.com/nvd/cve-2022-23806\n\
+  \nbin/promtool (gobinary)\n=======================\nTotal: 81 (HIGH: 73, CRITICAL: 8)\n\n  github.com/docker/distribution\
+  \ | CVE-2023-2253 | v2.7.1+incompatible -> 2.8.2-beta.1 | https://avd.aquasec.com/nvd/cve-2023-2253\n\
+  \  github.com/docker/docker | CVE-2024-41110 | CRITICAL | v20.10.8+incompatible -> 23.0.15, 26.1.5,\
+  \ 27.1.1, 25.0.6 | https://avd.aquasec.com/nvd/cve-2024-41110\n  github.com/golang-jwt/jwt/v4 | CVE-2025-30204\
+  \ | v4.0.0 -> 4.5.2 | https://avd.aquasec.com/nvd/cve-2025-30204\n  github.com/prometheus/client_golang\
+  \ | CVE-2022-21698 | v1.11.0 -> 1.11.1 | https://avd.aquasec.com/nvd/cve-2022-21698\n  github.com/sirupsen/logrus\
+  \ | CVE-2025-65637 | v1.7.0 -> 1.8.3, 1.9.1, 1.9.3 | https://avd.aquasec.com/nvd/cve-2025-65637\n  stdlib\
+  \ | CVE-2022-23806 | CRITICAL | v1.17.1 -> 1.16.14, 1.17.7 | https://avd.aquasec.com/nvd/cve-2022-23806"
+stack_context: "Service: cluster-monitoring-v1\nImage: prom/prometheus:v2.30.0\nExposure: internal ClusterIP\
+  \ on EKS, namespace: monitoring\nContainer runtime: EKS 1.28 with:\n  - read-only root filesystem\n\
+  \  - non-root user (uid 65534)\n  - seccomp default profile\n  - Pod Security Standard: baseline\n \
+  \ - NetworkPolicy: allow inbound from all namespaces\n\nUsage: Scrapes metrics from all namespaces in\
+  \ the cluster.\nService mesh: Istio with mTLS STRICT mode cluster-wide.\nPod identity via SPIFFE/IRSA.\
+  \ ClusterIP only, accessible via Grafana ingress.\nNo PII in metrics, but metric labels may contain\
+  \ internal service topology.\n\nRegulatory context: No PII. Internal service topology revealed."
+ground_truth:
+  exploitable_findings:
+  - cve: CVE-2022-21698
+    verdict: exploitable
+    reasoning: DoS via InstrumentHandlerCounter, reachable via HTTP metrics endpoint.
+    action: Segera upgrade prometheus/client_golang ke v1.11.1.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: GHSA-4v48-4q5m-8vx4
+    verdict: exploitable
+    reasoning: Basic auth bypass pada Prometheus, akses internal via NetworkPolicy.
+    action: Upgrade Prometheus ke v2.37.4 atau v2.40.4.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-30204
+    verdict: exploitable
+    reasoning: Memory exhaustion via JWT header parsing, digunakan untuk auth.
+    action: Upgrade golang-jwt/jwt/v4 ke v4.5.2.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-65637
+    verdict: exploitable
+    reasoning: DoS via large log payload, logrus digunakan untuk logging.
+    action: Upgrade sirupsen/logrus ke v1.8.3 atau lebih baru.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  non_exploitable_findings:
+  - cve: CVE-2024-41110
+    verdict: not_exploitable
+    reasoning: Authz bypass pada Docker, container non-root dan RO fs.
+    action: Pantau update Docker.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2026-34040
+    verdict: not_exploitable
+    reasoning: Auth bypass pada Moby, container non-root dan RO fs.
+    action: Pantau update Docker.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2022-30580
+    verdict: not_exploitable
+    reasoning: Code injection pada os/exec, container non-root dan RO fs.
+    action: Pantau update Go.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2023-2253
+    verdict: not_exploitable
+    reasoning: DoS via API request, container non-root dan RO fs.
+    action: Pantau update distribution.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings: []
+  priority_order:
+  - GHSA-4v48-4q5m-8vx4
+  - CVE-2022-21698
+  - CVE-2025-30204
+  - CVE-2025-65637
+expected_response_includes:
+- (?i)upgrade
+- (?i)prometheus
+- (?i)non-root
+- (?i)mtls
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly
+      identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats
+      all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing
+      CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as
+      equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y,
+      deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional
+      tone.
+weight: 1.0

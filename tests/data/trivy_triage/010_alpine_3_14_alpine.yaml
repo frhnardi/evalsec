@@ -1,0 +1,88 @@
+id: trivy_triage_010
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: alpine:3.14
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: Alpine 3.14 base image dalam fase review keamanan pra-deployment,
+    belum digunakan di produksi.'
+  total_cves_found: 0
+  cves_selected: 0
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: '
+
+  Report Summary
+
+
+  ┌──────────────────────────────┬────────┬─────────────────┬─────────┐
+
+  │            Target            │  Type  │ Vulnerabilities │ Secrets │
+
+  ├──────────────────────────────┼────────┼─────────────────┼─────────┤
+
+  │ alpine:3.14 (alpine 3.14.10) │ alpine │        0        │    -    │
+
+  └──────────────────────────────┴────────┴─────────────────┴─────────┘
+
+  Legend:
+
+  - ''-'': Not scanned
+
+  - ''0'': Clean (no security findings detected)
+
+
+  '
+stack_context: "Service: base-image-evaluation\nImage: alpine:3.14\nExposure: Not\
+  \ deployed — security review phase\nContainer runtime: EKS 1.28 (planned) with:\n\
+  \  - restricted PSS\n  - runAsNonRoot\n  - no shell access in production\n  - IRSA\
+  \ for AWS API access\n\nUsage: Empty Alpine base image being evaluated for use as\
+  \ base\nfor new microservices. Not yet deployed to production.\n\nRegulatory context:\
+  \ Pre-deployment review. No data processed."
+ground_truth:
+  exploitable_findings: []
+  non_exploitable_findings:
+  - cve: NONE
+    verdict: not_exploitable
+    reasoning: 'Alpine 3.14 base image — clean scan. No vulnerabilities detected by
+      Trivy. Sesuai ekspektasi: base image minimal dengan permukaan serang kecil.'
+    action: null
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings: []
+  priority_order:
+  - NONE
+expected_response_includes:
+- (?i)alpine
+- (?i)base.image
+- (?i)review
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability?
+      Full marks: correctly identifies which CVEs are reachable vs unreachable. Zero
+      marks: ignores deployment context, treats all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable
+      internet-facing CVEs must be prioritised over non-exploitable ones. Penalize
+      if the model treats all CRITICAL as equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library
+      X to version Y, deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable
+      dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats.
+      Direct, professional tone.
+weight: 1.0
