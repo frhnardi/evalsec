@@ -52,6 +52,7 @@ def _resolve_api_key(provider: str) -> str | None:
     """Return the API key for a provider, or None if not set."""
     return _PROVIDER_KEY_MAP.get(provider)
 
+
 def _is_json_truncated(text: str) -> bool:
     """Check if a model response looks like truncated/incomplete JSON.
 
@@ -90,7 +91,6 @@ def _is_json_truncated(text: str) -> bool:
 # ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
-
 
 
 class Runner:
@@ -359,8 +359,7 @@ class Runner:
                     max_retries = 2
                     retry_count = 0
                     while retry_count < max_retries and (
-                        response.finish_reason == "length"
-                        or _is_json_truncated(response.text)
+                        response.finish_reason == "length" or _is_json_truncated(response.text)
                     ):
                         retry_count += 1
                         doubled = request.max_tokens * 2

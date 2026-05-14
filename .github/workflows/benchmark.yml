@@ -17,10 +17,14 @@ on:
     # Sunday midnight UTC
     - cron: "0 0 * * 0"
   workflow_dispatch:
-    # Manual trigger with optional dry-run flag
+    # Manual trigger with optional flags
     inputs:
       dry_run:
         description: "Dry run (estimate only, no API calls)"
+        type: boolean
+        default: false
+      deploy_only:
+        description: "Rebuild dashboard from existing scores and deploy — skips benchmark/grade"
         type: boolean
         default: false
 
@@ -74,6 +78,7 @@ jobs:
       # 5. Run benchmark
       # ----------------------------------------------------------------
       - name: Run benchmark
+        if: ${{ github.event.inputs.deploy_only != 'true' }}
         run: |
           if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
             uv run evalsec run --dry-run
@@ -88,7 +93,7 @@ jobs:
       # 6. Grade responses
       # ----------------------------------------------------------------
       - name: Grade responses
-        if: ${{ github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event.inputs.dry_run != 'true' && github.event.inputs.deploy_only != 'true' }}
         run: |
           # Find the latest responses file
           RESPONSES_FILE=$(ls -t outputs/responses_*.json 2>/dev/null | head -1)
@@ -164,7 +169,7 @@ jobs:
       # 12. Commit scores back to repo (audit trail)
       # ----------------------------------------------------------------
       - name: Create PR with scores
-        if: ${{ github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event.inputs.dry_run != 'true' && github.event.inputs.deploy_only != 'true' }}
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
