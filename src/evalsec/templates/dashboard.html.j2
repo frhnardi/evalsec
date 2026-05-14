@@ -5,441 +5,716 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
 
-  <!-- Open Graph -->
   <meta property="og:title" content="evalsec — DevSecOps LLM Benchmark">
   <meta property="og:description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://evalsec.farhan.ngenz.org">
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="evalsec — DevSecOps LLM Benchmark">
   <meta name="twitter:description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
 
   <title>evalsec — DevSecOps LLM Benchmark</title>
 
-  <!-- Chart.js from CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js"></script>
 
   <style>
-    /* ── Reset & Base ── */
+    @property --angle {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: false;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #f8f9fa;
-      --surface:  #ffffff;
-      --border:   #dee2e6;
-      --text:     #212529;
-      --muted:    #6c757d;
-      --accent:   #4361ee;
-      --accent2:  #3a0ca3;
-      --success:  #2d6a4f;
-      --warn:     #e85d04;
-      --danger:   #d00000;
-      --warn-bg:  rgba(232, 93, 4, 0.12);
-      --success-bg: rgba(45, 106, 79, 0.10);
-      --font:     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      --radius:   10px;
-      --shadow:   0 1px 3px rgba(0,0,0,0.08);
+      --bg:           #fafafa;
+      --surface:      #ffffff;
+      --surface-2:    #f5f5f5;
+      --border:       #e5e7eb;
+      --border-soft:  #ececef;
+      --border-strong:#d4d4d8;
+      --text:         #0a0a0a;
+      --text-soft:    #27272a;
+      --muted:        #71717a;
+      --muted-2:      #a1a1aa;
+      --accent:       #A369FF;
+      --accent-2:     #C4A0FF;
+      --accent-deep:  #7c3aed;
+      --accent-soft:  rgba(163, 105, 255, 0.10);
+      --accent-line:  rgba(163, 105, 255, 0.28);
+      --warn:         #f59e0b;
+      --warn-soft:    rgba(245, 158, 11, 0.10);
+      --success:      #10b981;
+      --danger:       #ef4444;
+      --radius-sm:    8px;
+      --radius:       12px;
+      --radius-lg:    16px;
+      --radius-xl:    24px;
+      --radius-2xl:   28px;
+      --shadow-1:     0 1px 2px rgba(0,0,0,0.04);
+      --shadow-2:     0 8px 24px -8px rgba(0,0,0,0.08);
+      --font-sans:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --grain:        radial-gradient(1px 1px at 25% 35%, rgba(0,0,0,0.04) 50%, transparent 50%),
+                      radial-gradient(1px 1px at 75% 65%, rgba(0,0,0,0.04) 50%, transparent 50%);
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg:       #0d1117;
-        --surface:  #161b22;
-        --border:   #30363d;
-        --text:     #e6edf3;
-        --muted:    #8b949e;
-        --accent:   #58a6ff;
-        --accent2:  #a371f7;
-        --success:  #3fb950;
-        --warn:     #d29922;
-        --danger:   #f85149;
-        --warn-bg:  rgba(210, 153, 34, 0.15);
-        --success-bg: rgba(63, 185, 80, 0.12);
-        --shadow:   0 1px 3px rgba(0,0,0,0.3);
+        --bg:           #08070b;
+        --surface:      #0f0e13;
+        --surface-2:    #141319;
+        --border:       rgba(255,255,255,0.07);
+        --border-soft:  rgba(255,255,255,0.04);
+        --border-strong:rgba(255,255,255,0.14);
+        --text:         #fafafa;
+        --text-soft:    #e4e4e7;
+        --muted:        #a1a1aa;
+        --muted-2:      #71717a;
+        --accent:       #A369FF;
+        --accent-2:     #C4A0FF;
+        --accent-deep:  #8b5cf6;
+        --accent-soft:  rgba(163, 105, 255, 0.14);
+        --accent-line:  rgba(163, 105, 255, 0.40);
+        --warn:         #fbbf24;
+        --warn-soft:    rgba(251, 191, 36, 0.10);
+        --shadow-1:     0 1px 2px rgba(0,0,0,0.4);
+        --shadow-2:     0 12px 32px -12px rgba(0,0,0,0.6);
+        --grain:        radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.04) 50%, transparent 50%),
+                        radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.04) 50%, transparent 50%);
       }
     }
 
-    body {
-      font-family: var(--font);
+    html, body {
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
-      padding: 0;
+      font-family: var(--font-sans);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    /* ── Layout ── */
+    body {
+      background-image: var(--grain);
+      background-size: 28px 28px;
+    }
+
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1.25rem;
+      padding: 0 1.5rem;
     }
 
-    header {
-      border-bottom: 1px solid var(--border);
-      padding: 2rem 0 1.5rem;
-      margin-bottom: 2rem;
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ─────────────────────────────────────────────
+       HERO
+       ───────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      padding: 5rem 0 3.5rem;
+      text-align: center;
+      overflow: hidden;
     }
 
-    .brand-row {
-      display: flex;
-      align-items: baseline;
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 720px;
+      height: 400px;
+      background: radial-gradient(closest-side, var(--accent-soft), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-inner { position: relative; z-index: 1; }
+
+    .beta-pill {
+      display: inline-flex;
+      align-items: center;
       gap: 0.5rem;
-      flex-wrap: wrap;
+      padding: 0.4rem 0.9rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent-line);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+    }
+    .pulse-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 var(--accent);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(163,105,255,0.6); }
+      70%  { box-shadow: 0 0 0 8px rgba(163,105,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(163,105,255,0); }
     }
 
-    header h1 {
-      font-size: 2.25rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1;
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 500;
+      letter-spacing: -0.055em;
+      line-height: 0.95;
+      margin-bottom: 1rem;
     }
+    .hero-title .accent-dot { color: var(--accent); }
 
-    header .subtitle {
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+      color: var(--text-soft);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+    .hero-desc {
       font-size: 1.05rem;
       color: var(--muted);
+      max-width: 44rem;
+      margin: 0 auto;
+      letter-spacing: -0.005em;
+    }
+
+    .meta-pills {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .meta-pill {
+      padding: 0.4rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      background: var(--surface);
+    }
+
+    /* ─────────────────────────────────────────────
+       SECTION HEADINGS
+       ───────────────────────────────────────────── */
+    .section-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
       font-weight: 500;
-      margin-top: 0.35rem;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      text-align: center;
+      margin-bottom: 0.6rem;
+    }
+    .section-title .accent-dot { color: var(--accent); }
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 36rem;
+      margin: 0 auto 2rem;
       letter-spacing: -0.01em;
     }
 
-    header .meta {
-      color: var(--muted);
-      font-size: 0.85rem;
-      margin-top: 0.9rem;
-    }
+    /* ─────────────────────────────────────────────
+       HERO STATS
+       ───────────────────────────────────────────── */
+    .stats-section { margin-bottom: 6rem; }
 
-    header .meta span + span::before {
-      content: " · ";
-    }
-
-    header .context-line {
-      color: var(--muted);
-      font-size: 0.8rem;
-      margin-top: 0.4rem;
-      opacity: 0.85;
-    }
-
-    .beta-badge {
-      display: inline-block;
-      padding: 0.2rem 0.55rem;
-      background: var(--warn-bg);
-      color: var(--warn);
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      border-radius: 4px;
-      vertical-align: middle;
-      border: 1px solid var(--warn);
-    }
-
-    /* ── Hero Stats Bar ── */
-    .stats-bar {
+    .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
-      margin-bottom: 2rem;
+    }
+    @media (max-width: 820px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
-    @media (max-width: 768px) {
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .stat-card {
+    .stat {
+      position: relative;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1rem;
-      text-align: center;
-      box-shadow: var(--shadow);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.4rem 1.35rem;
+      transition: border-color 0.25s ease, transform 0.25s ease;
+      overflow: hidden;
     }
+    .stat::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .stat:hover {
+      border-color: var(--accent-line);
+      transform: translateY(-2px);
+    }
+    .stat:hover::before { opacity: 1; }
 
     .stat-value {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--accent);
-      line-height: 1.1;
-      word-break: break-word;
+      font-size: 2.5rem;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
     }
-
     .stat-value.small {
-      font-size: 1.15rem;
-      font-weight: 700;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
     }
-
     .stat-label {
       display: block;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
       color: var(--muted);
-      margin-top: 0.45rem;
+      margin-top: 0.65rem;
       font-weight: 600;
     }
-
     .stat-sub {
       display: block;
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-top: 0.2rem;
-      opacity: 0.8;
+      font-size: 0.78rem;
+      color: var(--muted-2);
+      margin-top: 0.25rem;
+      letter-spacing: -0.005em;
     }
 
-    /* ── Charts ── */
-    .charts-grid {
+    /* ─────────────────────────────────────────────
+       METHODOLOGY TABS
+       ───────────────────────────────────────────── */
+    .method-section { margin-bottom: 6rem; }
+
+    .method-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .method-tab {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 500;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .method-tab:hover { border-color: var(--border-strong); color: var(--text); }
+    .method-tab .method-tab-icon {
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .method-tab.selected {
+      color: var(--text);
+      background: var(--surface);
+    }
+    .method-tab.selected::after {
+      content: "";
+      position: absolute;
+      inset: -1.5px;
+      border-radius: inherit;
+      padding: 1.5px;
+      background: conic-gradient(from var(--angle), transparent 0%, var(--accent) 18%, transparent 30%, transparent 60%, var(--accent-2) 78%, transparent 90%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      animation: spin 4.5s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes spin { to { --angle: 360deg; } }
+
+    .method-frame {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2xl);
+      padding: 0.55rem;
+      background: var(--surface);
+    }
+    .method-inner {
+      background: var(--surface-2);
+      border-radius: calc(var(--radius-2xl) - 5px);
+      padding: 2rem clamp(1.25rem, 4vw, 3rem);
+      min-height: 220px;
+    }
+
+    .method-panel { display: none; }
+    .method-panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .method-panel h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+      color: var(--text);
+    }
+    .method-panel p {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      max-width: 60ch;
+      margin-bottom: 0.65rem;
+    }
+    .method-panel p:last-child { margin-bottom: 0; }
+    .method-panel ul {
+      list-style: none;
+      padding: 0;
+      color: var(--text-soft);
+      font-size: 0.93rem;
+    }
+    .method-panel ul > li {
+      padding-left: 1.15rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+    .method-panel ul > li::before {
+      content: "—";
+      position: absolute; left: 0;
+      color: var(--accent);
+    }
+    .method-panel ul ul {
+      margin-top: 0.4rem;
+      margin-left: 0.4rem;
+      font-size: 0.88rem;
+    }
+    .method-panel ul ul > li::before { content: "·"; color: var(--muted-2); }
+    .method-panel strong { color: var(--text); font-weight: 600; }
+
+    /* ─────────────────────────────────────────────
+       CHARTS
+       ───────────────────────────────────────────── */
+    .charts-section { margin-bottom: 4.5rem; }
+
+    .charts-frame {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2xl);
+      padding: 0.55rem;
+      background: var(--surface);
+      box-shadow: var(--shadow-2);
+    }
+    .charts-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      gap: 0.55rem;
+      background: var(--surface-2);
+      border-radius: calc(var(--radius-2xl) - 5px);
+      padding: 0.55rem;
     }
-
-    @media (max-width: 768px) {
-      .charts-grid { grid-template-columns: 1fr; }
+    @media (max-width: 900px) {
+      .charts-inner { grid-template-columns: 1fr; }
     }
 
     .chart-card {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      box-shadow: var(--shadow);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.4rem 1.1rem;
     }
+    .chart-card h3 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+    .chart-sub {
+      font-size: 0.8rem;
+      color: var(--muted-2);
+      margin-bottom: 1rem;
+    }
+    .chart-card canvas { max-height: 340px; }
 
-    .chart-card h2 {
+    .baseline-chart-frame .charts-inner {
+      grid-template-columns: 1fr;
+    }
+    .baseline-chart-frame canvas { max-height: 240px; }
+
+    /* ─────────────────────────────────────────────
+       DISCLAIMER
+       ───────────────────────────────────────────── */
+    .disclaimer {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--warn-soft);
+      border: 1px solid var(--warn);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.35rem;
+      margin-bottom: 1.5rem;
+    }
+    .disclaimer.is-dismissed { display: none; }
+    .disclaimer-icon {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--warn);
+      color: #000;
       font-size: 0.95rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
-      color: var(--text);
-      letter-spacing: -0.01em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
-
-    .chart-card .chart-sub {
-      font-size: 0.75rem;
+    .disclaimer-body { flex: 1; color: var(--text-soft); font-size: 0.92rem; line-height: 1.5; }
+    .disclaimer-body strong { color: var(--warn); font-weight: 600; }
+    .disclaimer-close {
+      background: transparent;
+      border: none;
       color: var(--muted);
-      margin-bottom: 0.75rem;
-      margin-top: -0.5rem;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 0.35rem;
+      font-family: inherit;
     }
+    .disclaimer-close:hover { color: var(--text); }
 
-    .chart-card canvas {
-      max-height: 340px;
-    }
+    /* ─────────────────────────────────────────────
+       LEADERBOARD
+       ───────────────────────────────────────────── */
+    .ranking-section { margin-bottom: 5rem; }
 
-    .baseline-chart {
-      margin-bottom: 2rem;
-    }
-
-    .baseline-chart canvas {
-      max-height: 240px;
-    }
-
-    /* ── Leaderboard Table ── */
     .leaderboard {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
       overflow: hidden;
-      margin-bottom: 2rem;
     }
-
-    .leaderboard .lb-header {
-      padding: 1.1rem 1.25rem 0.5rem;
+    .lb-header {
+      padding: 1.5rem 1.75rem 0.9rem;
+      border-bottom: 1px solid var(--border-soft);
     }
-
-    .leaderboard h2 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text);
+    .lb-header h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
     }
-
-    .leaderboard .lb-note {
-      font-size: 0.78rem;
+    .lb-note {
+      font-size: 0.82rem;
       color: var(--muted);
       margin-top: 0.3rem;
     }
+    .leaderboard.baseline-board .lb-header h2 { color: var(--muted); font-weight: 500; }
 
-    .leaderboard.baseline-board h2 {
-      color: var(--muted);
-      font-weight: 600;
-    }
+    .lb-wrap { overflow-x: auto; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
 
     thead th {
       text-align: left;
-      padding: 0.7rem 1rem;
-      font-size: 0.72rem;
-      font-weight: 700;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.1em;
       color: var(--muted);
-      border-top: 1px solid var(--border);
-      border-bottom: 2px solid var(--border);
-      background: rgba(127, 127, 127, 0.04);
+      border-bottom: 1px solid var(--border-soft);
+      background: transparent;
+      white-space: nowrap;
     }
+    thead th:first-child { padding-left: 1.75rem; }
+    thead th:last-child  { padding-right: 1.75rem; }
 
     tbody td {
-      padding: 0.85rem 1rem;
-      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-soft);
       font-size: 0.9rem;
+      color: var(--text-soft);
       font-variant-numeric: tabular-nums;
     }
-
+    tbody td:first-child { padding-left: 1.75rem; }
+    tbody td:last-child  { padding-right: 1.75rem; }
     tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: rgba(127, 127, 127, 0.04); }
+    tbody tr { transition: background 0.15s ease; }
+    tbody tr:hover { background: var(--surface-2); }
 
     tbody tr.top-row {
-      background: var(--success-bg);
+      background: linear-gradient(90deg, var(--accent-soft) 0%, transparent 100%);
+      position: relative;
     }
-    tbody tr.top-row:hover {
-      background: var(--success-bg);
-      filter: brightness(1.05);
+    tbody tr.top-row::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
     }
+    tbody tr.top-row:hover { filter: brightness(1.04); }
 
-    .baseline-board tbody td {
-      color: var(--muted);
-    }
-    .baseline-board tbody td.model-name-cell {
-      color: var(--text);
-    }
+    .baseline-board tbody td { color: var(--muted); }
+    .baseline-board tbody td.model-name-cell { color: var(--text-soft); }
 
     .rank-cell {
-      font-weight: 800;
-      width: 3.5rem;
-      font-size: 1.05rem;
-    }
-
-    .medal { font-size: 1.25rem; }
-
-    .model-name-cell {
       font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    .model-id-mono {
-      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
-      font-size: 0.7rem;
+      width: 3.5rem;
+      font-size: 1rem;
       color: var(--muted);
+    }
+    .medal { font-size: 1.3rem; }
+
+    .model-name-cell { font-weight: 500; letter-spacing: -0.01em; color: var(--text); }
+    .model-id-mono {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted-2);
       font-weight: 400;
       display: block;
-      margin-top: 0.15rem;
+      margin-top: 0.2rem;
     }
 
-    .score-cell {
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
+    .score-cell { font-weight: 600; }
     .score-bar-wrap {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
     }
-
     .score-bar {
       display: inline-block;
-      height: 6px;
-      border-radius: 3px;
-      vertical-align: middle;
-      background: var(--accent);
-      max-width: 60px;
+      height: 5px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      max-width: 70px;
     }
 
     .cost-cell {
-      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
-      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      font-size: 0.83rem;
       color: var(--muted);
     }
 
-    /* ── Badges ── */
     .type-badge {
       display: inline-block;
-      padding: 0.15rem 0.5rem;
+      padding: 0.18rem 0.6rem;
       font-size: 0.65rem;
-      font-weight: 700;
-      border-radius: 4px;
+      font-weight: 600;
+      border-radius: 999px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
     }
     .type-llm {
-      background: rgba(67, 97, 238, 0.15);
+      background: var(--accent-soft);
       color: var(--accent);
+      border: 1px solid var(--accent-line);
     }
     .type-baseline {
-      background: var(--warn-bg);
+      background: var(--warn-soft);
       color: var(--warn);
+      border: 1px solid var(--warn);
     }
 
     .trunc-badge {
       display: inline-block;
-      padding: 0.12rem 0.45rem;
-      background: var(--warn-bg);
+      padding: 0.18rem 0.55rem;
+      background: var(--warn-soft);
       color: var(--warn);
       font-size: 0.68rem;
-      font-weight: 700;
-      border-radius: 4px;
-      margin-left: 0.5rem;
+      font-weight: 600;
+      border-radius: 999px;
+      margin-left: 0.55rem;
       border: 1px solid var(--warn);
       white-space: nowrap;
     }
-
     .trunc-note {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--warn);
-      margin-top: 0.4rem;
-      line-height: 1.4;
-      max-width: 30ch;
+      margin-top: 0.45rem;
+      line-height: 1.45;
+      max-width: 32ch;
     }
 
-    /* ── Baseline Divider ── */
-    .baseline-divider {
+    th.has-tooltip {
+      cursor: help;
+      text-decoration: underline dotted;
+      text-decoration-color: var(--muted-2);
+      text-underline-offset: 4px;
+    }
+
+    .card-dims tbody tr.has-tooltip th,
+    .card-dims tbody tr.has-tooltip td:first-child {
+      cursor: help;
+      border-bottom: 1px dotted currentColor;
+    }
+
+    /* ─────────────────────────────────────────────
+       BASELINE DIVIDER
+       ───────────────────────────────────────────── */
+    .baseline-section { margin-bottom: 5rem; }
+    .divider {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin: 2.5rem 0 1.5rem;
-      color: var(--muted);
+      gap: 1.25rem;
+      margin: 2rem 0 1.75rem;
     }
-    .baseline-divider::before,
-    .baseline-divider::after {
+    .divider::before, .divider::after {
       content: "";
       flex: 1;
       height: 1px;
       background: var(--border);
     }
-    .baseline-divider span {
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
+    .divider span {
+      font-size: 0.74rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      font-weight: 600;
+      color: var(--muted);
     }
+    .baseline-chart-frame { margin-bottom: 1.5rem; }
 
-    /* ── Model Cards Grid ── */
+    /* ─────────────────────────────────────────────
+       MODEL CARDS
+       ───────────────────────────────────────────── */
+    .cards-section { margin-bottom: 5rem; }
+
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      gap: 1.25rem;
     }
 
     .model-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 1.25rem;
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .model-card:hover {
+      border-color: var(--accent-line);
+      transform: translateY(-2px);
     }
 
     .card-header {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
       flex-wrap: wrap;
     }
 
@@ -447,41 +722,38 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #fff;
+      width: 2.2rem; height: 2.2rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
       font-size: 0.8rem;
-      font-weight: 700;
+      font-weight: 600;
       flex-shrink: 0;
+      border: 1px solid var(--accent-line);
     }
-
     .model-name {
       font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--text);
     }
 
-    .card-score {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
+    .card-score { text-align: center; margin-bottom: 1.25rem; }
     .score-value {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
+      font-size: 2.75rem;
+      font-weight: 500;
+      letter-spacing: -0.04em;
       line-height: 1;
+      color: var(--text);
     }
-
     .score-label {
       display: block;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.14em;
       color: var(--muted);
-      margin-top: 0.25rem;
+      margin-top: 0.4rem;
+      font-weight: 600;
     }
 
     .card-dims {
@@ -489,101 +761,109 @@
       font-size: 0.85rem;
       margin-bottom: 1rem;
     }
-
     .card-dims caption {
-      font-size: 0.75rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.12em;
       color: var(--muted);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.55rem;
       text-align: left;
+      font-weight: 600;
     }
-
-    .card-dims th,
-    .card-dims td {
-      padding: 0.35rem 0;
+    .card-dims th, .card-dims td {
+      padding: 0.4rem 0;
       border: none;
     }
-
     .card-dims th {
       color: var(--muted);
       font-weight: 400;
       width: 50%;
+      text-align: left;
     }
 
     .bar-wrapper {
       position: relative;
-      height: 1rem;
-      background: var(--bg);
-      border-radius: 4px;
+      height: 1.05rem;
+      background: var(--surface-2);
+      border-radius: 999px;
       overflow: hidden;
     }
-
     .bar-fill {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       height: 100%;
-      background: var(--accent);
-      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 999px;
       transition: width 0.3s ease;
     }
-
     .bar-label {
       position: relative;
       display: block;
-      padding: 0 0.35rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      line-height: 1rem;
+      padding: 0 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+      line-height: 1.05rem;
       white-space: nowrap;
+      color: var(--text);
+      font-family: var(--font-mono);
     }
 
     .card-cost {
       display: flex;
       justify-content: space-between;
       font-size: 0.85rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-soft);
     }
-
     .cost-label { color: var(--muted); }
-    .cost-value { font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace; }
+    .cost-value { font-family: var(--font-mono); color: var(--text-soft); }
 
-    /* ── Footer ── */
+    /* ─────────────────────────────────────────────
+       FOOTER
+       ───────────────────────────────────────────── */
     footer {
-      text-align: center;
-      padding: 2rem 0;
+      margin-top: 5rem;
+      padding: 3rem 0 2.5rem;
       border-top: 1px solid var(--border);
+      text-align: center;
       color: var(--muted);
-      font-size: 0.8rem;
+      font-size: 0.83rem;
     }
-
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
+    .footer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.5rem;
+      justify-content: center;
+      align-items: center;
     }
-
-    footer a:hover { text-decoration: underline; }
+    .footer-cell { white-space: nowrap; }
+    .footer-value { color: var(--text-soft); font-family: var(--font-mono); font-size: 0.78rem; }
+    .footer-mark {
+      margin-top: 1.25rem;
+      font-size: 0.72rem;
+      color: var(--muted-2);
+      letter-spacing: 0.08em;
+    }
+    .footer-mark .accent-dot { color: var(--accent); }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="container">
-    <div class="brand-row">
-      <h1>evalsec</h1>
-      <span class="beta-badge">BETA</span>
-    </div>
-    <div class="subtitle">DevSecOps LLM Benchmark</div>
-    <div class="meta">
-      <span>{{ graded_at }}</span>
-      <span>{{ response_count }} responses</span>
-      <span>judge: {{ judge_model }}</span>
-      <span>prompt: {{ prompt_version }}</span>
-    </div>
-    <div class="context-line">
-      Task: {{ task }} · Judge: Claude Opus 4.7 · Ground truth: EKS production deployment scenarios · 1 case (full benchmark: 17 cases pending)
+<header class="hero">
+  <div class="container hero-inner">
+    <span class="beta-pill"><span class="pulse-dot"></span> BETA · v0.1.0</span>
+
+    <h1 class="hero-title">evalsec<span class="accent-dot">.</span></h1>
+    <p class="hero-subtitle">DevSecOps LLM Benchmark</p>
+    <p class="hero-desc">
+      Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.
+    </p>
+
+    <div class="meta-pills">
+      <span class="meta-pill">📅 {{ graded_at }}</span>
+      <span class="meta-pill">🎯 task: {{ task }}</span>
+      <span class="meta-pill">⚖ judge: Claude Opus 4.7</span>
+      <span class="meta-pill">📊 {{ response_count }} responses</span>
     </div>
   </div>
 </header>
@@ -591,165 +871,267 @@
 <main class="container">
 
   <!-- ── Hero Stats ── -->
-  <div class="stats-bar">
-    <div class="stat-card">
-      <div class="stat-value" id="stat-models">—</div>
-      <span class="stat-label">Models tested</span>
-      <span class="stat-sub">LLMs evaluated</span>
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-value" id="stat-models">—</div>
+        <span class="stat-label">Models tested</span>
+        <span class="stat-sub">LLMs evaluated</span>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="stat-cases">—</div>
+        <span class="stat-label">Cases evaluated</span>
+        <span class="stat-sub">Per model</span>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="stat-top-score">—</div>
+        <span class="stat-label">Top score</span>
+        <span class="stat-sub" id="stat-top-score-sub">LLMs only</span>
+      </div>
+      <div class="stat">
+        <div class="stat-value small" id="stat-best-value">—</div>
+        <span class="stat-label">Best value</span>
+        <span class="stat-sub" id="stat-best-value-sub">Score per dollar</span>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-value" id="stat-cases">—</div>
-      <span class="stat-label">Cases evaluated</span>
-      <span class="stat-sub">Per model</span>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="stat-top-score">—</div>
-      <span class="stat-label">Top score</span>
-      <span class="stat-sub">LLMs only</span>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value small" id="stat-best-value">—</div>
-      <span class="stat-label">Best value</span>
-      <span class="stat-sub">Score per dollar</span>
-    </div>
-  </div>
+  </section>
 
-  <!-- ── Charts (LLM only) ── -->
-  <div class="charts-grid">
-    <div class="chart-card">
-      <h2>Composite Score — LLMs</h2>
-      <div class="chart-sub">Higher is better · 0–100 scale</div>
-      <canvas id="barChart"></canvas>
+  <!-- ── Methodology ── -->
+  <section class="method-section">
+    <h2 class="section-title">How this benchmark works<span class="accent-dot">.</span></h2>
+    <p class="section-sub">Three reasons why evalsec scores differently from CVSS-only triage.</p>
+
+    <div class="method-tabs" role="tablist">
+      <button class="method-tab selected" type="button" data-tab="what" role="tab" aria-selected="true">
+        <span class="method-tab-icon">🎯</span><span>What We Test</span>
+      </button>
+      <button class="method-tab" type="button" data-tab="how" role="tab" aria-selected="false">
+        <span class="method-tab-icon">⚖</span><span>How We Score</span>
+      </button>
+      <button class="method-tab" type="button" data-tab="why" role="tab" aria-selected="false">
+        <span class="method-tab-icon">🔒</span><span>Why It Matters</span>
+      </button>
     </div>
-    <div class="chart-card">
-      <h2>Per-Dimension Radar — LLMs</h2>
-      <div class="chart-sub">Strengths across rubric dimensions</div>
-      <canvas id="radarChart"></canvas>
+
+    <div class="method-frame">
+      <div class="method-inner">
+        <div class="method-panel active" data-panel="what" role="tabpanel">
+          <h3>What We Test</h3>
+          <p>
+            Each test case contains a real Trivy vulnerability scan output from a popular
+            container image (nginx, redis, postgres, etc.) plus a realistic Kubernetes/EKS
+            deployment context. Models must triage the findings by determining real
+            <strong>exploitability</strong> — not just CVSS score.
+          </p>
+        </div>
+
+        <div class="method-panel" data-panel="how" role="tabpanel">
+          <h3>How We Score</h3>
+          <p>Each response goes through two passes:</p>
+          <ul>
+            <li>
+              <strong>Pass 1 — deterministic (20%)</strong> · regex matches, JSON validity,
+              CVE coverage, format compliance.
+            </li>
+            <li>
+              <strong>Pass 2 — LLM judge (80%)</strong> · Claude Opus 4.7 scores responses
+              on four rubric dimensions:
+              <ul>
+                <li><strong>Reachability</strong> — does the model use deployment context?</li>
+                <li><strong>Prioritization</strong> — correct urgency ranking?</li>
+                <li><strong>Actionability</strong> — specific, executable recommendations?</li>
+                <li><strong>Conciseness</strong> — focused output without padding?</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="method-panel" data-panel="why" role="tabpanel">
+          <h3>Why It Matters</h3>
+          <p>
+            Most CVE triage benchmarks score against CVSS alone. <strong>evalsec</strong>
+            measures whether LLMs can reason about exploitability in realistic production
+            deployments — the actual skill DevSecOps engineers need.
+          </p>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- ── Charts ── -->
+  <section class="charts-section">
+    <h2 class="section-title">The leaderboard at a glance<span class="accent-dot">.</span></h2>
+    <p class="section-sub">Composite scores and per-dimension strengths across all evaluated LLMs.</p>
+
+    <div class="charts-frame">
+      <div class="charts-inner">
+        <div class="chart-card">
+          <h3>Composite Score</h3>
+          <div class="chart-sub">Higher is better · 0–100 scale</div>
+          <canvas id="barChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Per-Dimension Radar</h3>
+          <div class="chart-sub">Strengths across rubric dimensions</div>
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ── LLM Leaderboard ── -->
-  {% set llm_entries = leaderboard | selectattr("model_type", "equalto", "llm") | list %}
-  <section class="leaderboard">
-    <div class="lb-header">
-      <h2>LLM Rankings</h2>
-      <div class="lb-note">Scored by Claude Opus 4.7 across rubric dimensions, normalized to 0–100.</div>
+  <section class="ranking-section">
+    <aside class="disclaimer" id="prelimDisclaimer">
+      <div class="disclaimer-icon" aria-hidden="true">!</div>
+      <div class="disclaimer-body">
+        <strong>Preliminary results</strong> — based on
+        <strong><span id="disclaimer-cases">1</span> of 17</strong>
+        test cases. Final rankings may shift significantly with the full benchmark.
+        Full results coming soon.
+      </div>
+      <button class="disclaimer-close" type="button" aria-label="Dismiss notice" id="dismissDisclaimer">×</button>
+    </aside>
+
+    {% set llm_entries = leaderboard | selectattr("model_type", "equalto", "llm") | list %}
+    <div class="leaderboard">
+      <div class="lb-header">
+        <h2>LLM Rankings</h2>
+        <div class="lb-note">Scored by Claude Opus 4.7 across rubric dimensions, normalized to 0–100.</div>
+      </div>
+      <div class="lb-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Model</th>
+              <th>Score</th>
+              <th class="has-tooltip" title="Does the model use stack context to determine real exploitability vs just relying on CVSS scores?">Reachability</th>
+              <th class="has-tooltip" title="Does the model rank findings by correct urgency (critical first, deferrable last)?">Prioritization</th>
+              <th class="has-tooltip" title="Are recommendations specific and executable, with concrete commands or patch versions?">Actionability</th>
+              <th class="has-tooltip" title="Is the response focused without preamble or padding, under target length?">Conciseness</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in llm_entries %}
+            {% set is_truncated = entry.details | selectattr("score.validation.parse_error") | list | length > 0 %}
+            {% set reach = entry.dimension_scores.get("reachability_reasoning", 0) %}
+            {% set prio  = entry.dimension_scores.get("prioritization", 0) %}
+            {% set act   = entry.dimension_scores.get("actionability", 0) %}
+            {% set conc  = entry.dimension_scores.get("conciseness", 0) %}
+            <tr class="{% if loop.index == 1 %}top-row{% endif %}" data-model-id="{{ entry.model_id }}">
+              <td class="rank-cell">
+                {% if loop.index == 1 %}<span class="medal">🥇</span>
+                {% elif loop.index == 2 %}<span class="medal">🥈</span>
+                {% elif loop.index == 3 %}<span class="medal">🥉</span>
+                {% else %}#{{ loop.index }}
+                {% endif %}
+              </td>
+              <td class="model-name-cell">
+                <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
+                {% if is_truncated %}<span class="trunc-badge" title="Response exceeded max_tokens — JSON truncated. Score reflects partial output only.">⚠ Truncated</span>{% endif %}
+                <span class="model-id-mono">{{ entry.model_id }}</span>
+                {% if is_truncated %}
+                <div class="trunc-note">Response exceeded max_tokens — JSON truncated. Score reflects partial output only.</div>
+                {% endif %}
+              </td>
+              <td class="score-cell">
+                <div class="score-bar-wrap">
+                  <span class="score-bar" style="width: {{ entry.avg_score * 0.7 }}px;"></span>
+                  {{ "%.1f"|format(entry.avg_score) }}
+                </div>
+              </td>
+              <td>{{ "%.1f"|format(reach) }}</td>
+              <td>{{ "%.1f"|format(prio) }}</td>
+              <td>{{ "%.1f"|format(act) }}</td>
+              <td>{{ "%.1f"|format(conc) }}</td>
+              <td class="cost-cell">${{ "%.4f"|format(entry.total_cost) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Model</th>
-          <th>Score</th>
-          <th>Reachability</th>
-          <th>Prioritization</th>
-          <th>Actionability</th>
-          <th>Conciseness</th>
-          <th>Cost</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for entry in llm_entries %}
-        {% set is_truncated = entry.details | selectattr("score.validation.parse_error") | list | length > 0 %}
-        {% set reach = entry.dimension_scores.get("reachability_reasoning", 0) %}
-        {% set prio  = entry.dimension_scores.get("prioritization", 0) %}
-        {% set act   = entry.dimension_scores.get("actionability", 0) %}
-        {% set conc  = entry.dimension_scores.get("conciseness", 0) %}
-        <tr class="{% if loop.index == 1 %}top-row{% endif %}" data-model-id="{{ entry.model_id }}">
-          <td class="rank-cell">
-            {% if loop.index == 1 %}<span class="medal">🥇</span>
-            {% elif loop.index == 2 %}<span class="medal">🥈</span>
-            {% elif loop.index == 3 %}<span class="medal">🥉</span>
-            {% else %}#{{ loop.index }}
-            {% endif %}
-          </td>
-          <td class="model-name-cell">
-            <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
-            {% if is_truncated %}<span class="trunc-badge" title="Response exceeded max_tokens — JSON truncated. Score reflects partial output only.">⚠ Truncated response</span>{% endif %}
-            <span class="model-id-mono">{{ entry.model_id }}</span>
-            {% if is_truncated %}
-            <div class="trunc-note">Response exceeded max_tokens — JSON truncated. Score reflects partial output only.</div>
-            {% endif %}
-          </td>
-          <td class="score-cell">
-            <div class="score-bar-wrap">
-              <span class="score-bar" style="width: {{ entry.avg_score * 0.6 }}px;"></span>
-              {{ "%.1f"|format(entry.avg_score) }}
-            </div>
-          </td>
-          <td>{{ "%.1f"|format(reach) }}</td>
-          <td>{{ "%.1f"|format(prio) }}</td>
-          <td>{{ "%.1f"|format(act) }}</td>
-          <td>{{ "%.1f"|format(conc) }}</td>
-          <td class="cost-cell">${{ "%.4f"|format(entry.total_cost) }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
   </section>
 
   <!-- ── Baseline Section ── -->
   {% set baselines = leaderboard | selectattr("model_type", "equalto", "baseline") | list %}
   {% if baselines %}
-  <div class="baseline-divider">
-    <span>── Baseline methods (no AI reasoning) ──</span>
-  </div>
+  <section class="baseline-section">
+    <div class="divider"><span>Baseline methods · no AI reasoning</span></div>
 
-  <div class="chart-card baseline-chart">
-    <h2>Baseline Scores</h2>
-    <div class="chart-sub">Deterministic methods · for reference only, not directly comparable to LLMs</div>
-    <canvas id="baselineBarChart"></canvas>
-  </div>
-
-  <section class="leaderboard baseline-board">
-    <div class="lb-header">
-      <h2>Baseline Comparison</h2>
-      <div class="lb-note">Baselines use deterministic scoring only (no LLM judge pass). Scores are not directly comparable to LLMs.</div>
+    <div class="charts-frame baseline-chart-frame">
+      <div class="charts-inner">
+        <div class="chart-card">
+          <h3>Baseline Scores</h3>
+          <div class="chart-sub">Deterministic methods · for reference only, not directly comparable to LLMs</div>
+          <canvas id="baselineBarChart"></canvas>
+        </div>
+      </div>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Model</th>
-          <th>Score</th>
-          <th>Verdict Accuracy</th>
-          <th>Priority Accuracy</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for entry in baselines %}
-        <tr data-model-id="{{ entry.model_id }}">
-          <td class="model-name-cell">
-            <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
-            <span class="model-id-mono">{{ entry.model_id }}</span>
-          </td>
-          <td class="score-cell">
-            <div class="score-bar-wrap">
-              <span class="score-bar" style="width: {{ entry.avg_score * 0.6 }}px; background: var(--warn);"></span>
-              {{ "%.1f"|format(entry.avg_score) }}
-            </div>
-          </td>
-          <td>{{ "%.1f"|format(entry.avg_verdict) }}</td>
-          <td>{{ "%.1f"|format(entry.avg_priority) }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+    <div class="leaderboard baseline-board">
+      <div class="lb-header">
+        <h2>Baseline Comparison</h2>
+        <div class="lb-note">Baselines use deterministic scoring only (no LLM judge pass). Scores are not directly comparable to LLMs.</div>
+      </div>
+      <div class="lb-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Score</th>
+              <th class="has-tooltip" title="How accurate were verdicts (exploitable/not exploitable/partial) vs ground truth?">Verdict Accuracy</th>
+              <th class="has-tooltip" title="How accurate was the priority ordering vs ground truth?">Priority Accuracy</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in baselines %}
+            <tr data-model-id="{{ entry.model_id }}">
+              <td class="model-name-cell">
+                <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
+                <span class="model-id-mono">{{ entry.model_id }}</span>
+              </td>
+              <td class="score-cell">
+                <div class="score-bar-wrap">
+                  <span class="score-bar" style="width: {{ entry.avg_score * 0.7 }}px; background: linear-gradient(90deg, var(--warn), #fbbf24);"></span>
+                  {{ "%.1f"|format(entry.avg_score) }}
+                </div>
+              </td>
+              <td>{{ "%.1f"|format(entry.avg_verdict) }}</td>
+              <td>{{ "%.1f"|format(entry.avg_priority) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </section>
   {% endif %}
 
   <!-- ── Model Cards ── -->
-  <div class="cards-grid">
-    {% for entry in leaderboard %}
-    {% include "card.html.j2" %}
-    {% endfor %}
-  </div>
+  <section class="cards-section">
+    <h2 class="section-title">Drill-down per model<span class="accent-dot">.</span></h2>
+    <p class="section-sub">Full per-dimension breakdown for every evaluated model.</p>
+    <div class="cards-grid">
+      {% for entry in leaderboard %}
+      {% include "card.html.j2" %}
+      {% endfor %}
+    </div>
+  </section>
 
 </main>
 
 <footer>
   <div class="container">
-    Last updated: {{ graded_at }} ·
-    <a href="https://github.com/frhnardi/evalsec">Source</a>
+    <div class="footer-row">
+      <span class="footer-cell">Last updated: <span class="footer-value">{{ graded_at }}</span></span>
+      <span class="footer-cell">Source: <a href="https://github.com/frhnardi/evalsec">github.com/frhnardi/evalsec</a></span>
+      <span class="footer-cell"><a href="https://github.com/frhnardi/evalsec/blob/main/docs/methodology.md">Methodology</a></span>
+      <span class="footer-cell"><a href="https://github.com/frhnardi/evalsec/blob/main/CONTRIBUTING.md">Contribute</a></span>
+      <span class="footer-cell">License: <span class="footer-value">MIT</span></span>
+    </div>
+    <div class="footer-mark">evalsec<span class="accent-dot">.</span> built by Farhan Ardi · for the DevSecOps community.</div>
   </div>
 </footer>
 
@@ -769,10 +1151,7 @@
     "baseline_epss":         "Baseline: EPSS Score",
     "baseline_reachability": "Baseline: Reachability",
   };
-
-  function displayName(id) {
-    return MODEL_DISPLAY[id] || id;
-  }
+  const displayName = id => MODEL_DISPLAY[id] || id;
 
   const DIM_LABELS = {
     reachability_reasoning: "Reachability",
@@ -784,40 +1163,64 @@
     verdict:                "Verdict Accuracy",
     priority:               "Priority Order",
   };
+  const dimLabel = d => DIM_LABELS[d] || d.replace(/_/g, " ");
 
-  function dimLabel(d) {
-    return DIM_LABELS[d] || d.replace(/_/g, " ");
+  const DIM_TOOLTIPS = {
+    reachability_reasoning: "Does the model use stack context to determine real exploitability vs just relying on CVSS scores?",
+    prioritization:         "Does the model rank findings by correct urgency (critical first, deferrable last)?",
+    actionability:          "Are recommendations specific and executable, with concrete commands or patch versions?",
+    conciseness:            "Is the response focused without preamble or padding, under target length?",
+    format:                 "Is output valid JSON matching the expected schema?",
+    coverage:               "Did the model address all CVEs in the input scan?",
+    verdict:                "How accurate were verdicts (exploitable/not exploitable/partial) vs ground truth?",
+    priority:               "How accurate was the priority ordering vs ground truth?",
+    hall_penalty:           "Penalty for fabricated CVEs not in original scan (lower is better)",
+  };
+  const DIM_TOOLTIPS_BY_TEXT = {};
+  Object.entries(DIM_TOOLTIPS).forEach(([k, v]) => {
+    DIM_TOOLTIPS_BY_TEXT[k.replace(/_/g, " ")] = v;
+  });
+  DIM_TOOLTIPS_BY_TEXT["hall. penalty"] = DIM_TOOLTIPS.hall_penalty;
+  DIM_TOOLTIPS_BY_TEXT["regex"]         = "Regex / pattern match score on deterministic Pass 1.";
+  DIM_TOOLTIPS_BY_TEXT["cost"]          = "Total API cost for this model across all evaluated cases.";
+
+  // ── Chart.js theme ──
+  Chart.defaults.color       = isDark ? '#a1a1aa' : '#71717a';
+  Chart.defaults.borderColor = isDark ? 'rgba(255,255,255,0.06)' : '#e5e7eb';
+  Chart.defaults.font.family = '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+
+  const ACCENT  = '#A369FF';
+  const ACCENT2 = '#C4A0FF';
+  const ACCENT3 = '#7c3aed';
+  const NEUTRAL = isDark ? '#52525b' : '#a1a1aa';
+  const WARN    = isDark ? '#fbbf24' : '#f59e0b';
+
+  function paletteFor(n) {
+    const base = [ACCENT, ACCENT2, ACCENT3];
+    return Array.from({ length: n }, (_, i) => base[i] || NEUTRAL);
   }
 
-  // ── Chart defaults ──
-  Chart.defaults.color = isDark ? '#8b949e' : '#6c757d';
-  Chart.defaults.borderColor = isDark ? '#30363d' : '#dee2e6';
-  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-
   // ── Data from server ──
-  const leaderboard = {{ leaderboard | tojson }};
-  const dimNames = {{ dim_names | tojson }};
-
-  const llmEntries = leaderboard.filter(e => e.model_type === "llm");
+  const leaderboard     = {{ leaderboard | tojson }};
+  const dimNames        = {{ dim_names | tojson }};
+  const llmEntries      = leaderboard.filter(e => e.model_type === "llm");
   const baselineEntries = leaderboard.filter(e => e.model_type === "baseline");
 
-  // ── Replace raw model_id with display name everywhere it appears in the DOM ──
+  // ── Display-name replacement throughout the DOM ──
   document.querySelectorAll('.model-display-name').forEach(el => {
     const id = el.dataset.id;
     if (id) el.textContent = displayName(id);
   });
 
-  // ── Enhance model cards (rendered by card.html.j2) ──
+  // ── Model card enhancement (preserve card.html.j2 untouched) ──
   document.querySelectorAll('.model-card').forEach(card => {
     const rank = parseInt(card.dataset.rank, 10);
     const entry = leaderboard.find(e => e.rank === rank);
     if (!entry) return;
 
-    // Replace model name with display name
     const nameEl = card.querySelector('.model-name');
     if (nameEl) nameEl.textContent = displayName(entry.model_id);
 
-    // Truncation detection — score.validation.parse_error is not null
     const truncated = (entry.details || []).some(d =>
       d && d.score && d.score.validation && d.score.validation.parse_error
     );
@@ -834,9 +1237,20 @@
       const scoreEl = card.querySelector('.card-score');
       if (scoreEl) scoreEl.appendChild(note);
     }
+
+    card.querySelectorAll('.card-dims tbody tr').forEach(tr => {
+      const firstCell = tr.querySelector('td, th');
+      if (!firstCell) return;
+      const text = firstCell.textContent.trim().toLowerCase();
+      const tip = DIM_TOOLTIPS_BY_TEXT[text];
+      if (tip) {
+        tr.title = tip;
+        tr.classList.add('has-tooltip');
+      }
+    });
   });
 
-  // ── Hero Stats ──
+  // ── Hero stats ──
   const allCases = new Set();
   leaderboard.forEach(e => (e.details || []).forEach(d => {
     if (d && d.case_id) allCases.add(d.case_id);
@@ -844,41 +1258,84 @@
   const caseCount = allCases.size || (leaderboard[0]?.details?.length || 0);
 
   document.getElementById('stat-models').textContent = llmEntries.length;
-  document.getElementById('stat-cases').textContent = caseCount;
+  document.getElementById('stat-cases').textContent  = caseCount;
 
-  const topScore = llmEntries.length
-    ? Math.max(...llmEntries.map(e => e.avg_score))
-    : 0;
-  document.getElementById('stat-top-score').textContent = topScore.toFixed(1);
+  const disclaimerCases = document.getElementById('disclaimer-cases');
+  if (disclaimerCases) disclaimerCases.textContent = caseCount || 1;
 
-  const llmWithCost = llmEntries.filter(e => (e.total_cost || 0) > 0);
-  const bestValueEl = document.getElementById('stat-best-value');
+  const topEl    = document.getElementById('stat-top-score');
+  const topSubEl = document.getElementById('stat-top-score-sub');
+  if (llmEntries.length > 0) {
+    const topEntry = llmEntries.reduce((acc, e) => e.avg_score > acc.avg_score ? e : acc);
+    topEl.textContent = topEntry.avg_score.toFixed(1);
+    if (topSubEl) topSubEl.textContent = displayName(topEntry.model_id);
+  } else {
+    topEl.textContent = '—';
+    if (topSubEl) topSubEl.textContent = 'No LLM data';
+  }
+
+  const llmWithCost   = llmEntries.filter(e => (e.total_cost || 0) > 0);
+  const bestValueEl   = document.getElementById('stat-best-value');
+  const bestValueSub  = document.getElementById('stat-best-value-sub');
   if (llmWithCost.length === 0) {
     bestValueEl.textContent = 'N/A';
+    bestValueEl.classList.remove('small');
+    if (bestValueSub) bestValueSub.textContent = 'Pending — costs $0 in current run';
   } else {
     const best = llmWithCost.reduce((acc, e) =>
       (e.avg_score / e.total_cost) > (acc.avg_score / acc.total_cost) ? e : acc
     );
-    bestValueEl.textContent = displayName(best.model_id);
+    const ratio = best.avg_score / best.total_cost;
+    const ratioStr = ratio >= 100
+      ? Math.round(ratio).toLocaleString()
+      : ratio.toFixed(1);
+    bestValueEl.textContent = ratioStr;
+    bestValueEl.classList.remove('small');
+    if (bestValueSub) bestValueSub.textContent = displayName(best.model_id);
   }
 
-  // ── Bar Chart (LLM composite scores) ──
-  const llmLabels = llmEntries.map(e => displayName(e.model_id));
-  const llmScores = llmEntries.map(e => e.avg_score);
-  const llmColors = llmEntries.map((_, i) =>
-    i === 0 ? '#3fb950' : i === 1 ? '#58a6ff' : i === 2 ? '#d29922' : '#8b949e'
-  );
+  // ── Disclaimer dismissal ──
+  const disclaimer = document.getElementById('prelimDisclaimer');
+  const dismissBtn = document.getElementById('dismissDisclaimer');
+  if (disclaimer && sessionStorage.getItem('evalsecDismissDisclaimer') === '1') {
+    disclaimer.classList.add('is-dismissed');
+  }
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', () => {
+      if (disclaimer) disclaimer.classList.add('is-dismissed');
+      try { sessionStorage.setItem('evalsecDismissDisclaimer', '1'); } catch (_) {}
+    });
+  }
 
+  // ── Methodology tab switching ──
+  const tabs   = document.querySelectorAll('.method-tab');
+  const panels = document.querySelectorAll('.method-panel');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      tabs.forEach(t => {
+        const sel = t === btn;
+        t.classList.toggle('selected', sel);
+        t.setAttribute('aria-selected', sel ? 'true' : 'false');
+      });
+      panels.forEach(p => p.classList.toggle('active', p.dataset.panel === target));
+    });
+  });
+
+  // ── Bar Chart (LLM composite scores) ──
   if (llmEntries.length > 0) {
+    const colors = paletteFor(llmEntries.length);
     new Chart(document.getElementById('barChart'), {
       type: 'bar',
       data: {
-        labels: llmLabels,
+        labels: llmEntries.map(e => displayName(e.model_id)),
         datasets: [{
           label: 'Composite Score',
-          data: llmScores,
-          backgroundColor: llmColors,
-          borderRadius: 4,
+          data: llmEntries.map(e => e.avg_score),
+          backgroundColor: colors,
+          borderRadius: 8,
+          borderSkipped: false,
+          maxBarThickness: 28,
         }]
       },
       options: {
@@ -886,20 +1343,25 @@
         maintainAspectRatio: true,
         indexAxis: 'y',
         plugins: { legend: { display: false } },
-        scales: { x: { min: 0, max: 100 } }
+        scales: {
+          x: { min: 0, max: 100, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f3' } },
+          y: { grid: { display: false }, ticks: { font: { weight: '500' } } }
+        }
       }
     });
   }
 
-  // ── Radar Chart (LLM only, with readable dim labels) ──
+  // ── Radar Chart (LLM only, readable dim labels) ──
   if (llmEntries.length > 0) {
+    const colors = paletteFor(llmEntries.length);
     const radarDatasets = llmEntries.map((entry, i) => ({
       label: displayName(entry.model_id),
       data: dimNames.map(d => (entry.dimension_scores[d] || 0)),
-      borderColor: llmColors[i],
-      backgroundColor: llmColors[i] + '20',
+      borderColor: colors[i],
+      backgroundColor: colors[i] + '22',
       borderWidth: 2,
       pointRadius: 3,
+      pointBackgroundColor: colors[i],
     }));
 
     new Chart(document.getElementById('radarChart'), {
@@ -913,23 +1375,24 @@
         maintainAspectRatio: true,
         scales: {
           r: {
-            min: 0,
-            max: 100,
-            ticks: { stepSize: 20, backdropColor: 'transparent' },
-            grid: { color: isDark ? '#30363d40' : '#dee2e640' },
+            min: 0, max: 100,
+            ticks: { stepSize: 25, backdropColor: 'transparent', font: { size: 10 } },
+            grid:  { color: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' },
+            angleLines: { color: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' },
+            pointLabels: { font: { size: 11, weight: '500' } }
           }
         },
         plugins: {
           legend: {
             position: 'bottom',
-            labels: { boxWidth: 12, padding: 12 },
+            labels: { boxWidth: 10, padding: 14, font: { size: 12 } },
           }
         }
       }
     });
   }
 
-  // ── Baseline Bar Chart (separate, smaller) ──
+  // ── Baseline Bar Chart ──
   const baselineCanvas = document.getElementById('baselineBarChart');
   if (baselineCanvas && baselineEntries.length > 0) {
     new Chart(baselineCanvas, {
@@ -939,8 +1402,10 @@
         datasets: [{
           label: 'Deterministic Score',
           data: baselineEntries.map(e => e.avg_score),
-          backgroundColor: '#d29922',
-          borderRadius: 4,
+          backgroundColor: WARN,
+          borderRadius: 8,
+          borderSkipped: false,
+          maxBarThickness: 22,
         }]
       },
       options: {
@@ -948,7 +1413,10 @@
         maintainAspectRatio: true,
         indexAxis: 'y',
         plugins: { legend: { display: false } },
-        scales: { x: { min: 0, max: 100 } }
+        scales: {
+          x: { min: 0, max: 100, grid: { color: isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f3' } },
+          y: { grid: { display: false }, ticks: { font: { weight: '500' } } }
+        }
       }
     });
   }
