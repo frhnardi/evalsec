@@ -1,0 +1,240 @@
+id: trivy_triage_006
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: python:3.8
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: Service ML inference internal dengan security controls ketat. Risiko utama
+    dari library jaringan (curl, OpenSSL, GnuTLS, libssh2) untuk koneksi keluar.
+
+    CVEs requiring manual review (7): CVE-2026-5773, CVE-2025-15467, CVE-2026-42010, CVE-2026-7598, CVE-2025-13699,
+    CVE-2026-24049, CVE-2025-47273'
+  total_cves_found: 172
+  cves_selected: 8
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "2026-05-14T09:25:41+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:25:41+07:00\t\
+  INFO\t[secret] Secret scanning is enabled\n2026-05-14T09:25:41+07:00\tINFO\t[secret] If your scanning\
+  \ is slow, please try '--scanners vuln' to disable secret scanning\n2026-05-14T09:25:41+07:00\tINFO\t\
+  [secret] Please see https://trivy.dev/docs/v0.70/guide/scanner/secret#recommendation for faster secret\
+  \ detection\n2026-05-14T09:25:58+07:00\tINFO\t[python] Licenses acquired from one or more METADATA files\
+  \ may be subject to additional terms. Use `--debug` flag to see all affected packages.\n2026-05-14T09:26:27+07:00\t\
+  INFO\tDetected OS\tfamily=\"debian\" version=\"12.7\"\n2026-05-14T09:26:27+07:00\tINFO\t[debian] Detecting\
+  \ vulnerabilities...\tos_version=\"12\" pkg_num=429\n2026-05-14T09:26:27+07:00\tINFO\tNumber of language-specific\
+  \ files\tnum=1\n2026-05-14T09:26:27+07:00\tINFO\t[python-pkg] Detecting vulnerabilities...\n2026-05-14T09:26:27+07:00\t\
+  WARN\tUsing severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.70/guide/scanner/vulnerability#severity-selection\
+  \ for details.\n2026-05-14T09:26:27+07:00\tINFO\tTable result includes only package filenames. Use '--format\
+  \ json' option to get the full path to the package file.\n\nReport Summary\n\n┌────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐\n\
+  │                                   Target                                   │    Type    │ Vulnerabilities\
+  \ │ Secrets │\n├────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ python:3.8 (debian 12.7)                                                   │   debian   │      1757\
+  \       │    -    │\n├────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/local/lib/python3.8/site-packages/pip-23.0.1.dist-info/METADATA        │ python-pkg │        0\
+  \        │    -    │\n├────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/local/lib/python3.8/site-packages/setuptools-57.5.0.dist-info/METADATA │ python-pkg │        3\
+  \        │    -    │\n├────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/local/lib/python3.8/site-packages/wheel-0.44.0.dist-info/METADATA      │ python-pkg │        1\
+  \        │    -    │\n└────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\npython:3.8 (debian 12.7)\n\
+  ========================\nTotal: 1757 (HIGH: 1565, CRITICAL: 192)\n\n  curl | CVE-2026-5773 | HIGH |\
+  \ affected | 7.88.1-10+deb12u7 | https://avd.aquasec.com/nvd/cve-2026-5773\n  imagemagick | CVE-2025-53014\
+  \ | CRITICAL | 8:6.9.11.60+dfsg-1.6+deb12u2 -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  imagemagick-6-common | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  imagemagick-6.q16 | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libaom3 | CVE-2023-6879 | CRITICAL | affected | 3.6.0-1+deb12u1 | https://avd.aquasec.com/nvd/cve-2023-6879\n\
+  \  libbluetooth-dev | CVE-2023-44431 | 5.66-1+deb12u2 | https://avd.aquasec.com/nvd/cve-2023-44431\n\
+  \  libbluetooth3 | CVE-2023-44431 | https://avd.aquasec.com/nvd/cve-2023-44431\n  libcurl3-gnutls |\
+  \ CVE-2026-5773 | 7.88.1-10+deb12u7 | https://avd.aquasec.com/nvd/cve-2026-5773\n  libglib2.0-0 | CVE-2025-14087\
+  \ | CRITICAL | 2.74.6-2+deb12u3 -> 2.74.6-2+deb12u8 | https://avd.aquasec.com/nvd/cve-2025-14087\n \
+  \ libglib2.0-bin | CVE-2025-14087 | CRITICAL | https://avd.aquasec.com/nvd/cve-2025-14087\n  libglib2.0-data\
+  \ | CVE-2025-14087 | CRITICAL | https://avd.aquasec.com/nvd/cve-2025-14087\n  libglib2.0-dev | CVE-2025-14087\
+  \ | CRITICAL | https://avd.aquasec.com/nvd/cve-2025-14087\n  libglib2.0-dev-bin | CVE-2025-14087 | CRITICAL\
+  \ | https://avd.aquasec.com/nvd/cve-2025-14087\n  libmagickcore-6-arch-config | CVE-2025-53014 | CRITICAL\
+  \ | 8:6.9.11.60+dfsg-1.6+deb12u2 -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickcore-6-headers | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickcore-6.q16-6 | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickcore-6.q16-6-extra | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickcore-6.q16-dev | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickcore-dev | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickwand-6-headers | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickwand-6.q16-6 | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickwand-6.q16-dev | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libmagickwand-dev | CVE-2025-53014 | CRITICAL | -> 8:6.9.11.60+dfsg-1.6+deb12u4 | https://avd.aquasec.com/nvd/cve-2025-53014\n\
+  \  libssl-dev | CVE-2025-15467 | HIGH | fixed | 3.0.14-1~deb12u2 -> 3.0.18-1~deb12u2 | https://avd.aquasec.com/nvd/cve-2025-15467\n\
+  \  libssl3 | CVE-2025-15467 | CRITICAL | -> 3.0.18-1~deb12u2 | https://avd.aquasec.com/nvd/cve-2025-15467\n\
+  \  openssl | CVE-2025-15467 | CRITICAL | fixed | 3.0.14-1~deb12u2 -> 3.0.18-1~deb12u2 | https://avd.aquasec.com/nvd/cve-2025-15467\n\
+  \nPython (python-pkg)\n===================\nTotal: 4 (HIGH: 4, CRITICAL: 0)\n"
+stack_context: "Service: ml-inference-v2\nImage: python:3.8 (Debian 12.7)\nExposure: internal cluster\
+  \ network only via ClusterIP\nContainer runtime: EKS 1.28 with:\n  - read-only root filesystem\n  -\
+  \ non-root user (uid 1000)\n  - seccomp default profile\n  - no capabilities (drop all)\n  - Pod Security\
+  \ Standard: restricted\n  - NetworkPolicy: allow inbound from api-gateway namespace only\n\nUsage: Machine\
+  \ learning inference service (PyTorch + FastAPI).\nProcesses inference requests via REST API.\nHas outbound\
+  \ internet access for model download from S3.\nNo direct database access; uses internal REST calls to\
+  \ data-service.\nLong-running pods (not batch jobs).\n\nRegulatory context: Processes inference results\
+  \ that may contain\nindirect PII. Subject to UU PDP data protection requirements."
+ground_truth:
+  exploitable_findings:
+  - cve: CVE-2026-5773
+    verdict: exploitable
+    reasoning: Kerentanan SMB pada libcurl dapat dieksploitasi dari jarak jauh melalui koneksi S3.
+    action: Segera patch curl ke versi terbaru atau batasi akses S3.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-15467
+    verdict: exploitable
+    reasoning: RCE pada OpenSSL via inisialisasi berlebih, kritis untuk koneksi TLS/SSL keluar.
+    action: Update OpenSSL ke versi 3.0.18+ segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-69419
+    verdict: exploitable
+    reasoning: RCE pada OpenSSL via PKCS#12, berpotensi dieksploitasi saat unduh model dari S3.
+    action: Update OpenSSL ke versi 3.0.18+ untuk mitigasi.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2026-28387
+    verdict: exploitable
+    reasoning: Use-after-free pada DANE TLSA OpenSSL, dapat menyebabkan RCE dari jarak jauh.
+    action: Update OpenSSL ke versi 3.0.19+.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  non_exploitable_findings:
+  - cve: CVE-2025-53014
+    verdict: not_exploitable
+    reasoning: Kerentanan ImageMagick, tidak digunakan oleh aplikasi ML inference.
+    action: Hapus paket ImageMagick jika tidak diperlukan.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2023-6879
+    verdict: not_exploitable
+    reasoning: Kerentanan libaom, tidak digunakan oleh aplikasi ML inference.
+    action: Hapus paket libaom jika tidak diperlukan.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2023-44431
+    verdict: not_exploitable
+    reasoning: Kerentanan bluez, tidak digunakan di container Kubernetes.
+    action: Hapus paket bluetooth jika tidak diperlukan.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-14087
+    verdict: not_exploitable
+    reasoning: Kerentanan glib, tidak digunakan secara langsung oleh aplikasi.
+    action: Update glib ke versi terbaru.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings:
+  - cve: CVE-2026-5773
+    verdict: partial
+    reasoning: Kerentanan SMB pada libcurl, namun akses S3 mungkin menggunakan HTTPS bukan SMB.
+    action: Verifikasi protokol S3 dan patch curl.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-15467
+    verdict: partial
+    reasoning: RCE pada OpenSSL, namun perlu koneksi keluar yang dimulai oleh aplikasi.
+    action: Update OpenSSL dan batasi akses keluar.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  priority_order:
+  - CVE-2025-15467
+  - CVE-2026-5773
+  - CVE-2025-69419
+  - CVE-2026-28387
+expected_response_includes:
+- (?i)curl
+- (?i)openssl
+- (?i)gnutls
+- (?i)libssh2
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly
+      identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats
+      all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing
+      CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as
+      equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y,
+      deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional
+      tone.
+weight: 1.0

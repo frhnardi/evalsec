@@ -1,0 +1,213 @@
+id: trivy_triage_004
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: nginx:1.18
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: API gateway Nginx 1.18 di Debian 10 EOL, publik via ALB, dengan security
+    controls ketat namun banyak CVE kritis.
+
+    CVEs requiring manual review (79): CVE-2022-1304, CVE-2018-12886, CVE-2019-15847, CVE-2022-1271, CVE-2020-1751,
+    CVE-2020-1752, CVE-2020-6096, CVE-2021-3326, CVE-2021-3999, CVE-2019-8457, CVE-2021-33560, CVE-2017-6363,
+    CVE-2018-14553, CVE-2021-43618, CVE-2020-24659, CVE-2022-2509, CVE-2023-0361, CVE-2024-0553, CVE-2021-36222,
+    CVE-2022-42898, CVE-2021-20305, CVE-2021-3580, CVE-2019-12290, CVE-2023-2953, CVE-2021-39537, CVE-2022-29458,
+    CVE-2023-29491, CVE-2020-11080, CVE-2023-44487, CVE-2022-24407, CVE-2019-13115, CVE-2019-17498, CVE-2020-22218,
+    CVE-2021-3712, CVE-2022-0778, CVE-2022-1292, CVE-2022-2068, CVE-2022-4450, CVE-2023-0215, CVE-2023-0286,
+    CVE-2023-0464, CVE-2019-3843, CVE-2019-3844, CVE-2023-26604, CVE-2023-50387, CVE-2023-50868, CVE-2022-0891,
+    CVE-2022-3970, CVE-2023-25434, CVE-2023-52355, CVE-2023-52356, CVE-2020-36332, CVE-2023-3138, CVE-2023-43787,
+    CVE-2017-16932, CVE-2021-3516, CVE-2021-3517, CVE-2021-3518, CVE-2022-2309, CVE-2022-23308, CVE-2022-40303,
+    CVE-2022-40304, CVE-2024-25062, CVE-2022-44617, CVE-2022-46285, CVE-2022-4883, CVE-2019-5815, CVE-2021-30560,
+    CVE-2020-16156, CVE-2023-31484, CVE-2018-25032, CVE-2023-45853, CVE-2021-22946, CVE-2022-22576, CVE-2022-27781,
+    CVE-2022-27782, CVE-2023-27533, CVE-2023-27534, CVE-2024-2398'
+  total_cves_found: 125
+  cves_selected: 8
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "2026-05-14T09:24:12+07:00\tINFO\t[vulndb] Need to update DB\n2026-05-14T09:24:12+07:00\tINFO\t\
+  [vulndb] Downloading vulnerability DB...\n2026-05-14T09:24:12+07:00\tINFO\t[vulndb] Downloading artifact...\t\
+  repo=\"mirror.gcr.io/aquasec/trivy-db:2\"\n257911122223334445555666777788899999999999999992026-05-14T09:24:23+07:00\t\
+  INFO\t[vulndb] Artifact successfully downloaded\trepo=\"mirror.gcr.io/aquasec/trivy-db:2\"\n2026-05-14T09:24:23+07:00\t\
+  INFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:24:23+07:00\tINFO\t[secret] Secret scanning\
+  \ is enabled\n2026-05-14T09:24:23+07:00\tINFO\t[secret] If your scanning is slow, please try '--scanners\
+  \ vuln' to disable secret scanning\n2026-05-14T09:24:23+07:00\tINFO\t[secret] Please see https://trivy.dev/docs/v0.70/guide/scanner/secret#recommendation\
+  \ for faster secret detection\n2026-05-14T09:24:29+07:00\tINFO\t[javadb] Downloading Java DB...\n2026-05-14T09:24:29+07:00\t\
+  INFO\t[javadb] Downloading artifact...\trepo=\"mirror.gcr.io/aquasec/trivy-java-db:1\"\n2581112223333444555666777788899911111111111111111111111111111111222222222222222222222222222222222233333333333333333333333333333333334444444444444444444444444444444455555555555555555555555555555555666666666666666666666666666666677777777777777777777777777777777788888888888888888888888888888888888888888888888888888888888888888882026-05-14T09:25:35+07:00\t\
+  INFO\t[javadb] Artifact successfully downloaded\trepo=\"mirror.gcr.io/aquasec/trivy-java-db:1\"\n2026-05-14T09:25:35+07:00\t\
+  INFO\t[javadb] Java DB is cached for 3 days. If you want to update the database more frequently, \"\
+  trivy clean --java-db\" command clears the DB cache.\n2026-05-14T09:25:35+07:00\tINFO\tDetected OS\t\
+  family=\"debian\" version=\"10.9\"\n2026-05-14T09:25:35+07:00\tINFO\t[debian] Detecting vulnerabilities...\t\
+  os_version=\"10\" pkg_num=135\n2026-05-14T09:25:35+07:00\tINFO\tNumber of language-specific files\t\
+  num=0\n2026-05-14T09:25:35+07:00\tWARN\tUsing severities from other vendors for some vulnerabilities.\
+  \ Read https://trivy.dev/docs/v0.70/guide/scanner/vulnerability#severity-selection for details.\n2026-05-14T09:25:35+07:00\t\
+  WARN\tThis OS version is no longer supported by the distribution\tfamily=\"debian\" version=\"10.9\"\
+  \n2026-05-14T09:25:35+07:00\tWARN\tThe vulnerability detection may be insufficient because security\
+  \ updates are not provided\n\nReport Summary\n\n┌──────────────────────────┬────────┬─────────────────┬─────────┐\n\
+  │          Target          │  Type  │ Vulnerabilities │ Secrets │\n├──────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ nginx:1.18 (debian 10.9) │ debian │       191       │    -    │\n└──────────────────────────┴────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\nnginx:1.18 (debian 10.9)\n\
+  ========================\nTotal: 191 (HIGH: 149, CRITICAL: 42)\n\n  curl | CVE-2022-32221 | CRITICAL\
+  \ | fixed | 7.64.0-4+deb10u2 -> 7.64.0-4+deb10u4 | https://avd.aquasec.com/nvd/cve-2022-32221\n  e2fsprogs\
+  \ | CVE-2022-1304 | HIGH | affected | 1.44.5-1+deb10u3 | https://avd.aquasec.com/nvd/cve-2022-1304\n\
+  \  gcc-8-base | CVE-2018-12886 | 8.3.0-6 | https://avd.aquasec.com/nvd/cve-2018-12886\n  gzip | CVE-2022-1271\
+  \ | fixed | 1.9-3 -> 1.9-3+deb10u1 | https://avd.aquasec.com/nvd/cve-2022-1271\n  libc-bin | CVE-2021-33574\
+  \ | CRITICAL | fixed | 2.28-10 -> 2.28-10+deb10u2 | https://avd.aquasec.com/nvd/cve-2021-33574\n  libc6\
+  \ | CVE-2021-33574 | CRITICAL | fixed | -> 2.28-10+deb10u2 | https://avd.aquasec.com/nvd/cve-2021-33574\n\
+  \  libcom-err2 | CVE-2022-1304 | affected | 1.44.5-1+deb10u3 | https://avd.aquasec.com/nvd/cve-2022-1304\n\
+  \  libcurl4 | CVE-2022-32221 | CRITICAL | fixed | 7.64.0-4+deb10u2 -> 7.64.0-4+deb10u4 | https://avd.aquasec.com/nvd/cve-2022-32221\n\
+  \  libext2fs2 | CVE-2022-1304 | affected | 1.44.5-1+deb10u3 | https://avd.aquasec.com/nvd/cve-2022-1304\n\
+  \  libgcc1 | CVE-2018-12886 | 1:8.3.0-6 | https://avd.aquasec.com/nvd/cve-2018-12886\n  liblzma5 | CVE-2022-1271\
+  \ | HIGH | 5.2.4-1 -> 5.2.4-1+deb10u1 | https://avd.aquasec.com/nvd/cve-2022-1271\n  libss2 | CVE-2022-1304\
+  \ | affected | 1.44.5-1+deb10u3 | https://avd.aquasec.com/nvd/cve-2022-1304\n  libssl1.1 | CVE-2021-3711\
+  \ | CRITICAL | 1.1.1d-0+deb10u6 -> 1.1.1d-0+deb10u7 | https://avd.aquasec.com/nvd/cve-2021-3711\n  libstdc++6\
+  \ | CVE-2018-12886 | 8.3.0-6 | https://avd.aquasec.com/nvd/cve-2018-12886\n  libwebp6 | CVE-2018-25009\
+  \ | CRITICAL | fixed | 0.6.1-2 -> 0.6.1-2+deb10u1 | https://avd.aquasec.com/nvd/cve-2018-25009\n  openssl\
+  \ | CVE-2021-3711 | CRITICAL | 1.1.1d-0+deb10u6 -> 1.1.1d-0+deb10u7 | https://avd.aquasec.com/nvd/cve-2021-3711"
+stack_context: "Service: api-gateway-v1\nImage: nginx:1.18 (Debian 10.9 - EOL)\nExposure: public internet\
+  \ via ALB on ports 443 and 80 (redirect to 443)\nContainer runtime: EKS 1.28 with:\n  - read-only root\
+  \ filesystem\n  - non-root user (uid 101)\n  - seccomp default profile\n  - no NET_RAW, no SYS_ADMIN\
+  \ capabilities\n  - Pod Security Standard: restricted\n  - NetworkPolicy: allow inbound from ALB only\n\
+  \nUsage: Reverse proxy terminating TLS, routing to backend services.\nServes as the ingress point for\
+  \ all external traffic.\nProxies to: payment-gateway, user-service, notification-service.\nLogs all\
+  \ request/response metadata for audit.\n\nRegulatory context: Supervised under OJK POJK 22/2023 (digital\
+  \ resilience).\nBeing the public-facing entry point, any exploitable CRITICAL vulnerability\ntriggers\
+  \ the 72-hour remediation clock (Article 18)."
+ground_truth:
+  exploitable_findings:
+  - cve: CVE-2022-32221
+    verdict: exploitable
+    reasoning: Curl POST confusion dapat dieksploitasi dari internet melalui ALB.
+    action: Segera upgrade curl ke versi 7.64.0-4+deb10u4.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2024-2961
+    verdict: exploitable
+    reasoning: Out-of-bounds write di iconv dapat menyebabkan RCE dari jarak jauh.
+    action: Upgrade libc6 dan libc-bin ke 2.28-10+deb10u3.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2021-3711
+    verdict: exploitable
+    reasoning: SM2 buffer overflow di OpenSSL dapat dieksploitasi dari jaringan.
+    action: Upgrade openssl dan libssl1.1 ke 1.1.1d-0+deb10u7.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2023-4863
+    verdict: exploitable
+    reasoning: Heap buffer overflow di WebP dapat menyebabkan RCE via gambar.
+    action: Upgrade libwebp6 ke 0.6.1-2+deb10u3.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  non_exploitable_findings:
+  - cve: CVE-2022-1304
+    verdict: not_exploitable
+    reasoning: dan 3 CVE e2fsprogs lainnya. Membutuhkan akses ke filesystem lokal.
+    action: Tidak perlu tindakan segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2018-12886
+    verdict: not_exploitable
+    reasoning: dan 5 CVE gcc lainnya. Hanya relevan untuk arsitektur POWER9.
+    action: Tidak perlu tindakan segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2019-15847
+    verdict: not_exploitable
+    reasoning: dan 5 CVE gcc lainnya. Hanya relevan untuk arsitektur POWER9.
+    action: Tidak perlu tindakan segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2022-1271
+    verdict: not_exploitable
+    reasoning: dan 1 CVE gzip lainnya. Membutuhkan akses lokal untuk menulis file.
+    action: Tidak perlu tindakan segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings: []
+  priority_order:
+  - CVE-2022-32221
+  - CVE-2024-2961
+  - CVE-2021-3711
+  - CVE-2023-4863
+expected_response_includes:
+- (?i)upgrade
+- (?i)eksploitasi
+- (?i)networkpolicy
+- (?i)72.?jam
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly
+      identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats
+      all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing
+      CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as
+      equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y,
+      deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional
+      tone.
+weight: 1.0

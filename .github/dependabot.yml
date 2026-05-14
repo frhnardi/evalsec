@@ -1,0 +1,39 @@
+# ==============================================================================
+# Dependabot — weekly dependency updates
+# ==============================================================================
+
+version: 2
+updates:
+  # Python (uv/pip) — weekly, grouped into a single PR
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Asia/Jakarta"
+    open-pull-requests-limit: 5
+    groups:
+      all-deps:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "automated"
+
+  # GitHub Actions — weekly, grouped into a single PR
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Asia/Jakarta"
+    open-pull-requests-limit: 5
+    groups:
+      all-actions:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "automated"

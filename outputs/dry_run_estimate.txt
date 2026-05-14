@@ -1,0 +1,66 @@
+[
+  {
+    "model": "claude_sonnet_46",
+    "model_id": "anthropic/claude-sonnet-4-6",
+    "cases": 1,
+    "est_total_in": 857,
+    "est_total_out": 1500,
+    "est_total_cost_usd": "0.0251",
+    "case_estimates": [
+      {
+        "case_id": "trivy_triage_001",
+        "est_input_tokens": 857,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0250710"
+      }
+    ]
+  },
+  {
+    "model": "kimi_k2_thinking",
+    "model_id": "moonshotai/kimi-k2-thinking",
+    "cases": 1,
+    "est_total_in": 857,
+    "est_total_out": 1500,
+    "est_total_cost_usd": "0.0125",
+    "case_estimates": [
+      {
+        "case_id": "trivy_triage_001",
+        "est_input_tokens": 857,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0125355"
+      }
+    ]
+  },
+  {
+    "model": "qwen_3_5",
+    "model_id": "qwen/qwen3.5-plus-20260420",
+    "cases": 1,
+    "est_total_in": 857,
+    "est_total_out": 1500,
+    "est_total_cost_usd": "0.0039",
+    "case_estimates": [
+      {
+        "case_id": "trivy_triage_001",
+        "est_input_tokens": 857,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0039428"
+      }
+    ]
+  },
+  {
+    "model": "deepseek_v4_pro",
+    "model_id": "deepseek-chat",
+    "cases": 1,
+    "est_total_in": 857,
+    "est_total_out": 1500,
+    "est_total_cost_usd": "0.0034",
+    "case_estimates": [
+      {
+        "case_id": "trivy_triage_001",
+        "est_input_tokens": 857,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0034285"
+      }
+    ]
+  }
+]

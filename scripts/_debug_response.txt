@@ -1,0 +1,529 @@
+finish_reason: stop
+raw_length: 17652
+cleaned_length: 17640
+--- RAW RESPONSE ---
+```json
+{
+  "exploitable_findings": [
+    {
+      "cve": "CVE-2025-31133",
+      "verdict": "exploitable",
+      "reasoning": "Container escape via mount race. Gosu binary reachable, writable FS.",
+      "action": "Segera upgrade gosu ke versi 1.2.8+."
+    },
+    {
+      "cve": "CVE-2025-52565",
+      "verdict": "exploitable",
+      "reasoning": "Container escape via /dev/console mount. Gosu binary reachable.",
+      "action": "Upgrade gosu ke versi terbaru yang mengandung fix."
+    },
+    {
+      "cve": "CVE-2025-52881",
+      "verdict": "exploitable",
+      "reasoning": "Container escape via arbitrary write. Gosu binary reachable.",
+      "action": "Upgrade gosu ke versi yang sudah diperbaiki."
+    },
+    {
+      "cve": "CVE-2024-21626",
+      "verdict": "exploitable",
+      "reasoning": "File descriptor leak pada runc. Gosu binary reachable.",
+      "action": "Upgrade gosu ke versi 1.1.12+."
+    },
+    {
+      "cve": "CVE-2023-27561",
+      "verdict": "exploitable",
+      "reasoning": "Volume mount race condition. Gosu binary reachable.",
+      "action": "Upgrade gosu ke versi 1.1.5+."
+    },
+    {
+      "cve": "CVE-2025-68121",
+      "verdict": "exploitable",
+      "reasoning": "Validasi sertifikat TLS salah. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.24.13+."
+    },
+    {
+      "cve": "CVE-2025-47907",
+      "verdict": "exploitable",
+      "reasoning": "Race condition pada Postgres Scan. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.23.12+."
+    },
+    {
+      "cve": "CVE-2025-58183",
+      "verdict": "exploitable",
+      "reasoning": "Alokasi tak terbatas di archive/tar. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.24.8+."
+    },
+    {
+      "cve": "CVE-2025-61726",
+      "verdict": "exploitable",
+      "reasoning": "Memory exhaustion di net/url. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.24.12+."
+    },
+    {
+      "cve": "CVE-2025-61728",
+      "verdict": "exploitable",
+      "reasoning": "CPU exhaustion di archive/zip. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.24.11+."
+    },
+    {
+      "cve": "CVE-2025-61729",
+      "verdict": "exploitable",
+      "reasoning": "DoS via crafted certificate. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.24.11+."
+    },
+    {
+      "cve": "CVE-2026-25679",
+      "verdict": "exploitable",
+      "reasoning": "Parsing IPv6 salah di net/url. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.8+."
+    },
+    {
+      "cve": "CVE-2026-32280",
+      "verdict": "exploitable",
+      "reasoning": "DoS di certificate chain building. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.9+."
+    },
+    {
+      "cve": "CVE-2026-32281",
+      "verdict": "exploitable",
+      "reasoning": "DoS via certificate chain validation. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.9+."
+    },
+    {
+      "cve": "CVE-2026-32283",
+      "verdict": "exploitable",
+      "reasoning": "DoS via TLS 1.3 key update. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.9+."
+    },
+    {
+      "cve": "CVE-2026-33811",
+      "verdict": "exploitable",
+      "reasoning": "CNAME lookup DoS. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.10+."
+    },
+    {
+      "cve": "CVE-2026-33814",
+      "verdict": "exploitable",
+      "reasoning": "HTTP/2 SETTINGS infinite loop. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.10+."
+    },
+    {
+      "cve": "CVE-2026-39820",
+      "verdict": "exploitable",
+      "reasoning": "DoS via crafted address parsing. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.10+."
+    },
+    {
+      "cve": "CVE-2026-39836",
+      "verdict": "exploitable",
+      "reasoning": "Panic via NUL byte on Windows. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.10+."
+    },
+    {
+      "cve": "CVE-2026-42499",
+      "verdict": "exploitable",
+      "reasoning": "DoS via consumePhrase parsing. Gosu binary reachable.",
+      "action": "Upgrade Go ke versi 1.25.10+."
+    }
+  ],
+  "non_exploitable_findings": [
+    {
+      "cve": "CVE-2016-2779",
+      "verdict": "not_exploitable",
+      "reasoning": "dan 5 CVE util-linux Debian OS lainnya. TTY hijack butuh akses terminal interaktif.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2018-1000858",
+      "verdict": "not_exploitable",
+      "reasoning": "dan 2 CVE gnupg lainnya. CSRF dirmngr tidak relevan di container non-interaktif.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-1304",
+      "verdict": "not_exploitable",
+      "reasoning": "dan 2 CVE e2fsprogs lainnya. OOB read/write butuh akses filesystem crafted.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2018-12886",
+      "verdict": "not_exploitable",
+      "reasoning": "dan 2 CVE gcc lainnya. Stack protection spill butuh binary exploitation lokal.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2019-12900",
+      "verdict": "not_exploitable",
+      "reasoning": "bzip2 data integrity error. Tidak ada akses file terkompresi dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2019-8457",
+      "verdict": "not_exploitable",
+      "reasoning": "dan 1 CVE sqlite lainnya. Heap OOB read butuh query SQL crafted.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2021-33560",
+      "verdict": "not_exploitable",
+      "reasoning": "libgcrypt ElGamal blinding. Tidak ada kriptografi ElGamal di PostgreSQL.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-29458",
+      "verdict": "not_exploitable",
+      "reasoning": "dan 3 CVE ncurses lainnya. Segfault OOB read butuh terminal interaktif.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2020-16156",
+      "verdict": "not_exploitable",
+      "reasoning": "dan 5 CVE perl lainnya. CPAN signature bypass tidak relevan di container.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2019-3843",
+      "verdict": "not_exploitable",
+      "reasoning": "dan 3 CVE systemd lainnya. DynamicUser SUID/SGID tidak digunakan di container.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2020-1712",
+      "verdict": "not_exploitable",
+      "reasoning": "systemd use-after-free. Polkit queries tidak terjadi di container non-root.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-23806",
+      "verdict": "not_exploitable",
+      "reasoning": "crypto/elliptic IsOnCurve. Gosu tidak menggunakan kriptografi elliptic curve.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-24538",
+      "verdict": "not_exploitable",
+      "reasoning": "html/template backticks. Gosu tidak memproses template HTML.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-24540",
+      "verdict": "not_exploitable",
+      "reasoning": "html/template JavaScript whitespace. Gosu tidak memproses template HTML.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2024-24790",
+      "verdict": "not_exploitable",
+      "reasoning": "net/netip IPv4-mapped IPv6. Gosu tidak menggunakan fungsi Is methods.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2021-39293",
+      "verdict": "not_exploitable",
+      "reasoning": "archive/zip panic. Gosu tidak memproses file ZIP dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2021-41771",
+      "verdict": "not_exploitable",
+      "reasoning": "debug/macho panic. Gosu tidak memproses file Mach-O.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2021-41772",
+      "verdict": "not_exploitable",
+      "reasoning": "archive/zip empty string. Gosu tidak memproses file ZIP.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2021-44716",
+      "verdict": "not_exploitable",
+      "reasoning": "net/http header cache. Gosu tidak berfungsi sebagai server HTTP.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-23772",
+      "verdict": "not_exploitable",
+      "reasoning": "math/big Rat.SetString overflow. Gosu tidak menggunakan big.Rat.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-24675",
+      "verdict": "not_exploitable",
+      "reasoning": "encoding/pem stack overflow. Gosu tidak memproses PEM dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-24921",
+      "verdict": "not_exploitable",
+      "reasoning": "regexp stack exhaustion. Gosu tidak memproses regex dari input eksternal.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-27664",
+      "verdict": "not_exploitable",
+      "reasoning": "net/http GOAWAY handling. Gosu tidak berfungsi sebagai server HTTP.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-28131",
+      "verdict": "not_exploitable",
+      "reasoning": "encoding/xml stack exhaustion. Gosu tidak memproses XML dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-28327",
+      "verdict": "not_exploitable",
+      "reasoning": "crypto/elliptic panic. Gosu tidak menggunakan elliptic curve.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-2879",
+      "verdict": "not_exploitable",
+      "reasoning": "archive/tar memory consumption. Gosu tidak memproses file tar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-2880",
+      "verdict": "not_exploitable",
+      "reasoning": "net/http/httputil ReverseProxy. Gosu tidak berfungsi sebagai proxy.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-29804",
+      "verdict": "not_exploitable",
+      "reasoning": "ELSA-2022-17957. Gosu tidak menggunakan fitur yang terpengaruh.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-30580",
+      "verdict": "not_exploitable",
+      "reasoning": "os/exec code injection. Gosu tidak menjalankan perintah dari input eksternal.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-30630",
+      "verdict": "not_exploitable",
+      "reasoning": "io/fs Glob stack exhaustion. Gosu tidak menggunakan Glob dari input eksternal.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-30631",
+      "verdict": "not_exploitable",
+      "reasoning": "compress/gzip stack exhaustion. Gosu tidak memproses file gzip dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-30632",
+      "verdict": "not_exploitable",
+      "reasoning": "path/filepath Glob stack exhaustion. Gosu tidak menggunakan Glob.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-30633",
+      "verdict": "not_exploitable",
+      "reasoning": "encoding/xml Unmarshal stack exhaustion. Gosu tidak memproses XML.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-30634",
+      "verdict": "not_exploitable",
+      "reasoning": "ELSA-2022-17957. Gosu tidak menggunakan fitur yang terpengaruh.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-30635",
+      "verdict": "not_exploitable",
+      "reasoning": "encoding/gob stack exhaustion. Gosu tidak memproses data gob dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-32189",
+      "verdict": "not_exploitable",
+      "reasoning": "math/big Decode panic. Gosu tidak menggunakan big.Float atau big.Rat.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-41715",
+      "verdict": "not_exploitable",
+      "reasoning": "regexp/syntax memory limit. Gosu tidak memproses regex dari input eksternal.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-41716",
+      "verdict": "not_exploitable",
+      "reasoning": "NUL byte in syscall. Gosu tidak menerima input dari jaringan.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-41720",
+      "verdict": "not_exploitable",
+      "reasoning": "os.DirFS escape Windows. Container berjalan di Linux.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-41722",
+      "verdict": "not_exploitable",
+      "reasoning": "path/filepath Clean traversal. Gosu tidak memproses path dari input eksternal.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-41723",
+      "verdict": "not_exploitable",
+      "reasoning": "HPACK decoding quadratic. Gosu tidak berfungsi sebagai server HTTP/2.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-41724",
+      "verdict": "not_exploitable",
+      "reasoning": "crypto/tls handshake panic. Gosu tidak menerima koneksi TLS dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2022-41725",
+      "verdict": "not_exploitable",
+      "reasoning": "net/http DoS. Gosu tidak berfungsi sebagai server HTTP.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-24534",
+      "verdict": "not_exploitable",
+      "reasoning": "net/http memory allocation. Gosu tidak berfungsi sebagai server HTTP.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-24536",
+      "verdict": "not_exploitable",
+      "reasoning": "net/http DoS. Gosu tidak berfungsi sebagai server HTTP.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-24537",
+      "verdict": "not_exploitable",
+      "reasoning": "go/parser infinite loop. Gosu tidak memproses kode Go dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-24539",
+      "verdict": "not_exploitable",
+      "reasoning": "html/template CSS sanitization. Gosu tidak memproses template HTML.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-29400",
+      "verdict": "not_exploitable",
+      "reasoning": "html/template empty attributes. Gosu tidak memproses template HTML.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-29403",
+      "verdict": "not_exploitable",
+      "reasoning": "runtime setuid/setgid. Gosu berjalan sebagai non-root.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-39325",
+      "verdict": "not_exploitable",
+      "reasoning": "HTTP/2 rapid reset DoS. Gosu tidak berfungsi sebagai server HTTP/2.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-45283",
+      "verdict": "not_exploitable",
+      "reasoning": "filepath \??\ prefix. Container berjalan di Linux.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-45287",
+      "verdict": "not_exploitable",
+      "reasoning": "crypto/tls timing side channel. Gosu tidak menerima koneksi TLS dari luar.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2023-45288",
+      "verdict": "not_exploitable",
+      "reasoning": "HTTP/2 CONTINUATION DoS. Gosu tidak berfungsi sebagai server HTTP/2.",
+      "action": "Tidak perlu tindakan."
+    },
+    {
+      "cve": "CVE-2024-34156",
+      "verdict": "not_exploitable",
+      "reasoning": "encoding/gob Decode panic. Gosu tidak memproses data gob dari luar.",
+      "action": "Tidak perlu tindakan."
+    }
+  ],
+  "partial_findings": [
+    {
+      "cve": "CVE-2022-41723",
+      "verdict": "partial",
+      "reasoning": "HPACK decoding quadratic. Gosu tidak server HTTP/2, tapi library terpakai.",
+      "action": "Upgrade Go untuk mitigasi risiko."
+    },
+    {
+      "cve": "CVE-2023-39325",
+      "verdict": "partial",
+      "reasoning": "HTTP/2 rapid reset DoS. Gosu tidak server HTTP/2, tapi library terpakai.",
+      "action": "Upgrade Go untuk mitigasi risiko."
+    },
+    {
+      "cve": "CVE-2023-45288",
+      "verdict": "partial",
+      "reasoning": "HTTP/2 CONTINUATION DoS. Gosu tidak server HTTP/2, tapi library terpakai.",
+      "action": "Upgrade Go untuk mitigasi risiko."
+    },
+    {
+      "cve": "CVE-2026-33814",
+      "verdict": "partial",
+      "reasoning": "HTTP/2 SETTINGS infinite loop. Gosu tidak server HTTP/2, tapi library terpakai.",
+      "action": "Upgrade Go untuk mitigasi risiko."
+    }
+  ],
+  "priority_order": [
+    "CVE-2025-31133",
+    "CVE-2025-52565",
+    "CVE-2025-52881",
+    "CVE-2024-21626",
+    "CVE-2023-27561",
+    "CVE-2025-68121",
+    "CVE-2025-47907",
+    "CVE-2025-58183",
+    "CVE-2025-61726",
+    "CVE-2025-61728",
+    "CVE-2025-61729",
+    "CVE-2026-25679",
+    "CVE-2026-32280",
+    "CVE-2026-32281",
+    "CVE-2026-32283",
+    "CVE-2026-33811",
+    "CVE-2026-33814",
+    "CVE-2026-39820",
+    "CVE-2026-39836",
+    "CVE-2026-42499",
+    "CVE-2022-41723",
+    "CVE-2023-39325",
+    "CVE-2023-45288"
+  ],
+  "needs_review": [
+    {
+      "cve": "CVE-2019-3843",
+      "reasoning": "systemd DynamicUser. Tidak digunakan, tapi perlu verifikasi."
+    },
+    {
+      "cve": "CVE-2019-3844",
+      "reasoning": "systemd DynamicUser. Tidak digunakan, tapi perlu verifikasi."
+    },
+    {
+      "cve": "CVE-2020-1712",
+      "reasoning": "systemd use-after-free. Polkit tidak aktif, tapi perlu verifikasi."
+    }
+  ],
+  "expected_response_includes": [
+    "(?i)gosu",
+    "(?i)container escape",
+    "(?i)upgrade",
+    "(?i)non-root"
+  ],
+  "deployment_summary": "PostgreSQL 11 di Debian 9 EOL, internal cluster, non-root, writable FS, NetworkPolicy ketat, menyimpan PII.",
+  "total_cves_analyzed": 101
+}
+```

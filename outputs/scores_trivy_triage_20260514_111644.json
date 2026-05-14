@@ -1,0 +1,370 @@
+{
+  "metadata": {
+    "task": "trivy_triage",
+    "prompt_version": "trivy_triage/v1",
+    "judge_model": "claude_opus_47",
+    "graded_at": "2026-05-14T11:16:44.029461+07:00",
+    "source_file": "responses_trivy_triage_20260514_111340.json",
+    "response_count": 6,
+    "model_averages": {
+      "claude_sonnet_46": 66.0,
+      "deepseek_v4_pro": 89.2,
+      "baseline_cvss": 64.0,
+      "baseline_trivy": 56.0,
+      "baseline_epss": 64.0,
+      "baseline_reachability": 76.0
+    }
+  },
+  "grades": [
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "claude_sonnet_46",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 66.0,
+        "pass1_score": 2.0,
+        "pass2_score": 64.0,
+        "format_score": 0.0,
+        "coverage_score": 0.0,
+        "verdict_score": 0.0,
+        "priority_score": 0.0,
+        "regex_score": 100.0,
+        "judge_score": 80.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 10.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": "Invalid JSON: Unterminated string starting at: line 31 column 20 (char 3565)"
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 18,
+            "max_score": 25,
+            "reasoning": "Correctly identifies log4j as exploitable, Pillow as not exploitable, and runc with mitigating controls. However, response is truncated mid-sentence on openssl and never addresses libxml2 at all. Missing 2 of 5 findings."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "Log4j correctly placed at P0. Pillow correctly deferred to P3. However, runc is marked P3 'next quarter' when rubric expects it second (this sprint) given it's a real container escape CVE with only partial mitigation \u2014 should arguably be P2. Missing libxml2/openssl prioritization due to truncation."
+          },
+          {
+            "dimension": "actionability",
+            "score": 24,
+            "max_score": 25,
+            "reasoning": "Excellent specificity: log4j upgrade to 2.17.2 with JVM flags, env vars, WAF rules, credential rotation. Pillow 10.2.0, runc 1.1.12 with verification steps. Cites OJK 22/2023 Article 18 72-hour requirement. Truncation prevents full marks."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 18,
+            "max_score": 25,
+            "reasoning": "No preamble, direct JSON. However, reasoning fields are quite verbose, and the response is truncated mid-output indicating it exceeded reasonable length. Action items are lengthy multi-step lists."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 89.2,
+        "pass1_score": 18.0,
+        "pass2_score": 71.2,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 80.0,
+        "priority_score": 80.0,
+        "regex_score": 100.0,
+        "judge_score": 89.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 90.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 22,
+            "max_score": 25,
+            "reasoning": "Correctly identifies log4j as exploitable, Pillow/openssl/libxml2 as not exploitable. However, runc reasoning is partially flawed \u2014 claims hardening 'prevents' container escape, but CVE-2024-21626 is a runtime-level issue that hardening doesn't fully mitigate; should be P2 partial rather than P3 not_exploitable."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 18,
+            "max_score": 25,
+            "reasoning": "Log4j correctly P0. However, runc is incorrectly demoted to P3/next quarter alongside truly unreachable findings. Expected ranking placed runc second (this sprint) as it's a real container escape risk. Non-exploitable findings tied with runc rather than runc being elevated."
+          },
+          {
+            "dimension": "actionability",
+            "score": 24,
+            "max_score": 25,
+            "reasoning": "Specific version numbers (log4j 2.17.1, Pillow 10.2.0, runc 1.1.12, openssl 1.1.1t, libxml2 2.9.14), JVM flag, WAF rule pattern provided. Cites OJK 22/2023 Article 18 72-hour requirement explicitly."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Direct JSON output, no preamble or disclaimers. Professional and focused."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 64.0,
+        "pass1_score": 12.8,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 20.0,
+        "priority_score": 60.0,
+        "regex_score": 60.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 64.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-50447",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-0286",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-29824",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-44228",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 56.0,
+        "pass1_score": 11.2,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 20.0,
+        "priority_score": 20.0,
+        "regex_score": 60.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 56.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-50447",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-0286",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-29824",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2023-50447",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2023-0286",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-29824",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 64.0,
+        "pass1_score": 12.8,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 20.0,
+        "priority_score": 60.0,
+        "regex_score": 60.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 64.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-50447",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-0286",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-29824",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-44228",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 76.0,
+        "pass1_score": 15.2,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 60.0,
+        "priority_score": 60.0,
+        "regex_score": 60.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 76.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2021-44228",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-44228",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    }
+  ]
+}

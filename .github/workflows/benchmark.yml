@@ -1,0 +1,176 @@
+# ==============================================================================
+# evalsec — Weekly Benchmark + Deploy
+# ==============================================================================
+# Runs every Sunday midnight UTC (or on manual trigger):
+#   1. Install uv + Python 3.12
+#   2. Run benchmark (all models on all test cases)
+#   3. Grade responses (pass 1 regex + pass 2 LLM-as-judge)
+#   4. Build static dashboard
+#   5. Deploy to S3 + invalidate CloudFront
+#   6. Commit scores back to repo for audit trail
+# ==============================================================================
+
+name: benchmark
+
+on:
+  schedule:
+    # Sunday midnight UTC
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+    # Manual trigger with optional dry-run flag
+    inputs:
+      dry_run:
+        description: "Dry run (estimate only, no API calls)"
+        type: boolean
+        default: false
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    # Timeout: 30 minutes max (benchmarking 5 models × N cases)
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+
+    steps:
+      # ----------------------------------------------------------------
+      # 1. Checkout
+      # ----------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ----------------------------------------------------------------
+      # 2. Install uv
+      # ----------------------------------------------------------------
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      # ----------------------------------------------------------------
+      # 3. Setup Python
+      # ----------------------------------------------------------------
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      # ----------------------------------------------------------------
+      # 4. Sync dependencies
+      # ----------------------------------------------------------------
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      # ----------------------------------------------------------------
+      # 5. Run benchmark
+      # ----------------------------------------------------------------
+      - name: Run benchmark
+        run: |
+          if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+            uv run evalsec run --dry-run
+          else
+            uv run evalsec run
+          fi
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+
+      # ----------------------------------------------------------------
+      # 6. Grade responses
+      # ----------------------------------------------------------------
+      - name: Grade responses
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          # Find the latest responses file
+          RESPONSES_FILE=$(ls -t outputs/responses_*.json 2>/dev/null | head -1)
+          if [[ -z "$RESPONSES_FILE" ]]; then
+            echo "No responses file found — skipping grade"
+            exit 0
+          fi
+          echo "Grading: $RESPONSES_FILE"
+          uv run evalsec grade --input "$RESPONSES_FILE"
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      # ----------------------------------------------------------------
+      # 7. Build dashboard
+      # ----------------------------------------------------------------
+      - name: Build dashboard
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          SCORES_FILE=$(ls -t outputs/scores_*.json 2>/dev/null | head -1)
+          if [[ -z "$SCORES_FILE" ]]; then
+            echo "No scores file found — skipping build"
+            exit 0
+          fi
+          echo "Building dashboard from: $SCORES_FILE"
+          RESPONSES_FILE=$(ls -t outputs/responses_*.json 2>/dev/null | head -1)
+          if [[ -n "$RESPONSES_FILE" ]]; then
+            uv run evalsec build --scores "$SCORES_FILE" --responses "$RESPONSES_FILE"
+          else
+            uv run evalsec build --scores "$SCORES_FILE"
+          fi
+
+      # ----------------------------------------------------------------
+      # 8. Configure AWS credentials via OIDC
+      # ----------------------------------------------------------------
+      - name: Configure AWS credentials
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # ----------------------------------------------------------------
+      # 9. Sync dashboard to S3
+      # ----------------------------------------------------------------
+      - name: Deploy dashboard to S3
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}/" --delete
+
+      # ----------------------------------------------------------------
+      # 10. Archive scores to S3 history
+      # ----------------------------------------------------------------
+      - name: Archive scores
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          for f in outputs/scores_*.json; do
+            if [[ -f "$f" ]]; then
+              aws s3 cp "$f" "s3://${{ vars.S3_BUCKET }}/history/"
+            fi
+          done
+
+      # ----------------------------------------------------------------
+      # 11. Invalidate CloudFront cache
+      # ----------------------------------------------------------------
+      - name: Invalidate CloudFront
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.CF_DISTRIBUTION_ID }}" \
+            --paths "/*"
+
+      # ----------------------------------------------------------------
+      # 12. Commit scores back to repo (audit trail)
+      # ----------------------------------------------------------------
+      - name: Create PR with scores
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: add benchmark scores [skip ci]"
+          title: "Benchmark scores — $(date +'%Y-%m-%d')"
+          body: |
+            Automated benchmark scores from the weekly run.
+            See the [live dashboard](https://${{ vars.DOMAIN_NAME }}) for charts.
+          branch: benchmark-scores
+          delete-branch: true
+          labels: automated

@@ -15,7 +15,7 @@ def test_task_case_loads_001_log4shell() -> None:
     yaml_path = TEST_DATA_DIR / "001_log4shell_reachable.yaml"
     assert yaml_path.exists(), f"YAML file not found: {yaml_path}"
 
-    with open(yaml_path, "r") as f:
+    with open(yaml_path) as f:
         raw = yaml.safe_load(f)
 
     case = TaskCase.model_validate(raw)
@@ -73,28 +73,30 @@ def test_task_case_loads_001_log4shell() -> None:
 def test_strict_mode_rejects_extra_fields() -> None:
     """Verify that extra="forbid" rejects unknown fields."""
     with pytest.raises((ValueError, TypeError)):
-        TaskCase.model_validate({
-            "id": "trivy_triage_999",
-            "task": "trivy_triage",
-            "version": "v1",
-            "source": {"type": "synthetic", "unknown_field": "oops"},
-            "input": "scan output",
-            "stack_context": "some context",
-            "ground_truth": {
-                "exploitable_findings": [],
-                "non_exploitable_findings": [],
-                "partial_findings": [],
-                "priority_order": [],
-            },
-            "expected_response_includes": ["test"],
-            "rubric": {
-                "reachability_reasoning": {"max_score": 25, "description": "a"},
-                "prioritization": {"max_score": 25, "description": "b"},
-                "actionability": {"max_score": 25, "description": "c"},
-                "conciseness": {"max_score": 25, "description": "d"},
-            },
-            "extra_field_should_fail": True,
-        })
+        TaskCase.model_validate(
+            {
+                "id": "trivy_triage_999",
+                "task": "trivy_triage",
+                "version": "v1",
+                "source": {"type": "synthetic", "unknown_field": "oops"},
+                "input": "scan output",
+                "stack_context": "some context",
+                "ground_truth": {
+                    "exploitable_findings": [],
+                    "non_exploitable_findings": [],
+                    "partial_findings": [],
+                    "priority_order": [],
+                },
+                "expected_response_includes": ["test"],
+                "rubric": {
+                    "reachability_reasoning": {"max_score": 25, "description": "a"},
+                    "prioritization": {"max_score": 25, "description": "b"},
+                    "actionability": {"max_score": 25, "description": "c"},
+                    "conciseness": {"max_score": 25, "description": "d"},
+                },
+                "extra_field_should_fail": True,
+            }
+        )
 
 
 def test_rubric_item_rejects_negative_score() -> None:
@@ -103,3 +105,139 @@ def test_rubric_item_rejects_negative_score() -> None:
 
     with pytest.raises((ValueError, TypeError)):
         RubricItem(max_score=-5, description="negative should fail")
+
+
+# ---------------------------------------------------------------------------
+# Risk metadata tests (Issue 9)
+# ---------------------------------------------------------------------------
+
+
+def test_finding_detail_backward_compatible_no_metadata() -> None:
+    """FindingDetail without risk metadata fields still loads (backward compat)."""
+    from evalsec.tasks.base import FindingDetail
+
+    detail = FindingDetail(
+        cve="CVE-2021-44228",
+        verdict="exploitable",
+        reasoning="Test reasoning",
+        action="Patch to 2.17.1",
+    )
+    assert detail.cvss_score is None
+    assert detail.epss_percentile is None
+    assert detail.cisa_kev is None
+    assert detail.exploit_maturity is None
+    assert detail.fixed_version is None
+    assert detail.package_path is None
+    assert detail.runtime_exposure is None
+    assert detail.asset_criticality is None
+    assert detail.internet_facing is None
+
+
+def test_finding_detail_with_all_metadata() -> None:
+    """FindingDetail accepts all risk metadata fields."""
+    from evalsec.tasks.base import FindingDetail
+
+    detail = FindingDetail(
+        cve="CVE-2021-44228",
+        verdict="exploitable",
+        reasoning="Reachable via HTTP",
+        action="Patch to 2.17.1",
+        cvss_score=9.8,
+        epss_percentile=97.5,
+        cisa_kev=True,
+        exploit_maturity="active",
+        fixed_version="2.17.1",
+        package_path="/usr/lib/log4j-core-2.14.1.jar",
+        runtime_exposure="network",
+        asset_criticality="critical",
+        internet_facing=True,
+    )
+    assert detail.cvss_score == 9.8
+    assert detail.epss_percentile == 97.5
+    assert detail.cisa_kev is True
+    assert detail.exploit_maturity == "active"
+    assert detail.fixed_version == "2.17.1"
+    assert detail.package_path == "/usr/lib/log4j-core-2.14.1.jar"
+    assert detail.runtime_exposure == "network"
+    assert detail.asset_criticality == "critical"
+    assert detail.internet_facing is True
+
+
+def test_finding_detail_rejects_invalid_cvss_range() -> None:
+    """CVSS score outside 0.0-10.0 range is rejected."""
+    from evalsec.tasks.base import FindingDetail
+
+    with pytest.raises((ValueError, TypeError)):
+        FindingDetail(
+            cve="CVE-2021-44228",
+            verdict="exploitable",
+            reasoning="Test",
+            action="Patch",
+            cvss_score=11.0,
+        )
+
+    with pytest.raises((ValueError, TypeError)):
+        FindingDetail(
+            cve="CVE-2021-44228",
+            verdict="exploitable",
+            reasoning="Test",
+            action="Patch",
+            cvss_score=-1.0,
+        )
+
+
+def test_finding_detail_rejects_invalid_epss_range() -> None:
+    """EPSS percentile outside 0.0-100.0 range is rejected."""
+    from evalsec.tasks.base import FindingDetail
+
+    with pytest.raises((ValueError, TypeError)):
+        FindingDetail(
+            cve="CVE-2021-44228",
+            verdict="exploitable",
+            reasoning="Test",
+            action="Patch",
+            epss_percentile=101.0,
+        )
+
+
+def test_finding_detail_partial_metadata() -> None:
+    """FindingDetail with only some metadata fields set."""
+    from evalsec.tasks.base import FindingDetail
+
+    detail = FindingDetail(
+        cve="CVE-2024-21626",
+        verdict="partial",
+        reasoning="Container escape partial mitigation",
+        action="Patch runc",
+        cvss_score=7.5,
+        cisa_kev=False,
+        # Note: epss_percentile, exploit_maturity, etc. intentionally omitted
+    )
+    assert detail.cvss_score == 7.5
+    assert detail.cisa_kev is False
+    assert detail.epss_percentile is None
+    assert detail.exploit_maturity is None
+    assert detail.fixed_version is None
+    assert detail.internet_facing is None
+
+
+def test_existing_yaml_still_loads_without_metadata() -> None:
+    """The existing 001_log4shell YAML has no risk metadata and still loads."""
+    yaml_path = TEST_DATA_DIR / "001_log4shell_reachable.yaml"
+    assert yaml_path.exists()
+
+    with open(yaml_path) as f:
+        raw = yaml.safe_load(f)
+
+    case = TaskCase.model_validate(raw)
+
+    # Verify all findings have no metadata set
+    for finding in case.ground_truth.exploitable_findings:
+        assert finding.cvss_score is None
+        assert finding.epss_percentile is None
+
+    for finding in case.ground_truth.non_exploitable_findings:
+        assert finding.cvss_score is None
+
+    for finding in case.ground_truth.partial_findings:
+        assert finding.cvss_score is None

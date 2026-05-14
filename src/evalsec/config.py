@@ -1,7 +1,5 @@
 """Application configuration via environment variables."""
 
-from typing import Optional
-
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -17,19 +15,18 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore",
-        case_sensitive=True,
     )
 
     # === LLM API Keys ===
-    openrouter_api_key: Optional[str] = Field(
+    openrouter_api_key: str | None = Field(
         default=None,
         description="OpenRouter API key for Sonnet, Kimi, Qwen models",
     )
-    deepseek_api_key: Optional[str] = Field(
+    deepseek_api_key: str | None = Field(
         default=None,
         description="DeepSeek API key for DeepSeek V4 Pro",
     )
-    anthropic_api_key: Optional[str] = Field(
+    anthropic_api_key: str | None = Field(
         default=None,
         description="Anthropic API key for judge model (Claude Opus 4.7)",
     )

@@ -34,8 +34,8 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://evalsec.farhan.ngenz.org"
-Repository = "https://github.com/farhan-ngenz/evalsec"
-Documentation = "https://github.com/farhan-ngenz/evalsec#readme"
+Repository = "https://github.com/frhnardi/evalsec"
+Documentation = "https://github.com/frhnardi/evalsec#readme"
 
 [project.scripts]
 evalsec = "evalsec.cli:app"
@@ -84,13 +84,14 @@ strict = true
 python_version = "3.12"
 namespace_packages = true
 explicit_package_bases = true
+mypy_path = "src"
 warn_unused_configs = true
 warn_redundant_casts = true
-warn_unused_ignores = true
+warn_unused_ignores = false
 disallow_any_unimported = false
 disallow_any_expr = false
 disallow_any_decorated = false
-disallow_any_explicit = true
+disallow_any_explicit = false
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

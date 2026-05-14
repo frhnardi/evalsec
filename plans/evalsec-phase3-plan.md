@@ -47,12 +47,12 @@ Build **evalsec**, an open-source LLM benchmark for DevSecOps tasks. This plan c
 
 **Checkpoint:** Owner runs test script, sees response with cost_usd.
 
-### 3.4 — Anthropic Adapter (Judge)
-**Goal:** Separate adapter for Claude Opus 4.7 judge model.
+### 3.4 — Judge Model Config (OpenRouter)
+**Goal:** Add Claude Opus 4.7 judge model to the registry. No new adapter needed — reuses `OpenAICompatAdapter` via OpenRouter.
 
-**Files to create:**
-1. `src/evalsec/adapters/anthropic_direct.py` — anthropic SDK with JSON mode
-2. `scripts/test_judge.py` — one-off test script
+**Files to modify/create:**
+1. `src/evalsec/adapters/__init__.py` — add `claude_opus_47` entry ($5/$25 per 1M)
+2. `scripts/test_judge.py` — one-off test script with JSON parsing
 
 **Checkpoint:** Owner runs test script, gets valid Score object.
 

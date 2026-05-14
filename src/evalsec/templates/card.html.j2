@@ -1,0 +1,127 @@
+<article class="model-card" data-rank="{{ entry.rank }}">
+  <div class="card-header">
+    <span class="rank-badge">#{{ entry.rank }}</span>
+    <h3 class="model-name">{{ entry.model_id }}</h3>
+    {% if entry.model_type == "baseline" %}
+    <span class="type-badge type-baseline">baseline</span>
+    {% else %}
+    <span class="type-badge type-llm">LLM</span>
+    {% endif %}
+  </div>
+
+  <div class="card-score">
+    <span class="score-value">{{ "%.1f"|format(entry.avg_score) }}</span>
+    <span class="score-label">composite</span>
+  </div>
+
+  {% if entry.model_type == "baseline" %}
+  <table class="card-dims">
+    <caption>Deterministic scores</caption>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Format</td>
+        <td>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: {{ entry.avg_format }}%"></div>
+            <span class="bar-label">{{ "%.1f"|format(entry.avg_format) }}%</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Coverage</td>
+        <td>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: {{ entry.avg_coverage }}%"></div>
+            <span class="bar-label">{{ "%.1f"|format(entry.avg_coverage) }}%</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Verdict</td>
+        <td>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: {{ entry.avg_verdict }}%"></div>
+            <span class="bar-label">{{ "%.1f"|format(entry.avg_verdict) }}%</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Priority</td>
+        <td>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: {{ entry.avg_priority }}%"></div>
+            <span class="bar-label">{{ "%.1f"|format(entry.avg_priority) }}%</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Regex</td>
+        <td>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: {{ entry.avg_regex }}%"></div>
+            <span class="bar-label">{{ "%.1f"|format(entry.avg_regex) }}%</span>
+          </div>
+        </td>
+      </tr>
+      {% if entry.avg_hallucination_penalty > 0 %}
+      <tr>
+        <td>Hall. Penalty</td>
+        <td>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: {{ entry.avg_hallucination_penalty * 5 }}%; background: var(--danger);"></div>
+            <span class="bar-label">-{{ "%.1f"|format(entry.avg_hallucination_penalty) }}</span>
+          </div>
+        </td>
+      </tr>
+      {% endif %}
+      <tr>
+        <td>Cost</td>
+        <td class="cost-cell">$0.0000</td>
+      </tr>
+    </tbody>
+  </table>
+  {% else %}
+  <table class="card-dims">
+    <caption>Per-dimension scores</caption>
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for dim, avg in entry.dimension_scores.items() %}
+      <tr>
+        <td>{{ dim.replace("_", " ") }}</td>
+        <td>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: {{ avg }}%"></div>
+            <span class="bar-label">{{ "%.1f"|format(avg) }}%</span>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td>Hall. Penalty</td>
+        <td>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: {{ entry.avg_hallucination_penalty * 5 }}%; background: var(--danger);"></div>
+            <span class="bar-label">{{ "%.1f"|format(entry.avg_hallucination_penalty) }}</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  {% endif %}
+
+  <div class="card-cost">
+    <span class="cost-label">Total cost:</span>
+    <span class="cost-value">${{ "%.4f"|format(entry.total_cost) }}</span>
+  </div>
+</article>

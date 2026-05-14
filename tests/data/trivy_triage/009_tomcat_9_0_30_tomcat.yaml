@@ -1,0 +1,301 @@
+id: trivy_triage_009
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: tomcat:9.0.30
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: Legacy portal Tomcat 9.0.30 di Debian 10 EKS, internet-facing, banyak CVE
+    kritis pada Tomcat dan OS base image.
+
+    CVEs requiring manual review (20): CVE-2022-32221, CVE-2020-8231, CVE-2020-8285, CVE-2020-8286, CVE-2021-22946,
+    CVE-2022-27781, CVE-2022-27782, CVE-2020-11501, CVE-2020-13777, CVE-2020-24659, CVE-2022-2509, CVE-2023-0361,
+    CVE-2024-0553, CVE-2020-1751, CVE-2020-6096, CVE-2021-3326, CVE-2021-3999, CVE-2020-10735, CVE-2023-45853,
+    CVE-2019-15847'
+  total_cves_found: 96
+  cves_selected: 10
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "2026-05-14T09:26:46+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:26:46+07:00\t\
+  INFO\t[secret] Secret scanning is enabled\n2026-05-14T09:26:46+07:00\tINFO\t[secret] If your scanning\
+  \ is slow, please try '--scanners vuln' to disable secret scanning\n2026-05-14T09:26:46+07:00\tINFO\t\
+  [secret] Please see https://trivy.dev/docs/v0.70/guide/scanner/secret#recommendation for faster secret\
+  \ detection\n2026-05-14T09:27:05+07:00\tINFO\t[python] Licenses acquired from one or more METADATA files\
+  \ may be subject to additional terms. Use `--debug` flag to see all affected packages.\n2026-05-14T09:27:17+07:00\t\
+  INFO\tDetected OS\tfamily=\"debian\" version=\"10.2\"\n2026-05-14T09:27:17+07:00\tINFO\t[debian] Detecting\
+  \ vulnerabilities...\tos_version=\"10\" pkg_num=178\n2026-05-14T09:27:17+07:00\tINFO\tNumber of language-specific\
+  \ files\tnum=1\n2026-05-14T09:27:17+07:00\tINFO\t[jar] Detecting vulnerabilities...\n2026-05-14T09:27:17+07:00\t\
+  WARN\tUsing severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.70/guide/scanner/vulnerability#severity-selection\
+  \ for details.\n2026-05-14T09:27:17+07:00\tWARN\tThis OS version is no longer supported by the distribution\t\
+  family=\"debian\" version=\"10.2\"\n2026-05-14T09:27:17+07:00\tWARN\tThe vulnerability detection may\
+  \ be insufficient because security updates are not provided\n2026-05-14T09:27:17+07:00\tINFO\tTable\
+  \ result includes only package filenames. Use '--format json' option to get the full path to the package\
+  \ file.\n\nReport Summary\n\n┌──────────────────────────────────────────────────────────────────────────────────┬────────┬─────────────────┬─────────┐\n\
+  │                                      Target                                      │  Type  │ Vulnerabilities\
+  \ │ Secrets │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ tomcat:9.0.30 (debian 10.2)                                                      │ debian │      \
+  \ 352       │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/bin/commons-daemon.jar                                          │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/bin/tomcat-juli.jar                                             │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/annotations-api.jar                                         │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/catalina-ant.jar                                            │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/catalina-ha.jar                                             │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/catalina-ssi.jar                                            │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/catalina-storeconfig.jar                                    │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/catalina-tribes.jar                                         │  jar   │      \
+  \  2        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/catalina.jar                                                │  jar   │      \
+  \  9        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/ecj-4.13.jar                                                │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/el-api.jar                                                  │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/jasper-el.jar                                               │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/jasper.jar                                                  │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/jaspic-api.jar                                              │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/jsp-api.jar                                                 │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/servlet-api.jar                                             │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-api.jar                                              │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-coyote.jar                                           │  jar   │      \
+  \  6        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-dbcp.jar                                             │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-cs.jar                                          │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-de.jar                                          │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-es.jar                                          │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-fr.jar                                          │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-ja.jar                                          │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-ko.jar                                          │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-pt-BR.jar                                       │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-ru.jar                                          │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-i18n-zh-CN.jar                                       │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-jdbc.jar                                             │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-jni.jar                                              │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-util-scan.jar                                        │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-util.jar                                             │  jar   │      \
+  \  1        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/tomcat-websocket.jar                                        │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/lib/websocket-api.jar                                           │  jar   │      \
+  \  0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/webapps.dist/examples/WEB-INF/lib/taglibs-standard-impl-1.2.5.- │  jar   │      \
+  \  0        │    -    │\n│ jar                                                                     \
+  \         │        │                 │         │\n├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤\n\
+  │ usr/local/tomcat/webapps.dist/examples/WEB-INF/lib/taglibs-standard-spec-1.2.5.- │  jar   │      \
+  \  0        │    -    │\n│ jar                                                                     \
+  \         │        │                 │         │\n└──────────────────────────────────────────────────────────────────────────────────┴────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\ntomcat:9.0.30 (debian\
+  \ 10.2)\n===========================\nTotal: 352 (HIGH: 291, CRITICAL: 61)\n\n  curl | CVE-2019-5481\
+  \ | CRITICAL | fixed | 7.64.0-4 -> 7.64.0-4+deb10u1 | https://avd.aquasec.com/nvd/cve-2019-5481\n  git\
+  \ | CVE-2022-23521 | CRITICAL | fixed | 1:2.20.1-2+deb10u1 -> 1:2.20.1-2+deb10u7 | https://avd.aquasec.com/nvd/cve-2022-23521\n\
+  \  git-man | CVE-2022-23521 | CRITICAL | -> 1:2.20.1-2+deb10u7 | https://avd.aquasec.com/nvd/cve-2022-23521\n\
+  \  libbsd0 | CVE-2019-20367 | CRITICAL | 0.9.1-2 -> 0.9.1-2+deb10u1 | https://avd.aquasec.com/nvd/cve-2019-20367\n\
+  \  libcurl3-gnutls | CVE-2019-5481 | CRITICAL | fixed | 7.64.0-4 -> 7.64.0-4+deb10u1 | https://avd.aquasec.com/nvd/cve-2019-5481\n\
+  \  libcurl4 | CVE-2019-5481 | CRITICAL | fixed | -> 7.64.0-4+deb10u1 | https://avd.aquasec.com/nvd/cve-2019-5481\n\
+  \  libdb5.3 | CVE-2019-8457 | CRITICAL | 5.3.28+dfsg1-0.5 | https://avd.aquasec.com/nvd/cve-2019-8457\n\
+  \nJava (jar)\n==========\nTotal: 18 (HIGH: 16, CRITICAL: 2)\n\n  org.apache.tomcat:tomcat-catalina (catalina.jar)\
+  \ | CVE-2024-52316 | CRITICAL | fixed | 9.0.30 -> 9.0.96, 10.1.30, 11.0.1 | https://avd.aquasec.com/nvd/cve-2024-52316"
+stack_context: "Service: legacy-portal-v2\nImage: tomcat:9.0.30 (Debian 10.2 - EOL)\nExposure: public\
+  \ internet via ALB on port 443\nContainer runtime: EKS 1.28 with:\n  - read-only root filesystem\n \
+  \ - non-root user (uid 10001)\n  - seccomp default profile\n  - no SYS_ADMIN capability\n  - Pod Security\
+  \ Standard: restricted\n  - NetworkPolicy: allow inbound from ALB only\n\nUsage: Java 11 (Spring Boot\
+  \ 2.3) web application serving the customer portal.\nHandles: login, account overview, transaction history,\
+  \ profile updates.\nExposes REST and SOAP endpoints. Uses log4j 2.x for logging.\nDirect database access\
+  \ to user-db (PostgreSQL 11).\n\nCode reachability (verified via static analysis):\n  - log4j-core:\
+  \ USED extensively throughout logging framework.\n    Reachable from public HTTP handlers (all user-facing\
+  \ endpoints log request data).\n  - catalina.jar / coyote.jar: Core Tomcat libraries. Reachable by definition.\n\
+  \  - Additional libraries may contain vulnerabilities.\n\nRegulatory context: OJK POJK 22/2023 applies.\
+  \ As an internet-facing service,\nCRITICAL exploitable vulnerabilities require 72-hour remediation.\n\
+  Customer PII handled, UU PDP applies."
+ground_truth:
+  exploitable_findings:
+  - cve: CVE-2025-24813
+    verdict: exploitable
+    reasoning: RCE via partial PUT pada Tomcat, internet-facing, kode reachable.
+    action: Segera upgrade Tomcat ke 9.0.99 atau terapkan WAF rule.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2024-52316
+    verdict: exploitable
+    reasoning: Authentication bypass pada Jakarta Auth API, internet-facing, kritis.
+    action: Upgrade Tomcat ke 9.0.96 atau lebih baru segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2024-50379
+    verdict: exploitable
+    reasoning: RCE via TOCTOU JSP compilation, internet-facing, reachable.
+    action: Upgrade Tomcat ke 9.0.98. Nonaktifkan JSP jika tidak perlu.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-55752
+    verdict: exploitable
+    reasoning: Directory traversal via rewrite berpotensi RCE, internet-facing.
+    action: Upgrade Tomcat ke 9.0.109. Review konfigurasi rewrite.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  non_exploitable_findings:
+  - cve: CVE-2019-5481
+    verdict: not_exploitable
+    reasoning: Curl double free, tapi aplikasi tidak menggunakan curl secara langsung.
+    action: Pantau jika ada dependensi yang menggunakan curl.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2022-23521
+    verdict: not_exploitable
+    reasoning: Git integer overflow, git tidak digunakan di runtime aplikasi.
+    action: Hapus git dari image jika tidak diperlukan.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2019-20367
+    verdict: not_exploitable
+    reasoning: Libbsd OOB read, tidak digunakan langsung oleh aplikasi.
+    action: Pantau jika ada dependensi.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2019-8457
+    verdict: not_exploitable
+    reasoning: Sqlite OOB read, tidak digunakan langsung oleh aplikasi.
+    action: Pantau jika ada dependensi.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings:
+  - cve: CVE-2020-8169
+    verdict: partial
+    reasoning: Partial password leak via DNS redirect, mitigasi dengan HTTPS.
+    action: Pastikan semua traffic menggunakan HTTPS dan HSTS.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2020-8177
+    verdict: partial
+    reasoning: Curl overwrite local files, terbatas oleh RO filesystem.
+    action: Pastikan RO filesystem aktif dan tidak ada write mount.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  priority_order:
+  - CVE-2025-24813
+  - CVE-2024-52316
+  - CVE-2024-50379
+  - CVE-2025-55752
+  - CVE-2020-8169
+  - CVE-2020-8177
+expected_response_includes:
+- (?i)tomcat
+- (?i)upgrade
+- (?i)internet-facing
+- (?i)rce
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly
+      identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats
+      all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing
+      CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as
+      equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y,
+      deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional
+      tone.
+weight: 1.0

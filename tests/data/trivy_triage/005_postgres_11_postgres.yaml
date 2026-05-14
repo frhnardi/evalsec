@@ -1,0 +1,240 @@
+id: trivy_triage_005
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: postgres:11
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: PostgreSQL 11 di Debian 9 EOL, internal cluster, non-root, seccomp default,
+    NetworkPolicy ketat, menyimpan PII dan MFA secrets.
+
+    CVEs requiring manual review (12): CVE-2016-2779, CVE-2018-1000858, CVE-2022-1304, CVE-2018-12886,
+    CVE-2019-12900, CVE-2019-8457, CVE-2021-33560, CVE-2022-29458, CVE-2020-16156, CVE-2019-3843, CVE-2019-3844,
+    CVE-2020-1712'
+  total_cves_found: 75
+  cves_selected: 8
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "2026-05-14T09:26:33+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:26:33+07:00\t\
+  INFO\t[secret] Secret scanning is enabled\n2026-05-14T09:26:33+07:00\tINFO\t[secret] If your scanning\
+  \ is slow, please try '--scanners vuln' to disable secret scanning\n2026-05-14T09:26:33+07:00\tINFO\t\
+  [secret] Please see https://trivy.dev/docs/v0.70/guide/scanner/secret#recommendation for faster secret\
+  \ detection\n2026-05-14T09:26:44+07:00\tINFO\tDetected OS\tfamily=\"debian\" version=\"9.13\"\n2026-05-14T09:26:44+07:00\t\
+  INFO\t[debian] Detecting vulnerabilities...\tos_version=\"9\" pkg_num=132\n2026-05-14T09:26:44+07:00\t\
+  INFO\tNumber of language-specific files\tnum=1\n2026-05-14T09:26:44+07:00\tINFO\t[gobinary] Detecting\
+  \ vulnerabilities...\n2026-05-14T09:26:44+07:00\tWARN\tUsing severities from other vendors for some\
+  \ vulnerabilities. Read https://trivy.dev/docs/v0.70/guide/scanner/vulnerability#severity-selection\
+  \ for details.\n2026-05-14T09:26:44+07:00\tWARN\tThis OS version is no longer supported by the distribution\t\
+  family=\"debian\" version=\"9.13\"\n2026-05-14T09:26:44+07:00\tWARN\tThe vulnerability detection may\
+  \ be insufficient because security updates are not provided\n\nReport Summary\n\n┌────────────────────────────────────────┬──────────┬─────────────────┬─────────┐\n\
+  │                 Target                 │   Type   │ Vulnerabilities │ Secrets │\n├────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ postgres:11 (debian 9.13)              │  debian  │       38        │    -    │\n├────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ usr/local/bin/gosu                     │ gobinary │       63        │    -    │\n├────────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
+  │ /etc/ssl/private/ssl-cert-snakeoil.key │   text   │        -        │    1    │\n└────────────────────────────────────────┴──────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\npostgres:11 (debian 9.13)\n\
+  =========================\nTotal: 38 (HIGH: 35, CRITICAL: 3)\n\n  dirmngr | CVE-2018-1000858 | 2.1.18-8~deb9u4\
+  \ | https://avd.aquasec.com/nvd/cve-2018-1000858\n  gnupg | CVE-2018-1000858 | affected | 2.1.18-8~deb9u4\
+  \ | https://avd.aquasec.com/nvd/cve-2018-1000858\n  libbz2-1.0 | CVE-2019-12900 | CRITICAL | 1.0.6-8.1\
+  \ | https://avd.aquasec.com/nvd/cve-2019-12900\n  libdb5.3 | CVE-2019-8457 | CRITICAL | 5.3.28-12+deb9u1\
+  \ | https://avd.aquasec.com/nvd/cve-2019-8457\n  libgcrypt20 | CVE-2021-33560 | affected | 1.7.6-2+deb9u4\
+  \ | https://avd.aquasec.com/nvd/cve-2021-33560\n  libsqlite3-0 | CVE-2019-8457 | CRITICAL | 3.16.2-5+deb9u3\
+  \ | https://avd.aquasec.com/nvd/cve-2019-8457\n\nusr/local/bin/gosu (gobinary)\n=============================\n\
+  Total: 63 (HIGH: 58, CRITICAL: 5)\n\n  github.com/opencontainers/runc | CVE-2023-27561 | HIGH | fixed\
+  \ | v1.0.1 -> 1.1.5 | https://avd.aquasec.com/nvd/cve-2023-27561\n\n/etc/ssl/private/ssl-cert-snakeoil.key\
+  \ (secrets)\n================================================\nTotal: 1 (HIGH: 1, CRITICAL: 0)\n\nHIGH:\
+  \ AsymmetricPrivateKey (private-key)\n════════════════════════════════════════\nAsymmetric Private Key\n\
+  ────────────────────────────────────────\n /etc/ssl/private/ssl-cert-snakeoil.key:2-27 (offset: 28 bytes)\
+  \ (added by 'set -ex; \t\texport PYTHONDONTWRITEBYTECOD')\n────────────────────────────────────────\n\
+  \   1   -----BEGIN PRIVATE KEY-----\n   2 ┌ ****************************************************************\n\
+  \   3 │ ****************************************************************\n   4 │ ****************************************************************\n\
+  \   5 │ ****************************************************************\n   6 │ ****************************************************************\n\
+  \   7 │ ****************************************************************\n   8 │ ****************************************************************\n\
+  \   9 │ ****************************************************************\n  10 │ ****************************************************************\n\
+  \  11 │ ****************************************************************\n  12 │ ****************************************************************\n\
+  \  13 │ ****************************************************************\n  14 │ ****************************************************************\n\
+  \  15 │ ****************************************************************\n  16 │ ****************************************************************\n\
+  \  17 │ ****************************************************************\n  18 │ ****************************************************************\n\
+  \  19 │ ****************************************************************\n  20 │ ****************************************************************\n\
+  \  21 │ ****************************************************************\n  22 │ ****************************************************************\n\
+  \  23 │ ****************************************************************\n  24 │ ****************************************************************\n\
+  \  25 │ ****************************************************************\n  26 │ ****************************************************************\n\
+  \  27 └ ************************\n  28   -----END PRIVATE KEY-----\n────────────────────────────────────────\n\
+  \n"
+stack_context: "Service: user-db-primary\nImage: postgres:11 (Debian 9.13 - EOL)\nExposure: internal cluster\
+  \ network only via ClusterIP (port 5432)\nContainer runtime: EKS 1.28 with:\n  - writable filesystem\
+  \ (required for PostgreSQL data)\n  - non-root user (uid 999)\n  - seccomp default profile\n  - no SYS_ADMIN,\
+  \ no NET_RAW capabilities\n  - Pod Security Standard: baseline\n  - NetworkPolicy: allow inbound from\
+  \ user-service namespace only\n  - Volume: 100 GB gp3 EBS volume (encrypted at rest with KMS)\n  - StatefulSet\
+  \ with automated backup cronjob\n\nUsage: Primary database for user-service (account management).\n\
+  Stores: user profiles, hashed passwords, MFA secrets, session tokens.\nBuilt-in PostgreSQL SSL/TLS configured\
+  \ for in-cluster traffic.\n\nRegulatory context: Contains PII under UU PDP. Database compromise\nwould\
+  \ constitute a data breach with mandatory notification.\nOJK POJK 22/2023 Article 18 applies for critical\
+  \ infrastructure."
+ground_truth:
+  exploitable_findings:
+  - cve: CVE-2025-31133
+    verdict: exploitable
+    reasoning: Container escape via mount race, gosu binary rentan, akses root di host.
+    action: Update gosu ke versi 1.2.8+ atau rebuild image.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-52565
+    verdict: exploitable
+    reasoning: Container escape via /dev/console mount, gosu rentan, akses host.
+    action: Update gosu ke versi 1.2.8+ atau rebuild image.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-52881
+    verdict: exploitable
+    reasoning: Container escape via arbitrary write, gosu rentan, akses host.
+    action: Update gosu ke versi 1.2.8+ atau rebuild image.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2024-21626
+    verdict: exploitable
+    reasoning: File descriptor leak di runc, gosu rentan, akses host filesystem.
+    action: Update gosu ke versi 1.1.12+ atau rebuild image.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  non_exploitable_findings:
+  - cve: CVE-2019-12900
+    verdict: not_exploitable
+    reasoning: 'dan 1 CVE bzip2 Debian OS lainnya. Alasan: data integrity error, tidak mempengaruhi kerahasiaan
+      data.'
+    action: Update base image ke Debian 12.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2019-8457
+    verdict: not_exploitable
+    reasoning: 'dan 1 CVE sqlite Debian OS lainnya. Alasan: heap OOB read, butuh query SQL berbahaya,
+      tidak ada di PostgreSQL.'
+    action: Update base image ke Debian 12.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2018-1000858
+    verdict: not_exploitable
+    reasoning: 'dan 3 CVE gnupg Debian OS lainnya. Alasan: dirmngr tidak berjalan, CSRF tidak relevan.'
+    action: Update base image ke Debian 12.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2021-33560
+    verdict: not_exploitable
+    reasoning: 'dan 1 CVE libgcrypt Debian OS lainnya. Alasan: ElGamal encryption, tidak digunakan oleh
+      PostgreSQL.'
+    action: Update base image ke Debian 12.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings:
+  - cve: CVE-2025-31133
+    verdict: partial
+    reasoning: Container escape via mount race, butuh akses host yang terbatas.
+    action: Update gosu dan batasi mount points.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-52565
+    verdict: partial
+    reasoning: Container escape via /dev/console, butuh akses device yang dibatasi.
+    action: Update gosu dan nonaktifkan console access.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  priority_order:
+  - CVE-2025-31133
+  - CVE-2025-52565
+  - CVE-2025-52881
+  - CVE-2024-21626
+expected_response_includes:
+- (?i)update.*gosu
+- (?i)rebuild.*image
+- (?i)update.*base.*image
+- (?i)debian.*12
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly
+      identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats
+      all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing
+      CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as
+      equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y,
+      deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional
+      tone.
+weight: 1.0

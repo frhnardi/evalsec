@@ -1,0 +1,237 @@
+id: trivy_triage_003
+task: trivy_triage
+version: v1
+source:
+  type: ai_assisted_deepseek_v4
+  image: mysql:5.7
+  scanned_at: 2026-05-14
+  trivy_version: auto_detected
+  url: null
+  notes: 'Deployment summary: MySQL 5.7 di Oracle Linux 7.9 EOL, internal cluster, non-root, writable
+    FS, NetworkPolicy ketat, compliance OJK/PCI-DSS.
+
+    CVEs requiring manual review (2): CVE-2026-39836, CVE-2023-45283'
+  total_cves_found: 73
+  cves_selected: 8
+  selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
+input: "2026-05-14T09:50:04+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:50:04+07:00\t\
+  INFO\t[secret] Secret scanning is enabled\n2026-05-14T09:50:04+07:00\tINFO\t[secret] If your scanning\
+  \ is slow, please try '--scanners vuln' to disable secret scanning\n2026-05-14T09:50:04+07:00\tINFO\t\
+  [secret] Please see https://trivy.dev/docs/v0.70/guide/scanner/secret#recommendation for faster secret\
+  \ detection\n2026-05-14T09:50:18+07:00\tINFO\t[python] Licenses acquired from one or more METADATA files\
+  \ may be subject to additional terms. Use `--debug` flag to see all affected packages.\n2026-05-14T09:50:19+07:00\t\
+  INFO\tDetected OS\tfamily=\"oracle\" version=\"7.9\"\n2026-05-14T09:50:19+07:00\tINFO\t[oracle] Detecting\
+  \ vulnerabilities...\tos_version=\"7\" pkg_num=117\n2026-05-14T09:50:19+07:00\tINFO\tNumber of language-specific\
+  \ files\tnum=2\n2026-05-14T09:50:19+07:00\tINFO\t[gobinary] Detecting vulnerabilities...\n2026-05-14T09:50:19+07:00\t\
+  INFO\t[python-pkg] Detecting vulnerabilities...\n2026-05-14T09:50:19+07:00\tWARN\tUsing severities from\
+  \ other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.70/guide/scanner/vulnerability#severity-selection\
+  \ for details.\n2026-05-14T09:50:19+07:00\tWARN\tThis OS version is no longer supported by the distribution\t\
+  family=\"oracle\" version=\"7.9\"\n2026-05-14T09:50:19+07:00\tWARN\tThe vulnerability detection may\
+  \ be insufficient because security updates are not provided\n2026-05-14T09:50:19+07:00\tINFO\tTable\
+  \ result includes only package filenames. Use '--format json' option to get the full path to the package\
+  \ file.\n\nReport Summary\n\n┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐\n\
+  │                                      Target                                      │    Type    │ Vulnerabilities\
+  \ │ Secrets │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ mysql:5.7 (oracle 7.9)                                                           │   oracle   │  \
+  \     28        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/PyNaCl-1.4.0.dist-info/METADATA      │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/PyYAML-6.0.1.dist-info/METADATA      │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/antlr4_python3_runtime-4.13.1.dist-- │ python-pkg │  \
+  \      0        │    -    │\n│ info/METADATA                                                       \
+  \             │            │                 │         │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/bcrypt-3.2.2.dist-info/METADATA      │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/certifi-2023.7.22.dist-info/METADATA │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/cffi-1.15.1.dist-info/METADATA       │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/circuitbreaker-1.4.0.dist-info/META- │ python-pkg │  \
+  \      0        │    -    │\n│ DATA                                                                \
+  \             │            │                 │         │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/cryptography-3.2.1.dist-info/METADA- │ python-pkg │  \
+  \      4        │    -    │\n│ TA                                                                  \
+  \             │            │                 │         │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/oci-2.109.0.dist-info/METADATA       │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/paramiko-2.11.0.dist-info/METADATA   │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/pip-23.0.1.dist-info/METADATA        │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/pyOpenSSL-20.0.1.dist-info/METADATA  │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/pycparser-2.21.dist-info/METADATA    │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/python_dateutil-2.8.2.dist-info/MET- │ python-pkg │  \
+  \      0        │    -    │\n│ ADATA                                                               \
+  \             │            │                 │         │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/pytz-2023.3.dist-info/METADATA       │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/setuptools-58.1.0.dist-info/METADATA │ python-pkg │  \
+  \      3        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/six-1.16.0.dist-info/METADATA        │ python-pkg │  \
+  \      0        │    -    │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/lib/mysqlsh/lib/python3.9/site-packages/typing_extensions-4.5.0.dist-info/M- │ python-pkg │  \
+  \      0        │    -    │\n│ ETADATA                                                             \
+  \             │            │                 │         │\n├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤\n\
+  │ usr/local/bin/gosu                                                               │  gobinary  │  \
+  \     54        │    -    │\n└──────────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘\n\
+  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\nmysql:5.7 (oracle 7.9)\n\
+  ======================\nTotal: 28 (HIGH: 28, CRITICAL: 0)\n\n  glibc | CVE-2024-2961 | HIGH | fixed\
+  \ | 2.17-326.0.9.el7_9 -> 2.17-326.0.9.el7_9.3 | https://avd.aquasec.com/nvd/cve-2024-2961\n  glibc-common\
+  \ | CVE-2024-2961 | https://avd.aquasec.com/nvd/cve-2024-2961\n  krb5-libs | CVE-2024-3596 | 1.15.1-55.0.1.el7_9\
+  \ -> 1.15.1-55.0.7.el7_9 | https://avd.aquasec.com/nvd/cve-2024-3596\n  python | CVE-2026-4519 | 2.7.5-94.0.1.el7_9\
+  \ -> 2.7.5-94.0.7.el7_9 | https://avd.aquasec.com/nvd/cve-2026-4519\n\nPython (python-pkg)\n===================\n\
+  Total: 7 (HIGH: 7, CRITICAL: 0)\n\n  cryptography (METADATA) | CVE-2020-36242 | HIGH | fixed | 3.2.1\
+  \ -> 3.3.2 | https://avd.aquasec.com/nvd/cve-2020-36242\n\nusr/local/bin/gosu (gobinary)\n=============================\n\
+  Total: 54 (HIGH: 50, CRITICAL: 4)\n\n  github.com/opencontainers/runc | CVE-2023-27561 | HIGH | fixed\
+  \ | v1.1.0 -> 1.1.5 | https://avd.aquasec.com/nvd/cve-2023-27561"
+stack_context: "Service: transaction-db-v1\nImage: mysql:5.7 (Oracle Linux 7.9 - EOL)\nExposure: internal\
+  \ cluster network only via ClusterIP (port 3306)\nContainer runtime: EKS 1.28 with:\n  - writable filesystem\
+  \ (required for MySQL data)\n  - non-root user (uid 27)\n  - seccomp default profile\n  - no SYS_ADMIN,\
+  \ no NET_RAW capabilities\n  - Pod Security Standard: baseline\n  - NetworkPolicy: allow inbound from\
+  \ payment-gateway namespace only\n  - Volume: 500 GB gp3 EBS volume (encrypted at rest with KMS)\n\n\
+  Usage: Transaction database for payment-gateway service.\nStores: transaction records, merchant settlement\
+  \ data, audit logs.\nNo direct public access. Accessed only by payment-gateway service pods.\nAutomated\
+  \ backups via mysqldump cronjob to S3.\n\nRegulatory context: Financial transaction data under OJK POJK\
+  \ 22/2023.\nPCI-DSS compliance required (cardholder data environment adjacent).\nData retention policies\
+  \ apply per Indonesian banking regulations."
+ground_truth:
+  exploitable_findings:
+  - cve: CVE-2024-2961
+    verdict: exploitable
+    reasoning: RCE via iconv, reachable melalui input data MySQL dari payment-gateway.
+    action: Segera patch glibc ke versi fixed atau upgrade image.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2024-21626
+    verdict: exploitable
+    reasoning: FD leak runc, bisa container escape walau non-root, akses host filesystem.
+    action: Upgrade runc ke >=1.1.12, rebuild image gosu.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-31133
+    verdict: exploitable
+    reasoning: Container escape via mount race, bypass seccomp default, akses host.
+    action: Upgrade runc ke >=1.2.8, patch segera.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2025-52565
+    verdict: exploitable
+    reasoning: Container escape via /dev/console mount, ancaman tinggi untuk host.
+    action: Upgrade runc ke versi terbaru, rebuild image.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  non_exploitable_findings:
+  - cve: CVE-2024-3596
+    verdict: not_exploitable
+    reasoning: Forgery attack di freeradius, tidak ada freeradius di image ini.
+    action: Tidak perlu tindakan.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2024-37371
+    verdict: not_exploitable
+    reasoning: GSS message token handling di krb5, tidak ada layanan GSSAPI aktif.
+    action: Tidak perlu tindakan.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2026-4519
+    verdict: not_exploitable
+    reasoning: Command injection via webbrowser.open, tidak ada GUI/browser di container.
+    action: Tidak perlu tindakan.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  - cve: CVE-2020-36242
+    verdict: not_exploitable
+    reasoning: Integer overflow di cryptography, hanya untuk MySQL Shell yang jarang dipakai.
+    action: Tidak perlu tindakan.
+    cvss_score: null
+    epss_percentile: null
+    cisa_kev: null
+    exploit_maturity: null
+    fixed_version: null
+    package_path: null
+    runtime_exposure: null
+    asset_criticality: null
+    internet_facing: null
+  partial_findings: []
+  priority_order:
+  - CVE-2024-2961
+  - CVE-2024-21626
+  - CVE-2025-31133
+  - CVE-2025-52565
+expected_response_includes:
+- (?i)patch
+- (?i)upgrade
+- (?i)rebuild
+- (?i)segera
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly
+      identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats
+      all CRITICAL as exploitable.'
+  prioritization:
+    max_score: 25
+    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing
+      CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as
+      equally urgent.
+  actionability:
+    max_score: 25
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y,
+      deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
+  conciseness:
+    max_score: 25
+    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional
+      tone.
+weight: 1.0

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en" data-color-scheme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="evalsec — DevSecOps LLM Benchmark">
+  <meta property="og:description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://evalsec.farhan.ngenz.org">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="evalsec — DevSecOps LLM Benchmark">
+  <meta name="twitter:description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
+
+  <title>evalsec — DevSecOps LLM Benchmark</title>
+
+  <!-- Chart.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js"></script>
+
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f8f9fa;
+      --surface:  #ffffff;
+      --border:   #dee2e6;
+      --text:     #212529;
+      --muted:    #6c757d;
+      --accent:   #4361ee;
+      --accent2:  #3a0ca3;
+      --success:  #2d6a4f;
+      --warn:     #e85d04;
+      --danger:   #d00000;
+      --warn-bg:  rgba(232, 93, 4, 0.12);
+      --success-bg: rgba(45, 106, 79, 0.10);
+      --font:     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --radius:   10px;
+      --shadow:   0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:       #0d1117;
+        --surface:  #161b22;
+        --border:   #30363d;
+        --text:     #e6edf3;
+        --muted:    #8b949e;
+        --accent:   #58a6ff;
+        --accent2:  #a371f7;
+        --success:  #3fb950;
+        --warn:     #d29922;
+        --danger:   #f85149;
+        --warn-bg:  rgba(210, 153, 34, 0.15);
+        --success-bg: rgba(63, 185, 80, 0.12);
+        --shadow:   0 1px 3px rgba(0,0,0,0.3);
+      }
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    header .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    header .meta {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.9rem;
+    }
+
+    header .meta span + span::before {
+      content: " · ";
+    }
+
+    header .context-line {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+      opacity: 0.85;
+    }
+
+    .beta-badge {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      background: var(--warn-bg);
+      color: var(--warn);
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      border-radius: 4px;
+      vertical-align: middle;
+      border: 1px solid var(--warn);
+    }
+
+    /* ── Hero Stats Bar ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--accent);
+      line-height: 1.1;
+      word-break: break-word;
+    }
+
+    .stat-value.small {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-top: 0.45rem;
+      font-weight: 600;
+    }
+
+    .stat-sub {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      opacity: 0.8;
+    }
+
+    /* ── Charts ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .chart-card h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .chart-card .chart-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      margin-top: -0.5rem;
+    }
+
+    .chart-card canvas {
+      max-height: 340px;
+    }
+
+    .baseline-chart {
+      margin-bottom: 2rem;
+    }
+
+    .baseline-chart canvas {
+      max-height: 240px;
+    }
+
+    /* ── Leaderboard Table ── */
+    .leaderboard {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .leaderboard .lb-header {
+      padding: 1.1rem 1.25rem 0.5rem;
+    }
+
+    .leaderboard h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .leaderboard .lb-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .leaderboard.baseline-board h2 {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0.7rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      border-bottom: 2px solid var(--border);
+      background: rgba(127, 127, 127, 0.04);
+    }
+
+    tbody td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(127, 127, 127, 0.04); }
+
+    tbody tr.top-row {
+      background: var(--success-bg);
+    }
+    tbody tr.top-row:hover {
+      background: var(--success-bg);
+      filter: brightness(1.05);
+    }
+
+    .baseline-board tbody td {
+      color: var(--muted);
+    }
+    .baseline-board tbody td.model-name-cell {
+      color: var(--text);
+    }
+
+    .rank-cell {
+      font-weight: 800;
+      width: 3.5rem;
+      font-size: 1.05rem;
+    }
+
+    .medal { font-size: 1.25rem; }
+
+    .model-name-cell {
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .model-id-mono {
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 400;
+      display: block;
+      margin-top: 0.15rem;
+    }
+
+    .score-cell {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .score-bar-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .score-bar {
+      display: inline-block;
+      height: 6px;
+      border-radius: 3px;
+      vertical-align: middle;
+      background: var(--accent);
+      max-width: 60px;
+    }
+
+    .cost-cell {
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ── Badges ── */
+    .type-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .type-llm {
+      background: rgba(67, 97, 238, 0.15);
+      color: var(--accent);
+    }
+    .type-baseline {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .trunc-badge {
+      display: inline-block;
+      padding: 0.12rem 0.45rem;
+      background: var(--warn-bg);
+      color: var(--warn);
+      font-size: 0.68rem;
+      font-weight: 700;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      border: 1px solid var(--warn);
+      white-space: nowrap;
+    }
+
+    .trunc-note {
+      font-size: 0.7rem;
+      color: var(--warn);
+      margin-top: 0.4rem;
+      line-height: 1.4;
+      max-width: 30ch;
+    }
+
+    /* ── Baseline Divider ── */
+    .baseline-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2.5rem 0 1.5rem;
+      color: var(--muted);
+    }
+    .baseline-divider::before,
+    .baseline-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .baseline-divider span {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ── Model Cards Grid ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .model-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.25rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .model-name {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .card-score {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .score-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .score-label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .card-dims {
+      width: 100%;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-dims caption {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      text-align: left;
+    }
+
+    .card-dims th,
+    .card-dims td {
+      padding: 0.35rem 0;
+      border: none;
+    }
+
+    .card-dims th {
+      color: var(--muted);
+      font-weight: 400;
+      width: 50%;
+    }
+
+    .bar-wrapper {
+      position: relative;
+      height: 1rem;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .bar-label {
+      position: relative;
+      display: block;
+      padding: 0 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1rem;
+      white-space: nowrap;
+    }
+
+    .card-cost {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .cost-label { color: var(--muted); }
+    .cost-value { font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="brand-row">
+      <h1>evalsec</h1>
+      <span class="beta-badge">BETA</span>
+    </div>
+    <div class="subtitle">DevSecOps LLM Benchmark</div>
+    <div class="meta">
+      <span>{{ graded_at }}</span>
+      <span>{{ response_count }} responses</span>
+      <span>judge: {{ judge_model }}</span>
+      <span>prompt: {{ prompt_version }}</span>
+    </div>
+    <div class="context-line">
+      Task: {{ task }} · Judge: Claude Opus 4.7 · Ground truth: EKS production deployment scenarios · 1 case (full benchmark: 17 cases pending)
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ── Hero Stats ── -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-models">—</div>
+      <span class="stat-label">Models tested</span>
+      <span class="stat-sub">LLMs evaluated</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-cases">—</div>
+      <span class="stat-label">Cases evaluated</span>
+      <span class="stat-sub">Per model</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-top-score">—</div>
+      <span class="stat-label">Top score</span>
+      <span class="stat-sub">LLMs only</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value small" id="stat-best-value">—</div>
+      <span class="stat-label">Best value</span>
+      <span class="stat-sub">Score per dollar</span>
+    </div>
+  </div>
+
+  <!-- ── Charts (LLM only) ── -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h2>Composite Score — LLMs</h2>
+      <div class="chart-sub">Higher is better · 0–100 scale</div>
+      <canvas id="barChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h2>Per-Dimension Radar — LLMs</h2>
+      <div class="chart-sub">Strengths across rubric dimensions</div>
+      <canvas id="radarChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ── LLM Leaderboard ── -->
+  {% set llm_entries = leaderboard | selectattr("model_type", "equalto", "llm") | list %}
+  <section class="leaderboard">
+    <div class="lb-header">
+      <h2>LLM Rankings</h2>
+      <div class="lb-note">Scored by Claude Opus 4.7 across rubric dimensions, normalized to 0–100.</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Model</th>
+          <th>Score</th>
+          <th>Reachability</th>
+          <th>Prioritization</th>
+          <th>Actionability</th>
+          <th>Conciseness</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in llm_entries %}
+        {% set is_truncated = entry.details | selectattr("score.validation.parse_error") | list | length > 0 %}
+        {% set reach = entry.dimension_scores.get("reachability_reasoning", 0) %}
+        {% set prio  = entry.dimension_scores.get("prioritization", 0) %}
+        {% set act   = entry.dimension_scores.get("actionability", 0) %}
+        {% set conc  = entry.dimension_scores.get("conciseness", 0) %}
+        <tr class="{% if loop.index == 1 %}top-row{% endif %}" data-model-id="{{ entry.model_id }}">
+          <td class="rank-cell">
+            {% if loop.index == 1 %}<span class="medal">🥇</span>
+            {% elif loop.index == 2 %}<span class="medal">🥈</span>
+            {% elif loop.index == 3 %}<span class="medal">🥉</span>
+            {% else %}#{{ loop.index }}
+            {% endif %}
+          </td>
+          <td class="model-name-cell">
+            <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
+            {% if is_truncated %}<span class="trunc-badge" title="Response exceeded max_tokens — JSON truncated. Score reflects partial output only.">⚠ Truncated response</span>{% endif %}
+            <span class="model-id-mono">{{ entry.model_id }}</span>
+            {% if is_truncated %}
+            <div class="trunc-note">Response exceeded max_tokens — JSON truncated. Score reflects partial output only.</div>
+            {% endif %}
+          </td>
+          <td class="score-cell">
+            <div class="score-bar-wrap">
+              <span class="score-bar" style="width: {{ entry.avg_score * 0.6 }}px;"></span>
+              {{ "%.1f"|format(entry.avg_score) }}
+            </div>
+          </td>
+          <td>{{ "%.1f"|format(reach) }}</td>
+          <td>{{ "%.1f"|format(prio) }}</td>
+          <td>{{ "%.1f"|format(act) }}</td>
+          <td>{{ "%.1f"|format(conc) }}</td>
+          <td class="cost-cell">${{ "%.4f"|format(entry.total_cost) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── Baseline Section ── -->
+  {% set baselines = leaderboard | selectattr("model_type", "equalto", "baseline") | list %}
+  {% if baselines %}
+  <div class="baseline-divider">
+    <span>── Baseline methods (no AI reasoning) ──</span>
+  </div>
+
+  <div class="chart-card baseline-chart">
+    <h2>Baseline Scores</h2>
+    <div class="chart-sub">Deterministic methods · for reference only, not directly comparable to LLMs</div>
+    <canvas id="baselineBarChart"></canvas>
+  </div>
+
+  <section class="leaderboard baseline-board">
+    <div class="lb-header">
+      <h2>Baseline Comparison</h2>
+      <div class="lb-note">Baselines use deterministic scoring only (no LLM judge pass). Scores are not directly comparable to LLMs.</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Score</th>
+          <th>Verdict Accuracy</th>
+          <th>Priority Accuracy</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in baselines %}
+        <tr data-model-id="{{ entry.model_id }}">
+          <td class="model-name-cell">
+            <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
+            <span class="model-id-mono">{{ entry.model_id }}</span>
+          </td>
+          <td class="score-cell">
+            <div class="score-bar-wrap">
+              <span class="score-bar" style="width: {{ entry.avg_score * 0.6 }}px; background: var(--warn);"></span>
+              {{ "%.1f"|format(entry.avg_score) }}
+            </div>
+          </td>
+          <td>{{ "%.1f"|format(entry.avg_verdict) }}</td>
+          <td>{{ "%.1f"|format(entry.avg_priority) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
+
+  <!-- ── Model Cards ── -->
+  <div class="cards-grid">
+    {% for entry in leaderboard %}
+    {% include "card.html.j2" %}
+    {% endfor %}
+  </div>
+
+</main>
+
+<footer>
+  <div class="container">
+    Last updated: {{ graded_at }} ·
+    <a href="https://github.com/frhnardi/evalsec">Source</a>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // ── Display name + dimension label maps ──
+  const MODEL_DISPLAY = {
+    "claude_sonnet_46":      "Claude Sonnet 4.6",
+    "kimi_k2_thinking":      "Kimi K2.6 Thinking",
+    "qwen_3_5":              "Qwen 3.5",
+    "deepseek_v4_pro":       "DeepSeek V4 Pro",
+    "claude_opus_47":        "Claude Opus 4.7 (Judge)",
+    "baseline_cvss":         "Baseline: CVSS Sort",
+    "baseline_trivy":        "Baseline: Trivy Severity",
+    "baseline_epss":         "Baseline: EPSS Score",
+    "baseline_reachability": "Baseline: Reachability",
+  };
+
+  function displayName(id) {
+    return MODEL_DISPLAY[id] || id;
+  }
+
+  const DIM_LABELS = {
+    reachability_reasoning: "Reachability",
+    prioritization:         "Prioritization",
+    actionability:          "Actionability",
+    conciseness:            "Conciseness",
+    format:                 "Format",
+    coverage:               "Coverage",
+    verdict:                "Verdict Accuracy",
+    priority:               "Priority Order",
+  };
+
+  function dimLabel(d) {
+    return DIM_LABELS[d] || d.replace(/_/g, " ");
+  }
+
+  // ── Chart defaults ──
+  Chart.defaults.color = isDark ? '#8b949e' : '#6c757d';
+  Chart.defaults.borderColor = isDark ? '#30363d' : '#dee2e6';
+  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+  // ── Data from server ──
+  const leaderboard = {{ leaderboard | tojson }};
+  const dimNames = {{ dim_names | tojson }};
+
+  const llmEntries = leaderboard.filter(e => e.model_type === "llm");
+  const baselineEntries = leaderboard.filter(e => e.model_type === "baseline");
+
+  // ── Replace raw model_id with display name everywhere it appears in the DOM ──
+  document.querySelectorAll('.model-display-name').forEach(el => {
+    const id = el.dataset.id;
+    if (id) el.textContent = displayName(id);
+  });
+
+  // ── Enhance model cards (rendered by card.html.j2) ──
+  document.querySelectorAll('.model-card').forEach(card => {
+    const rank = parseInt(card.dataset.rank, 10);
+    const entry = leaderboard.find(e => e.rank === rank);
+    if (!entry) return;
+
+    // Replace model name with display name
+    const nameEl = card.querySelector('.model-name');
+    if (nameEl) nameEl.textContent = displayName(entry.model_id);
+
+    // Truncation detection — score.validation.parse_error is not null
+    const truncated = (entry.details || []).some(d =>
+      d && d.score && d.score.validation && d.score.validation.parse_error
+    );
+    if (truncated && nameEl) {
+      const badge = document.createElement('span');
+      badge.className = 'trunc-badge';
+      badge.textContent = '⚠ Truncated';
+      badge.title = 'Response exceeded max_tokens — JSON truncated.';
+      nameEl.appendChild(badge);
+
+      const note = document.createElement('div');
+      note.className = 'trunc-note';
+      note.textContent = 'Response exceeded max_tokens — JSON truncated. Score reflects partial output only.';
+      const scoreEl = card.querySelector('.card-score');
+      if (scoreEl) scoreEl.appendChild(note);
+    }
+  });
+
+  // ── Hero Stats ──
+  const allCases = new Set();
+  leaderboard.forEach(e => (e.details || []).forEach(d => {
+    if (d && d.case_id) allCases.add(d.case_id);
+  }));
+  const caseCount = allCases.size || (leaderboard[0]?.details?.length || 0);
+
+  document.getElementById('stat-models').textContent = llmEntries.length;
+  document.getElementById('stat-cases').textContent = caseCount;
+
+  const topScore = llmEntries.length
+    ? Math.max(...llmEntries.map(e => e.avg_score))
+    : 0;
+  document.getElementById('stat-top-score').textContent = topScore.toFixed(1);
+
+  const llmWithCost = llmEntries.filter(e => (e.total_cost || 0) > 0);
+  const bestValueEl = document.getElementById('stat-best-value');
+  if (llmWithCost.length === 0) {
+    bestValueEl.textContent = 'N/A';
+  } else {
+    const best = llmWithCost.reduce((acc, e) =>
+      (e.avg_score / e.total_cost) > (acc.avg_score / acc.total_cost) ? e : acc
+    );
+    bestValueEl.textContent = displayName(best.model_id);
+  }
+
+  // ── Bar Chart (LLM composite scores) ──
+  const llmLabels = llmEntries.map(e => displayName(e.model_id));
+  const llmScores = llmEntries.map(e => e.avg_score);
+  const llmColors = llmEntries.map((_, i) =>
+    i === 0 ? '#3fb950' : i === 1 ? '#58a6ff' : i === 2 ? '#d29922' : '#8b949e'
+  );
+
+  if (llmEntries.length > 0) {
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: llmLabels,
+        datasets: [{
+          label: 'Composite Score',
+          data: llmScores,
+          backgroundColor: llmColors,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { min: 0, max: 100 } }
+      }
+    });
+  }
+
+  // ── Radar Chart (LLM only, with readable dim labels) ──
+  if (llmEntries.length > 0) {
+    const radarDatasets = llmEntries.map((entry, i) => ({
+      label: displayName(entry.model_id),
+      data: dimNames.map(d => (entry.dimension_scores[d] || 0)),
+      borderColor: llmColors[i],
+      backgroundColor: llmColors[i] + '20',
+      borderWidth: 2,
+      pointRadius: 3,
+    }));
+
+    new Chart(document.getElementById('radarChart'), {
+      type: 'radar',
+      data: {
+        labels: dimNames.map(dimLabel),
+        datasets: radarDatasets,
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          r: {
+            min: 0,
+            max: 100,
+            ticks: { stepSize: 20, backdropColor: 'transparent' },
+            grid: { color: isDark ? '#30363d40' : '#dee2e640' },
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 12, padding: 12 },
+          }
+        }
+      }
+    });
+  }
+
+  // ── Baseline Bar Chart (separate, smaller) ──
+  const baselineCanvas = document.getElementById('baselineBarChart');
+  if (baselineCanvas && baselineEntries.length > 0) {
+    new Chart(baselineCanvas, {
+      type: 'bar',
+      data: {
+        labels: baselineEntries.map(e => displayName(e.model_id)),
+        datasets: [{
+          label: 'Deterministic Score',
+          data: baselineEntries.map(e => e.avg_score),
+          backgroundColor: '#d29922',
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { min: 0, max: 100 } }
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

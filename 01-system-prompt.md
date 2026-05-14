@@ -100,10 +100,10 @@ The user is a Senior DevSecOps Engineer based in Indonesia with 5+ years of expe
 
 - **Claude Sonnet 4.6** — via OpenRouter (`anthropic/claude-sonnet-4-6` or current ID)
 - **Kimi K2.6 Thinking** — via OpenRouter (`moonshotai/kimi-k2-thinking` or current ID)
-- **Qwen 3.5** — via OpenRouter (find latest Qwen 3.x reasoning model in catalog)
+- **Qwen 3.5 Plus** — via OpenRouter (`qwen/qwen3.5-plus-20260420` — $0.40/$2.40 per 1M tokens)
 - **DeepSeek V4 Pro** — via DeepSeek direct API (`deepseek-chat`)
 
-**Judge model:** Claude Opus 4.7 via Anthropic direct API. More reliable for structured JSON scoring than via OpenRouter, and Anthropic's OSS credit program covers it.
+**Judge model:** Claude Opus 4.7 via OpenRouter. Uses the same `OpenAICompatAdapter` with explicit JSON prompt instruction for structured scoring.
 
 ---
 
