@@ -52,10 +52,45 @@ def _resolve_api_key(provider: str) -> str | None:
     """Return the API key for a provider, or None if not set."""
     return _PROVIDER_KEY_MAP.get(provider)
 
+def _is_json_truncated(text: str) -> bool:
+    """Check if a model response looks like truncated/incomplete JSON.
+
+    Some API providers return ``finish_reason: "stop"`` even when the output
+    is cut short at ``max_tokens``, producing an incomplete JSON string.
+    This detects that case by trying to parse the JSON after stripping markdown
+    fences.
+
+    Returns ``True`` if the text appears to be an incomplete JSON object/array.
+    """
+    stripped = text.strip()
+    # Strip markdown code fences if present
+    if stripped.startswith("```"):
+        end = stripped.find("```", 3)
+        if end != -1:
+            stripped = stripped[3:end]
+        else:
+            stripped = stripped[3:]
+        stripped = stripped.strip()
+        if stripped.startswith("json"):
+            stripped = stripped[4:].strip()
+        elif stripped.startswith("JSON"):
+            stripped = stripped[4:].strip()
+
+    # Only check if it looks like JSON (starts with { or [)
+    if not (stripped.startswith("{") or stripped.startswith("[")):
+        return False
+
+    try:
+        json.loads(stripped)
+        return False  # Valid JSON — not truncated
+    except json.JSONDecodeError:
+        return True  # Invalid JSON — likely truncated
+
 
 # ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
+
 
 
 class Runner:
@@ -300,7 +335,7 @@ class Runner:
                     model_id=adapter.model_config.model_id,
                     system_prompt=system_prompt,
                     user_prompt=user_prompt,
-                    max_tokens=4096,
+                    max_tokens=8192,
                     temperature=0.2,
                 )
                 tasks.append((case.id, request))
@@ -317,12 +352,19 @@ class Runner:
                     response = await adapter.complete(request)
 
                     # Fix C: Truncation detection + auto-retry with doubled max_tokens
+                    # Two triggers:
+                    #   1. finish_reason == "length" (API-level truncation)
+                    #   2. _is_json_truncated() — some providers return "stop" even when
+                    #      the response is cut mid-JSON at max_tokens
                     max_retries = 2
                     retry_count = 0
-                    while response.finish_reason == "length" and retry_count < max_retries:
+                    while retry_count < max_retries and (
+                        response.finish_reason == "length"
+                        or _is_json_truncated(response.text)
+                    ):
                         retry_count += 1
                         doubled = request.max_tokens * 2
-                        retry_max_tokens = min(doubled, 16384)  # Cap at model max
+                        retry_max_tokens = min(doubled, 32768)  # Cap at model max
                         logger.warning(
                             "truncated_response",
                             case_id=case_id,
