@@ -24,9 +24,15 @@ class SourceInfo(BaseModel):
     trivy_version: str | None = Field(default=None, description="Trivy version used")
     url: str | None = Field(default=None, description="URL if sourced from GitHub issue")
     notes: str | None = Field(default=None, description="Any additional context about the source")
-    total_cves_found: int | None = Field(default=None, description="Total CVEs found in the raw scan")
-    cves_selected: int | None = Field(default=None, description="Number of CVEs included in this test case after selection")
-    selection_criteria: str | None = Field(default=None, description="Criteria used to select CVEs for this test case")
+    total_cves_found: int | None = Field(
+        default=None, description="Total CVEs found in the raw scan"
+    )
+    cves_selected: int | None = Field(
+        default=None, description="Number of CVEs included in this test case after selection"
+    )
+    selection_criteria: str | None = Field(
+        default=None, description="Criteria used to select CVEs for this test case"
+    )
 
     @field_validator("scanned_at", mode="before")
     @classmethod

@@ -200,7 +200,13 @@ class TestCrossFieldIntegrity:
 
     def test_source_has_valid_type(self, all_cases: list[tuple[str, TaskCase]]) -> None:
         """Every case must have a recognised source type."""
-        valid_types = {"self_scan", "github_issue", "advisory", "synthetic"}
+        valid_types = {
+            "self_scan",
+            "github_issue",
+            "advisory",
+            "synthetic",
+            "ai_assisted_deepseek_v4",
+        }
         for case_id, case in all_cases:
             assert case.source.type in valid_types, (
                 f"{case_id}: source.type '{case.source.type}' not in valid types {valid_types}"

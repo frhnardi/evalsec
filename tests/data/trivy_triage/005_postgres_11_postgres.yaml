@@ -181,33 +181,7 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  partial_findings:
-  - cve: CVE-2025-31133
-    verdict: partial
-    reasoning: Container escape via mount race, butuh akses host yang terbatas.
-    action: Update gosu dan batasi mount points.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2025-52565
-    verdict: partial
-    reasoning: Container escape via /dev/console, butuh akses device yang dibatasi.
-    action: Update gosu dan nonaktifkan console access.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
+  partial_findings: []
   priority_order:
   - CVE-2025-31133
   - CVE-2025-52565

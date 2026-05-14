@@ -181,33 +181,7 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  partial_findings:
-  - cve: CVE-2026-5773
-    verdict: partial
-    reasoning: Kerentanan SMB pada libcurl, namun akses S3 mungkin menggunakan HTTPS bukan SMB.
-    action: Verifikasi protokol S3 dan patch curl.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2025-15467
-    verdict: partial
-    reasoning: RCE pada OpenSSL, namun perlu koneksi keluar yang dimulai oleh aplikasi.
-    action: Update OpenSSL dan batasi akses keluar.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
+  partial_findings: []
   priority_order:
   - CVE-2025-15467
   - CVE-2026-5773

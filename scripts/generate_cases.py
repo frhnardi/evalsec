@@ -398,6 +398,7 @@ def _build_user_prompt(scan_text: str, stack_context: str) -> str:
 # Retry strategy
 # ---------------------------------------------------------------------------
 
+
 def _is_retryable(exc: BaseException) -> bool:
     """Return True for API errors and invalid JSON that warrant a retry."""
     if isinstance(exc, openai.APITimeoutError):
@@ -422,6 +423,7 @@ _CALL_RETRY = retry(
 # ---------------------------------------------------------------------------
 # Scan-file helpers
 # ---------------------------------------------------------------------------
+
 
 def _discover_scan_files() -> list[Path]:
     """Return sorted list of ``.txt`` files in the scans directory."""
@@ -729,6 +731,7 @@ def _filter_scan_text(scan_text: str, selected_cves: set[str]) -> str:
 # DeepSeek API call
 # ---------------------------------------------------------------------------
 
+
 @_CALL_RETRY
 async def _call_deepseek(
     client: AsyncOpenAI,
@@ -794,6 +797,7 @@ async def _call_deepseek(
 # ---------------------------------------------------------------------------
 # Data transformation
 # ---------------------------------------------------------------------------
+
 
 def _build_finding_detail(
     item: dict[str, Any],
@@ -869,8 +873,7 @@ def _build_task_case(
         for item in parsed.get("non_exploitable_findings", [])
     ]
     partial = [
-        _build_finding_detail(item, "partial")
-        for item in parsed.get("partial_findings", [])
+        _build_finding_detail(item, "partial") for item in parsed.get("partial_findings", [])
     ]
 
     ground_truth = GroundTruth(
@@ -956,6 +959,7 @@ def _build_task_case(
 # YAML serialisation
 # ---------------------------------------------------------------------------
 
+
 class _CustomYamlDumper(yaml.SafeDumper):
     """YAML dumper that handles ``date`` objects by emitting YAML timestamps."""
 
@@ -997,6 +1001,7 @@ def _serialise_task_case(task_case: TaskCase) -> str:
 # Validation helpers
 # ---------------------------------------------------------------------------
 
+
 def _check_needs_review_ratio(parsed: dict[str, Any], persona_name: str) -> str | None:
     """Warn if >40 % of CVEs are marked ``needs_review``.
 
@@ -1016,6 +1021,7 @@ def _check_needs_review_ratio(parsed: dict[str, Any], persona_name: str) -> str 
 # ---------------------------------------------------------------------------
 # Progress display
 # ---------------------------------------------------------------------------
+
 
 def _print_header(text: str) -> None:
     """Print a section header."""
@@ -1052,6 +1058,7 @@ def _print_success(text: str) -> None:
 # ---------------------------------------------------------------------------
 # Per-scan-file worker
 # ---------------------------------------------------------------------------
+
 
 async def _process_scan(
     sem: asyncio.Semaphore,
@@ -1201,6 +1208,7 @@ async def _process_scan(
 # Summary table
 # ---------------------------------------------------------------------------
 
+
 def _print_summary(results: list[dict[str, Any]], warnings: list[str]) -> None:
     """Print a formatted summary table of all generated test cases."""
     if not results:
@@ -1312,6 +1320,7 @@ def _print_summary(results: list[dict[str, Any]], warnings: list[str]) -> None:
 # ---------------------------------------------------------------------------
 # Main entrypoint
 # ---------------------------------------------------------------------------
+
 
 async def _main() -> None:
     """Orchestrate the full pipeline."""
