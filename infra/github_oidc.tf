@@ -74,7 +74,19 @@ resource "aws_iam_policy" "github_actions_deploy" {
 }
 
 data "aws_iam_policy_document" "github_actions_deploy" {
-  # s3:PutObject + s3:DeleteObject on the dashboard bucket
+  # s3:ListBucket on the bucket itself (needed for `aws s3 sync`)
+  statement {
+    sid    = "S3ListBucket"
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+    ]
+    resources = [
+      aws_s3_bucket.dashboard.arn,
+    ]
+  }
+
+  # s3:PutObject + s3:DeleteObject on objects inside the bucket
   statement {
     sid    = "S3UploadAndDelete"
     effect = "Allow"
