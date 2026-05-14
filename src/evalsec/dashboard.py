@@ -11,6 +11,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -106,6 +107,15 @@ class BuildDashboard:
         dist_dir.mkdir(parents=True, exist_ok=True)
         index_path = dist_dir / "index.html"
         index_path.write_text(html)
+
+        # 7. Copy vendored Chart.js asset alongside index.html
+        chart_src = TEMPLATES_DIR / "chart.umd.min.js"
+        chart_dst = dist_dir / "chart.umd.min.js"
+        if chart_src.exists():
+            shutil.copy2(str(chart_src), str(chart_dst))
+            logger.info("chartjs_copied", src=str(chart_src), dst=str(chart_dst))
+        else:
+            logger.warning("chartjs_not_found", path=str(chart_src))
 
         console.print(f"\n[green]Dashboard written to {index_path}[/green]")
         logger.info("dashboard_built", path=str(index_path), grades=len(grades))

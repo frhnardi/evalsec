@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js"></script>
+  <script src="./chart.umd.min.js"></script>
 
   <style>
     @property --angle {
@@ -456,6 +456,22 @@
     }
     .baseline-chart-frame canvas { max-height: 240px; }
 
+    .chart-fallback {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--muted-2);
+      font-size: 0.88rem;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+    }
+    .chart-fallback.visible { display: block; }
+    .chart-fallback-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.5;
+    }
+
     /* ─────────────────────────────────────────────
        DISCLAIMER
        ───────────────────────────────────────────── */
@@ -557,14 +573,9 @@
 
     tbody tr.top-row {
       background: linear-gradient(90deg, var(--accent-soft) 0%, transparent 100%);
-      position: relative;
     }
-    tbody tr.top-row::before {
-      content: "";
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--accent);
+    tbody tr.top-row td:first-child {
+      border-left: 3px solid var(--accent);
     }
     tbody tr.top-row:hover { filter: brightness(1.04); }
 
@@ -969,11 +980,19 @@
           <h3>Composite Score</h3>
           <div class="chart-sub">Higher is better · 0–100 scale</div>
           <canvas id="barChart"></canvas>
+          <div class="chart-fallback" id="barChartFallback">
+            <div class="chart-fallback-icon">📊</div>
+            <div>Chart requires Chart.js — check browser console for details.</div>
+          </div>
         </div>
         <div class="chart-card">
           <h3>Per-Dimension Radar</h3>
           <div class="chart-sub">Strengths across rubric dimensions</div>
           <canvas id="radarChart"></canvas>
+          <div class="chart-fallback" id="radarChartFallback">
+            <div class="chart-fallback-icon">🕸️</div>
+            <div>Chart requires Chart.js — check browser console for details.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1066,6 +1085,10 @@
           <h3>Baseline Scores</h3>
           <div class="chart-sub">Deterministic methods · for reference only, not directly comparable to LLMs</div>
           <canvas id="baselineBarChart"></canvas>
+          <div class="chart-fallback" id="baselineBarChartFallback">
+            <div class="chart-fallback-icon">📊</div>
+            <div>Chart requires Chart.js — check browser console for details.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1185,14 +1208,21 @@ try {
   DIM_TOOLTIPS_BY_TEXT["regex"]         = "Regex / pattern match score on deterministic Pass 1.";
   DIM_TOOLTIPS_BY_TEXT["cost"]          = "Total API cost for this model across all evaluated cases.";
 
-  // ── Chart.js theme (graceful if CDN fails — hero stats & tables work regardless) ──
+  // ── Chart.js theme ──
   let chartLoaded = false;
   try {
     Chart.defaults.color       = isDark ? '#a1a1aa' : '#71717a';
     Chart.defaults.borderColor = isDark ? 'rgba(255,255,255,0.06)' : '#e5e7eb';
     Chart.defaults.font.family = '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     chartLoaded = true;
-  } catch (_) { /* Chart.js CDN unavailable — charts skipped, hero stats still work */ }
+  } catch (_) {
+    console.warn('Chart.js failed to load — chart canvas elements will show fallback message.');
+    // Show fallback UI for each chart card
+    ['barChart', 'radarChart', 'baselineBarChart'].forEach(id => {
+      const fb = document.getElementById(id + 'Fallback');
+      if (fb) fb.classList.add('visible');
+    });
+  }
 
   const ACCENT  = '#14b8a6';
   const ACCENT2 = '#5eead4';
