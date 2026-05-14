@@ -36,8 +36,8 @@ You MUST respond in this exact JSON format:
       "cve": "CVE-XXXX-XXXXX",
       "verdict": "exploitable | not_exploitable | partial",
       "priority": "P0 | P1 | P2 | P3",
-      "reasoning": "Short justification using stack context...",
-      "action": "Specific remediation step with version numbers...",
+      "reasoning": "1-sentence justification using stack context...",
+      "action": "Brief remediation with version numbers...",
       "timeline": "72 hours | this sprint | next quarter"
     }
   ]
@@ -51,8 +51,9 @@ Priority definitions:
 
 Rules:
 - Base EVERY verdict on the stack context provided. If the CVE describes a code path that is NOT reachable in this deployment, mark it not_exploitable.
-- Be specific in actions: include version numbers, JVM flags, WAF rules, config changes where relevant.
-- No preamble, no disclaimers, no "As an AI assistant". Begin directly with the JSON object."""
+- Be specific but concise in actions: include version numbers, JVM flags, WAF rules, config changes where relevant.
+- No preamble, no disclaimers, no "As an AI assistant". Begin directly with the JSON object.
+- Conciseness critical: You have a limited token budget for the entire response. Keep each reasoning to 1 sentence max, each action to 1-2 sentences max. Prioritize the most impactful CVEs."""
 
 # ---------------------------------------------------------------------------
 # Pass 1 — User Prompt Template

@@ -300,7 +300,7 @@ class Runner:
                     model_id=adapter.model_config.model_id,
                     system_prompt=system_prompt,
                     user_prompt=user_prompt,
-                    max_tokens=1024,
+                    max_tokens=4096,
                     temperature=0.2,
                 )
                 tasks.append((case.id, request))
@@ -315,7 +315,49 @@ class Runner:
                 async with sem:
                     start = time.monotonic()
                     response = await adapter.complete(request)
+
+                    # Fix C: Truncation detection + auto-retry with doubled max_tokens
+                    max_retries = 2
+                    retry_count = 0
+                    while response.finish_reason == "length" and retry_count < max_retries:
+                        retry_count += 1
+                        doubled = request.max_tokens * 2
+                        retry_max_tokens = min(doubled, 16384)  # Cap at model max
+                        logger.warning(
+                            "truncated_response",
+                            case_id=case_id,
+                            model_id=model_key,
+                            tokens_out=response.tokens_out,
+                            max_tokens=request.max_tokens,
+                            retry_max_tokens=retry_max_tokens,
+                            retry=retry_count,
+                        )
+                        console.print(
+                            f"  [yellow]⚠ {case_id} truncated ({response.tokens_out}/{request.max_tokens})"
+                            f" — retrying with max_tokens={retry_max_tokens}[/yellow]"
+                        )
+                        retry_request = LLMRequest(
+                            model_id=request.model_id,
+                            system_prompt=request.system_prompt,
+                            user_prompt=request.user_prompt,
+                            max_tokens=retry_max_tokens,
+                            temperature=request.temperature,
+                        )
+                        response = await adapter.complete(retry_request)
+                        request = retry_request
+
                     elapsed = time.monotonic() - start
+
+                    if response.finish_reason == "length":
+                        console.print(
+                            f"  [red]✗ {case_id} STILL truncated after {max_retries} retries"
+                            f" ({response.tokens_out}/{request.max_tokens})[/red]"
+                        )
+                    elif retry_count > 0:
+                        console.print(
+                            f"  [green]✓ {case_id} recovered after {retry_count} retry(ies)"
+                            f" ({response.tokens_out} tokens)[/green]"
+                        )
 
                     console.print(
                         f"  [{case_id}] {response.tokens_in} in → "
