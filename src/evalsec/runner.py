@@ -29,9 +29,9 @@ from evalsec.adapters.base import LLMRequest
 from evalsec.adapters.openai_compat import OpenAICompatAdapter
 from evalsec.config import settings
 from evalsec.tasks.base import TaskCase
-from evalsec.tasks.trivy_triage import (
-    PROMPT_VERSION,
+from evalsec.tasks import (
     build_user_prompt,
+    get_prompt_version,
     get_task_config,
 )
 
@@ -411,7 +411,7 @@ class Runner:
                     return {
                         "case_id": case_id,
                         "model_id": model_key,
-                        "prompt_version": PROMPT_VERSION,
+                        "prompt_version": get_prompt_version(self.task_name),
                         "request": {
                             "system_prompt": request.system_prompt,
                             "user_prompt": request.user_prompt,
@@ -471,7 +471,7 @@ class Runner:
         payload = {
             "metadata": {
                 "task": self.task_name,
-                "prompt_version": PROMPT_VERSION,
+                "prompt_version": get_prompt_version(self.task_name),
                 "run_at": now.isoformat(),
                 "models": model_ids,
                 "case_count": len(cases),

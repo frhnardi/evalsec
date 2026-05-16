@@ -1,7 +1,7 @@
 """Unit tests for non-LLM baselines — Issue 10.
 
 Tests cover:
-- Each baseline generator produces valid JSON matching the expected schema.
+- Each baseline generator produces valid VEX JSON matching the expected schema.
 - Sort order (CVSS descending, severity descending, EPSS descending).
 - Reachability heuristic decision tree.
 - ``grade_baselines()`` integration with ``JsonValidator``.
@@ -205,32 +205,32 @@ class TestExtractTrivySeverity:
 
 
 class TestGenerateCvssBaseline:
-    """CVSS baseline: sorts findings by CVSS descending, all exploitable."""
+    """CVSS baseline: sorts findings by CVSS descending, all affected."""
 
     def test_sorts_by_cvss_descending(self, ground_truth_with_metadata: GroundTruth) -> None:
         response = _generate_cvss_baseline(ground_truth_with_metadata)
         data = json.loads(response)
-        analysis: list[dict[str, Any]] = data["analysis"]
+        statements: list[dict[str, Any]] = data["statements"]
 
         # CVSS order: 9.8 (CVE-2021-44228) -> 7.5 (CVE-2024-21626) -> 5.5 (CVE-2023-50447)
-        assert len(analysis) == 3
-        assert analysis[0]["cve"] == "CVE-2021-44228"
-        assert analysis[1]["cve"] == "CVE-2024-21626"
-        assert analysis[2]["cve"] == "CVE-2023-50447"
+        assert len(statements) == 3
+        assert statements[0]["vulnerability"]["id"] == "CVE-2021-44228"
+        assert statements[1]["vulnerability"]["id"] == "CVE-2024-21626"
+        assert statements[2]["vulnerability"]["id"] == "CVE-2023-50447"
 
-    def test_all_verdicts_exploitable(self, ground_truth_with_metadata: GroundTruth) -> None:
+    def test_all_statuses_affected(self, ground_truth_with_metadata: GroundTruth) -> None:
         response = _generate_cvss_baseline(ground_truth_with_metadata)
         data = json.loads(response)
-        for entry in data["analysis"]:
-            assert entry["verdict"] == "exploitable"
+        for entry in data["statements"]:
+            assert entry["status"] == "affected"
 
     def test_priority_from_cvss_rank(self, ground_truth_with_metadata: GroundTruth) -> None:
         response = _generate_cvss_baseline(ground_truth_with_metadata)
         data = json.loads(response)
         # 3 items: idx=0 -> P0, idx=1 -> P1, idx=2 -> P2
-        assert data["analysis"][0]["priority"] == "P0"
-        assert data["analysis"][1]["priority"] == "P1"
-        assert data["analysis"][2]["priority"] == "P2"
+        assert data["statements"][0]["priority"] == "P0"
+        assert data["statements"][1]["priority"] == "P1"
+        assert data["statements"][2]["priority"] == "P2"
 
     def test_findings_without_cvss_get_p3(self) -> None:
         """Findings with no CVSS score are placed at end with P3."""
@@ -258,21 +258,21 @@ class TestGenerateCvssBaseline:
         response = _generate_cvss_baseline(gt)
         data = json.loads(response)
         # CVE-2021-44228 (CVSS 9.8) first, CVE-2023-50447 (no CVSS) last with P3
-        assert data["analysis"][0]["cve"] == "CVE-2021-44228"
-        assert data["analysis"][0]["priority"] == "P0"
-        assert data["analysis"][1]["cve"] == "CVE-2023-50447"
-        assert data["analysis"][1]["priority"] == "P3"
+        assert data["statements"][0]["vulnerability"]["id"] == "CVE-2021-44228"
+        assert data["statements"][0]["priority"] == "P0"
+        assert data["statements"][1]["vulnerability"]["id"] == "CVE-2023-50447"
+        assert data["statements"][1]["priority"] == "P3"
 
     def test_empty_ground_truth(self, ground_truth_empty: GroundTruth) -> None:
         response = _generate_cvss_baseline(ground_truth_empty)
         data = json.loads(response)
-        assert data["analysis"] == []
+        assert data["statements"] == []
 
     def test_no_cvss_metadata(self, ground_truth_no_metadata: GroundTruth) -> None:
         """All findings have no CVSS -> all get P3."""
         response = _generate_cvss_baseline(ground_truth_no_metadata)
         data = json.loads(response)
-        for entry in data["analysis"]:
+        for entry in data["statements"]:
             assert entry["priority"] == "P3"
 
 
@@ -290,18 +290,18 @@ class TestGenerateTrivyBaseline:
         response = _generate_trivy_baseline(ground_truth_with_metadata, trivy_scan_output)
         data = json.loads(response)
         # Severity order: CRITICAL (CVE-2021-44228) -> HIGH (CVE-2024-21626) -> MEDIUM (CVE-2023-50447)
-        assert len(data["analysis"]) == 3
-        assert data["analysis"][0]["cve"] == "CVE-2021-44228"
-        assert data["analysis"][1]["cve"] == "CVE-2024-21626"
-        assert data["analysis"][2]["cve"] == "CVE-2023-50447"
+        assert len(data["statements"]) == 3
+        assert data["statements"][0]["vulnerability"]["id"] == "CVE-2021-44228"
+        assert data["statements"][1]["vulnerability"]["id"] == "CVE-2024-21626"
+        assert data["statements"][2]["vulnerability"]["id"] == "CVE-2023-50447"
 
-    def test_all_verdicts_exploitable(
+    def test_all_statuses_affected(
         self, ground_truth_with_metadata: GroundTruth, trivy_scan_output: str
     ) -> None:
         response = _generate_trivy_baseline(ground_truth_with_metadata, trivy_scan_output)
         data = json.loads(response)
-        for entry in data["analysis"]:
-            assert entry["verdict"] == "exploitable"
+        for entry in data["statements"]:
+            assert entry["status"] == "affected"
 
     def test_priority_from_severity_rank(
         self, ground_truth_with_metadata: GroundTruth, trivy_scan_output: str
@@ -309,9 +309,9 @@ class TestGenerateTrivyBaseline:
         response = _generate_trivy_baseline(ground_truth_with_metadata, trivy_scan_output)
         data = json.loads(response)
         # 3 items: idx=0 -> P0, idx=1 -> P1, idx=2 -> P2
-        assert data["analysis"][0]["priority"] == "P0"
-        assert data["analysis"][1]["priority"] == "P1"
-        assert data["analysis"][2]["priority"] == "P2"
+        assert data["statements"][0]["priority"] == "P0"
+        assert data["statements"][1]["priority"] == "P1"
+        assert data["statements"][2]["priority"] == "P2"
 
     def test_cve_not_in_scan_goes_last(self, trivy_scan_output: str) -> None:
         """CVE not found in Trivy output (UNKNOWN severity) goes to end."""
@@ -330,14 +330,14 @@ class TestGenerateTrivyBaseline:
         )
         response = _generate_trivy_baseline(gt, trivy_scan_output)
         data = json.loads(response)
-        assert data["analysis"][0]["cve"] == "CVE-2021-44228"  # CRITICAL
-        assert data["analysis"][1]["cve"] == "CVE-9999-99999"  # UNKNOWN -> last
+        assert data["statements"][0]["vulnerability"]["id"] == "CVE-2021-44228"  # CRITICAL
+        assert data["statements"][1]["vulnerability"]["id"] == "CVE-9999-99999"  # UNKNOWN -> last
 
     def test_empty_input_text(self, ground_truth_with_metadata: GroundTruth) -> None:
         """With empty scan output, all severities are UNKNOWN -> preserve original order."""
         response = _generate_trivy_baseline(ground_truth_with_metadata, "")
         data = json.loads(response)
-        assert len(data["analysis"]) == 3
+        assert len(data["statements"]) == 3
 
 
 # ---------------------------------------------------------------------------
@@ -352,23 +352,23 @@ class TestGenerateEpssBaseline:
         response = _generate_epss_baseline(ground_truth_with_metadata)
         data = json.loads(response)
         # EPSS order: 97.5 (CVE-2021-44228) -> 45.0 (CVE-2024-21626) -> 12.3 (CVE-2023-50447)
-        assert len(data["analysis"]) == 3
-        assert data["analysis"][0]["cve"] == "CVE-2021-44228"
-        assert data["analysis"][1]["cve"] == "CVE-2024-21626"
-        assert data["analysis"][2]["cve"] == "CVE-2023-50447"
+        assert len(data["statements"]) == 3
+        assert data["statements"][0]["vulnerability"]["id"] == "CVE-2021-44228"
+        assert data["statements"][1]["vulnerability"]["id"] == "CVE-2024-21626"
+        assert data["statements"][2]["vulnerability"]["id"] == "CVE-2023-50447"
 
-    def test_all_verdicts_exploitable(self, ground_truth_with_metadata: GroundTruth) -> None:
+    def test_all_statuses_affected(self, ground_truth_with_metadata: GroundTruth) -> None:
         response = _generate_epss_baseline(ground_truth_with_metadata)
         data = json.loads(response)
-        for entry in data["analysis"]:
-            assert entry["verdict"] == "exploitable"
+        for entry in data["statements"]:
+            assert entry["status"] == "affected"
 
     def test_priority_from_epss_rank(self, ground_truth_with_metadata: GroundTruth) -> None:
         response = _generate_epss_baseline(ground_truth_with_metadata)
         data = json.loads(response)
-        assert data["analysis"][0]["priority"] == "P0"
-        assert data["analysis"][1]["priority"] == "P1"
-        assert data["analysis"][2]["priority"] == "P2"
+        assert data["statements"][0]["priority"] == "P0"
+        assert data["statements"][1]["priority"] == "P1"
+        assert data["statements"][2]["priority"] == "P2"
 
     def test_findings_without_epss_get_p3(self) -> None:
         """Findings with no EPSS percentile are placed at end with P3."""
@@ -395,21 +395,21 @@ class TestGenerateEpssBaseline:
         )
         response = _generate_epss_baseline(gt)
         data = json.loads(response)
-        assert data["analysis"][0]["cve"] == "CVE-2021-44228"
-        assert data["analysis"][0]["priority"] == "P0"
-        assert data["analysis"][1]["cve"] == "CVE-2023-50447"
-        assert data["analysis"][1]["priority"] == "P3"
+        assert data["statements"][0]["vulnerability"]["id"] == "CVE-2021-44228"
+        assert data["statements"][0]["priority"] == "P0"
+        assert data["statements"][1]["vulnerability"]["id"] == "CVE-2023-50447"
+        assert data["statements"][1]["priority"] == "P3"
 
     def test_empty_ground_truth(self, ground_truth_empty: GroundTruth) -> None:
         response = _generate_epss_baseline(ground_truth_empty)
         data = json.loads(response)
-        assert data["analysis"] == []
+        assert data["statements"] == []
 
     def test_no_epss_metadata(self, ground_truth_no_metadata: GroundTruth) -> None:
         """All findings have no EPSS -> all get P3."""
         response = _generate_epss_baseline(ground_truth_no_metadata)
         data = json.loads(response)
-        for entry in data["analysis"]:
+        for entry in data["statements"]:
             assert entry["priority"] == "P3"
 
 
@@ -419,10 +419,16 @@ class TestGenerateEpssBaseline:
 
 
 class TestGenerateReachabilityBaseline:
-    """Reachability heuristic baseline: uses internet_facing + cvss + runtime_exposure."""
+    """Reachability heuristic baseline: uses internet_facing + cvss + runtime_exposure.
 
-    def test_internet_facing_high_cvss_exploitable_p0(self) -> None:
-        """internet_facing=True, cvss>=7.0 -> exploitable P0."""
+    Now outputs VEX status values instead of internal verdicts:
+      - "affected" (was "exploitable")
+      - "not_affected" (was "not_exploitable")
+      - "under_investigation" (was "partial")
+    """
+
+    def test_internet_facing_high_cvss_affected_p0(self) -> None:
+        """internet_facing=True, cvss>=7.0 -> affected P0."""
         gt = GroundTruth(
             exploitable_findings=[
                 FindingDetail(
@@ -440,12 +446,12 @@ class TestGenerateReachabilityBaseline:
         )
         response = _generate_reachability_baseline(gt)
         data = json.loads(response)
-        assert data["analysis"][0]["verdict"] == "exploitable"
-        assert data["analysis"][0]["priority"] == "P0"
-        assert data["analysis"][0]["timeline"] == "72 hours"
+        assert data["statements"][0]["status"] == "affected"
+        assert data["statements"][0]["priority"] == "P0"
+        assert data["statements"][0]["timeline"] == "72 hours"
 
-    def test_internet_facing_low_cvss_exploitable_p1(self) -> None:
-        """internet_facing=True, cvss<7.0 -> exploitable P1."""
+    def test_internet_facing_low_cvss_affected_p1(self) -> None:
+        """internet_facing=True, cvss<7.0 -> affected P1."""
         gt = GroundTruth(
             exploitable_findings=[
                 FindingDetail(
@@ -463,12 +469,12 @@ class TestGenerateReachabilityBaseline:
         )
         response = _generate_reachability_baseline(gt)
         data = json.loads(response)
-        assert data["analysis"][0]["verdict"] == "exploitable"
-        assert data["analysis"][0]["priority"] == "P1"
-        assert data["analysis"][0]["timeline"] == "this sprint"
+        assert data["statements"][0]["status"] == "affected"
+        assert data["statements"][0]["priority"] == "P1"
+        assert data["statements"][0]["timeline"] == "this sprint"
 
-    def test_network_exposure_partial_p2(self) -> None:
-        """internet_facing=False, runtime_exposure=network -> partial P2."""
+    def test_network_exposure_under_investigation_p2(self) -> None:
+        """internet_facing=False, runtime_exposure=network -> under_investigation P2."""
         gt = GroundTruth(
             exploitable_findings=[
                 FindingDetail(
@@ -486,12 +492,12 @@ class TestGenerateReachabilityBaseline:
         )
         response = _generate_reachability_baseline(gt)
         data = json.loads(response)
-        assert data["analysis"][0]["verdict"] == "partial"
-        assert data["analysis"][0]["priority"] == "P2"
-        assert data["analysis"][0]["timeline"] == "this sprint"
+        assert data["statements"][0]["status"] == "under_investigation"
+        assert data["statements"][0]["priority"] == "P2"
+        assert data["statements"][0]["timeline"] == "this sprint"
 
-    def test_not_internet_facing_not_network_not_exploitable_p3(self) -> None:
-        """No internet facing, no network exposure -> not_exploitable P3."""
+    def test_not_internet_facing_not_network_not_affected_p3(self) -> None:
+        """No internet facing, no network exposure -> not_affected P3."""
         gt = GroundTruth(
             exploitable_findings=[
                 FindingDetail(
@@ -509,12 +515,12 @@ class TestGenerateReachabilityBaseline:
         )
         response = _generate_reachability_baseline(gt)
         data = json.loads(response)
-        assert data["analysis"][0]["verdict"] == "not_exploitable"
-        assert data["analysis"][0]["priority"] == "P3"
-        assert data["analysis"][0]["timeline"] == "next quarter"
+        assert data["statements"][0]["status"] == "not_affected"
+        assert data["statements"][0]["priority"] == "P3"
+        assert data["statements"][0]["timeline"] == "next quarter"
 
-    def test_no_metadata_conservative_not_exploitable(self) -> None:
-        """No metadata at all -> not_exploitable P3 (conservative default)."""
+    def test_no_metadata_conservative_not_affected(self) -> None:
+        """No metadata at all -> not_affected P3 (conservative default)."""
         gt = GroundTruth(
             exploitable_findings=[
                 FindingDetail(
@@ -530,31 +536,31 @@ class TestGenerateReachabilityBaseline:
         )
         response = _generate_reachability_baseline(gt)
         data = json.loads(response)
-        assert data["analysis"][0]["verdict"] == "not_exploitable"
-        assert data["analysis"][0]["priority"] == "P3"
+        assert data["statements"][0]["status"] == "not_affected"
+        assert data["statements"][0]["priority"] == "P3"
 
     def test_multiple_findings(self, ground_truth_with_metadata: GroundTruth) -> None:
         """All three rules applied across mixed findings."""
         response = _generate_reachability_baseline(ground_truth_with_metadata)
         data = json.loads(response)
-        findings_map = {e["cve"]: e for e in data["analysis"]}
+        findings_map = {e["vulnerability"]["id"]: e for e in data["statements"]}
 
-        # CVE-2021-44228: internet_facing not set -> None -> not_exploitable P3
-        assert findings_map["CVE-2021-44228"]["verdict"] == "not_exploitable"
+        # CVE-2021-44228: internet_facing not set -> None -> not_affected P3
+        assert findings_map["CVE-2021-44228"]["status"] == "not_affected"
         assert findings_map["CVE-2021-44228"]["priority"] == "P3"
 
-        # CVE-2024-21626: internet_facing=True, cvss=7.5 >= 7.0 -> exploitable P0
-        assert findings_map["CVE-2024-21626"]["verdict"] == "exploitable"
+        # CVE-2024-21626: internet_facing=True, cvss=7.5 >= 7.0 -> affected P0
+        assert findings_map["CVE-2024-21626"]["status"] == "affected"
         assert findings_map["CVE-2024-21626"]["priority"] == "P0"
 
-        # CVE-2023-50447: internet_facing not set -> not_exploitable P3
-        assert findings_map["CVE-2023-50447"]["verdict"] == "not_exploitable"
+        # CVE-2023-50447: internet_facing not set -> not_affected P3
+        assert findings_map["CVE-2023-50447"]["status"] == "not_affected"
         assert findings_map["CVE-2023-50447"]["priority"] == "P3"
 
     def test_empty_ground_truth(self, ground_truth_empty: GroundTruth) -> None:
         response = _generate_reachability_baseline(ground_truth_empty)
         data = json.loads(response)
-        assert data["analysis"] == []
+        assert data["statements"] == []
 
 
 # ---------------------------------------------------------------------------
@@ -568,9 +574,9 @@ class TestGenerateBaselineResponse:
     def test_cvss_baseline_key(self, ground_truth_with_metadata: GroundTruth) -> None:
         response = generate_baseline_response("baseline_cvss", ground_truth_with_metadata)
         data = json.loads(response)
-        assert len(data["analysis"]) == 3
+        assert len(data["statements"]) == 3
         # First item should be highest CVSS
-        assert data["analysis"][0]["cve"] == "CVE-2021-44228"
+        assert data["statements"][0]["vulnerability"]["id"] == "CVE-2021-44228"
 
     def test_trivy_baseline_key(
         self, ground_truth_with_metadata: GroundTruth, trivy_scan_output: str
@@ -579,44 +585,49 @@ class TestGenerateBaselineResponse:
             "baseline_trivy", ground_truth_with_metadata, input_text=trivy_scan_output
         )
         data = json.loads(response)
-        assert len(data["analysis"]) == 3
+        assert len(data["statements"]) == 3
         # First item should be CRITICAL severity
-        assert data["analysis"][0]["cve"] == "CVE-2021-44228"
+        assert data["statements"][0]["vulnerability"]["id"] == "CVE-2021-44228"
 
     def test_epss_baseline_key(self, ground_truth_with_metadata: GroundTruth) -> None:
         response = generate_baseline_response("baseline_epss", ground_truth_with_metadata)
         data = json.loads(response)
-        assert len(data["analysis"]) == 3
+        assert len(data["statements"]) == 3
         # First item should be highest EPSS
-        assert data["analysis"][0]["cve"] == "CVE-2021-44228"
+        assert data["statements"][0]["vulnerability"]["id"] == "CVE-2021-44228"
 
     def test_reachability_baseline_key(self, ground_truth_with_metadata: GroundTruth) -> None:
         response = generate_baseline_response("baseline_reachability", ground_truth_with_metadata)
         data = json.loads(response)
-        assert len(data["analysis"]) == 3
+        assert len(data["statements"]) == 3
 
     def test_unknown_baseline_key(self, ground_truth_with_metadata: GroundTruth) -> None:
         with pytest.raises(ValueError, match="Unknown baseline"):
             generate_baseline_response("baseline_nonexistent", ground_truth_with_metadata)
 
-    def test_output_is_valid_json(self, ground_truth_with_metadata: GroundTruth) -> None:
-        """All baselines produce valid parseable JSON."""
+    def test_output_is_valid_vex_json(self, ground_truth_with_metadata: GroundTruth) -> None:
+        """All baselines produce valid VEX JSON."""
         for key in BASELINE_GENERATORS:
             response = generate_baseline_response(key, ground_truth_with_metadata)
             data = json.loads(response)
-            assert "analysis" in data
-            assert isinstance(data["analysis"], list)
+            assert "document" in data
+            assert data["document"]["type"] == "vex"
+            assert "statements" in data
+            assert isinstance(data["statements"], list)
 
-    def test_each_entry_has_required_fields(self, ground_truth_with_metadata: GroundTruth) -> None:
-        """Each baseline entry has cve, verdict, priority, reasoning, action, timeline."""
-        required = {"cve", "verdict", "priority", "reasoning", "action", "timeline"}
+    def test_each_entry_has_required_vex_fields(
+        self, ground_truth_with_metadata: GroundTruth
+    ) -> None:
+        """Each VEX statement has vulnerability.id, status, priority, impact_statement, action_statement, timeline."""
+        required = {"vulnerability", "status", "priority", "impact_statement", "action_statement", "timeline"}
         for key in BASELINE_GENERATORS:
             response = generate_baseline_response(key, ground_truth_with_metadata)
             data = json.loads(response)
-            for entry in data["analysis"]:
+            for entry in data["statements"]:
                 assert required.issubset(entry.keys()), (
-                    f"Baseline {key} missing fields in {entry['cve']}"
+                    f"Baseline {key} missing fields in {entry.get('vulnerability', {})}"
                 )
+                assert "id" in entry["vulnerability"]
 
     def test_deterministic_output(self, ground_truth_with_metadata: GroundTruth) -> None:
         """Same inputs produce identical output (deterministic)."""
@@ -756,7 +767,7 @@ class TestGradeBaselines:
             input_text=trivy_scan_output,
             regex_patterns=["Patch", "CVE"],
         )
-        # All baselines use "Patch" in action and "CVE" in cve, so regex_score > 0
+        # All baselines use "Patch" in action and "CVE" in vulnerability.id, so regex_score > 0
         for result in results.values():
             assert result["regex_score"] > 0.0
 
@@ -772,7 +783,7 @@ class TestGradeBaselines:
             assert result["coverage_score"] == 100.0
 
     def test_baseline_cvss_verdict_accuracy(self, ground_truth_with_metadata: GroundTruth) -> None:
-        """CVSS baseline marks all as exploitable, but some ground truth entries
+        """CVSS baseline marks all as affected, but some ground truth entries
         are partial or not_exploitable -> verdict accuracy will be < 100."""
         results = grade_baselines(
             ground_truth=ground_truth_with_metadata,
@@ -780,8 +791,9 @@ class TestGradeBaselines:
             regex_patterns=[],
         )
         cvss_result = results["baseline_cvss"]
-        # Out of 3 findings, CVSS baseline marks all exploitable.
+        # Out of 3 findings, CVSS baseline marks all affected.
         # Ground truth: 1 exploitable, 1 partial, 1 not_exploitable.
+        # VEX mapping: affected->exploitable, so only 1 matches.
         # Verdict matches only 1/3 ~ 33.3 out of 100
         assert cvss_result["verdict_score"] < 100.0
         assert cvss_result["verdict_score"] >= 0.0
@@ -803,7 +815,7 @@ class TestGradeBaselines:
     def test_no_parse_error_for_any_baseline(
         self, ground_truth_with_metadata: GroundTruth, trivy_scan_output: str
     ) -> None:
-        """All baselines produce valid JSON that JsonValidator can parse."""
+        """All baselines produce valid VEX JSON that JsonValidator can parse."""
         results = grade_baselines(
             ground_truth=ground_truth_with_metadata,
             input_text=trivy_scan_output,

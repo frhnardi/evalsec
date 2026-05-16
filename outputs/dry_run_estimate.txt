@@ -2,64 +2,520 @@
   {
     "model": "claude_sonnet_46",
     "model_id": "anthropic/claude-sonnet-4-6",
-    "cases": 1,
-    "est_total_in": 857,
-    "est_total_out": 1500,
-    "est_total_cost_usd": "0.0251",
+    "cases": 20,
+    "est_total_in": 237112,
+    "est_total_out": 30000,
+    "est_total_cost_usd": "1.1613",
     "case_estimates": [
       {
         "case_id": "trivy_triage_001",
         "est_input_tokens": 857,
         "est_output_tokens": 1500,
         "est_cost_usd": "0.0250710"
+      },
+      {
+        "case_id": "trivy_triage_002",
+        "est_input_tokens": 1124,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0258720"
+      },
+      {
+        "case_id": "trivy_triage_003",
+        "est_input_tokens": 2385,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0296550"
+      },
+      {
+        "case_id": "trivy_triage_004",
+        "est_input_tokens": 1329,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0264870"
+      },
+      {
+        "case_id": "trivy_triage_005",
+        "est_input_tokens": 1546,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0271380"
+      },
+      {
+        "case_id": "trivy_triage_006",
+        "est_input_tokens": 1667,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0275010"
+      },
+      {
+        "case_id": "trivy_triage_008",
+        "est_input_tokens": 791,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0248730"
+      },
+      {
+        "case_id": "trivy_triage_009",
+        "est_input_tokens": 3360,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0325800"
+      },
+      {
+        "case_id": "trivy_triage_010",
+        "est_input_tokens": 215,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0231450"
+      },
+      {
+        "case_id": "trivy_triage_011",
+        "est_input_tokens": 14109,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0648270"
+      },
+      {
+        "case_id": "trivy_triage_013",
+        "est_input_tokens": 2327,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0294810"
+      },
+      {
+        "case_id": "trivy_triage_015",
+        "est_input_tokens": 710,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0246300"
+      },
+      {
+        "case_id": "trivy_triage_016",
+        "est_input_tokens": 587,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0242610"
+      },
+      {
+        "case_id": "trivy_triage_017",
+        "est_input_tokens": 216,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0231480"
+      },
+      {
+        "case_id": "trivy_triage_018",
+        "est_input_tokens": 483,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0239490"
+      },
+      {
+        "case_id": "trivy_triage_019",
+        "est_input_tokens": 173423,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.5427690"
+      },
+      {
+        "case_id": "trivy_triage_020",
+        "est_input_tokens": 14990,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0674700"
+      },
+      {
+        "case_id": "trivy_triage_021",
+        "est_input_tokens": 1145,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0259350"
+      },
+      {
+        "case_id": "trivy_triage_022",
+        "est_input_tokens": 1452,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0268560"
+      },
+      {
+        "case_id": "trivy_triage_023",
+        "est_input_tokens": 14396,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0656880"
       }
     ]
   },
   {
     "model": "kimi_k2_thinking",
     "model_id": "moonshotai/kimi-k2-thinking",
-    "cases": 1,
-    "est_total_in": 857,
-    "est_total_out": 1500,
-    "est_total_cost_usd": "0.0125",
+    "cases": 20,
+    "est_total_in": 237112,
+    "est_total_out": 30000,
+    "est_total_cost_usd": "0.5807",
     "case_estimates": [
       {
         "case_id": "trivy_triage_001",
         "est_input_tokens": 857,
         "est_output_tokens": 1500,
         "est_cost_usd": "0.0125355"
+      },
+      {
+        "case_id": "trivy_triage_002",
+        "est_input_tokens": 1124,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0129360"
+      },
+      {
+        "case_id": "trivy_triage_003",
+        "est_input_tokens": 2385,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0148275"
+      },
+      {
+        "case_id": "trivy_triage_004",
+        "est_input_tokens": 1329,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0132435"
+      },
+      {
+        "case_id": "trivy_triage_005",
+        "est_input_tokens": 1546,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0135690"
+      },
+      {
+        "case_id": "trivy_triage_006",
+        "est_input_tokens": 1667,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0137505"
+      },
+      {
+        "case_id": "trivy_triage_008",
+        "est_input_tokens": 791,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0124365"
+      },
+      {
+        "case_id": "trivy_triage_009",
+        "est_input_tokens": 3360,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0162900"
+      },
+      {
+        "case_id": "trivy_triage_010",
+        "est_input_tokens": 215,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0115725"
+      },
+      {
+        "case_id": "trivy_triage_011",
+        "est_input_tokens": 14109,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0324135"
+      },
+      {
+        "case_id": "trivy_triage_013",
+        "est_input_tokens": 2327,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0147405"
+      },
+      {
+        "case_id": "trivy_triage_015",
+        "est_input_tokens": 710,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0123150"
+      },
+      {
+        "case_id": "trivy_triage_016",
+        "est_input_tokens": 587,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0121305"
+      },
+      {
+        "case_id": "trivy_triage_017",
+        "est_input_tokens": 216,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0115740"
+      },
+      {
+        "case_id": "trivy_triage_018",
+        "est_input_tokens": 483,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0119745"
+      },
+      {
+        "case_id": "trivy_triage_019",
+        "est_input_tokens": 173423,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.2713845"
+      },
+      {
+        "case_id": "trivy_triage_020",
+        "est_input_tokens": 14990,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0337350"
+      },
+      {
+        "case_id": "trivy_triage_021",
+        "est_input_tokens": 1145,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0129675"
+      },
+      {
+        "case_id": "trivy_triage_022",
+        "est_input_tokens": 1452,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0134280"
+      },
+      {
+        "case_id": "trivy_triage_023",
+        "est_input_tokens": 14396,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0328440"
       }
     ]
   },
   {
     "model": "qwen_3_5",
     "model_id": "qwen/qwen3.5-plus-20260420",
-    "cases": 1,
-    "est_total_in": 857,
-    "est_total_out": 1500,
-    "est_total_cost_usd": "0.0039",
+    "cases": 20,
+    "est_total_in": 237112,
+    "est_total_out": 30000,
+    "est_total_cost_usd": "0.1668",
     "case_estimates": [
       {
         "case_id": "trivy_triage_001",
         "est_input_tokens": 857,
         "est_output_tokens": 1500,
         "est_cost_usd": "0.0039428"
+      },
+      {
+        "case_id": "trivy_triage_002",
+        "est_input_tokens": 1124,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0040496"
+      },
+      {
+        "case_id": "trivy_triage_003",
+        "est_input_tokens": 2385,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0045540"
+      },
+      {
+        "case_id": "trivy_triage_004",
+        "est_input_tokens": 1329,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0041316"
+      },
+      {
+        "case_id": "trivy_triage_005",
+        "est_input_tokens": 1546,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0042184"
+      },
+      {
+        "case_id": "trivy_triage_006",
+        "est_input_tokens": 1667,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0042668"
+      },
+      {
+        "case_id": "trivy_triage_008",
+        "est_input_tokens": 791,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0039164"
+      },
+      {
+        "case_id": "trivy_triage_009",
+        "est_input_tokens": 3360,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0049440"
+      },
+      {
+        "case_id": "trivy_triage_010",
+        "est_input_tokens": 215,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0036860"
+      },
+      {
+        "case_id": "trivy_triage_011",
+        "est_input_tokens": 14109,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0092436"
+      },
+      {
+        "case_id": "trivy_triage_013",
+        "est_input_tokens": 2327,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0045308"
+      },
+      {
+        "case_id": "trivy_triage_015",
+        "est_input_tokens": 710,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0038840"
+      },
+      {
+        "case_id": "trivy_triage_016",
+        "est_input_tokens": 587,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0038348"
+      },
+      {
+        "case_id": "trivy_triage_017",
+        "est_input_tokens": 216,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0036864"
+      },
+      {
+        "case_id": "trivy_triage_018",
+        "est_input_tokens": 483,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0037932"
+      },
+      {
+        "case_id": "trivy_triage_019",
+        "est_input_tokens": 173423,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0729692"
+      },
+      {
+        "case_id": "trivy_triage_020",
+        "est_input_tokens": 14990,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0095960"
+      },
+      {
+        "case_id": "trivy_triage_021",
+        "est_input_tokens": 1145,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0040580"
+      },
+      {
+        "case_id": "trivy_triage_022",
+        "est_input_tokens": 1452,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0041808"
+      },
+      {
+        "case_id": "trivy_triage_023",
+        "est_input_tokens": 14396,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0093584"
       }
     ]
   },
   {
     "model": "deepseek_v4_pro",
     "model_id": "deepseek-chat",
-    "cases": 1,
-    "est_total_in": 857,
-    "est_total_out": 1500,
-    "est_total_cost_usd": "0.0034",
+    "cases": 20,
+    "est_total_in": 237112,
+    "est_total_out": 30000,
+    "est_total_cost_usd": "0.1786",
     "case_estimates": [
       {
         "case_id": "trivy_triage_001",
         "est_input_tokens": 857,
         "est_output_tokens": 1500,
         "est_cost_usd": "0.0034285"
+      },
+      {
+        "case_id": "trivy_triage_002",
+        "est_input_tokens": 1124,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0035620"
+      },
+      {
+        "case_id": "trivy_triage_003",
+        "est_input_tokens": 2385,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0041925"
+      },
+      {
+        "case_id": "trivy_triage_004",
+        "est_input_tokens": 1329,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0036645"
+      },
+      {
+        "case_id": "trivy_triage_005",
+        "est_input_tokens": 1546,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0037730"
+      },
+      {
+        "case_id": "trivy_triage_006",
+        "est_input_tokens": 1667,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0038335"
+      },
+      {
+        "case_id": "trivy_triage_008",
+        "est_input_tokens": 791,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0033955"
+      },
+      {
+        "case_id": "trivy_triage_009",
+        "est_input_tokens": 3360,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0046800"
+      },
+      {
+        "case_id": "trivy_triage_010",
+        "est_input_tokens": 215,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0031075"
+      },
+      {
+        "case_id": "trivy_triage_011",
+        "est_input_tokens": 14109,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0100545"
+      },
+      {
+        "case_id": "trivy_triage_013",
+        "est_input_tokens": 2327,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0041635"
+      },
+      {
+        "case_id": "trivy_triage_015",
+        "est_input_tokens": 710,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0033550"
+      },
+      {
+        "case_id": "trivy_triage_016",
+        "est_input_tokens": 587,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0032935"
+      },
+      {
+        "case_id": "trivy_triage_017",
+        "est_input_tokens": 216,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0031080"
+      },
+      {
+        "case_id": "trivy_triage_018",
+        "est_input_tokens": 483,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0032415"
+      },
+      {
+        "case_id": "trivy_triage_019",
+        "est_input_tokens": 173423,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0897115"
+      },
+      {
+        "case_id": "trivy_triage_020",
+        "est_input_tokens": 14990,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0104950"
+      },
+      {
+        "case_id": "trivy_triage_021",
+        "est_input_tokens": 1145,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0035725"
+      },
+      {
+        "case_id": "trivy_triage_022",
+        "est_input_tokens": 1452,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0037260"
+      },
+      {
+        "case_id": "trivy_triage_023",
+        "est_input_tokens": 14396,
+        "est_output_tokens": 1500,
+        "est_cost_usd": "0.0101980"
       }
     ]
   }

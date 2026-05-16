@@ -27,10 +27,10 @@ from evalsec.adapters.openai_compat import OpenAICompatAdapter
 from evalsec.baselines import BASELINE_GENERATORS, grade_baselines
 from evalsec.config import settings
 from evalsec.tasks.base import FindingDetail, GroundTruth, Rubric, RubricItem, TaskCase
-from evalsec.tasks.trivy_triage import (
-    JUDGE_SYSTEM_PROMPT,
-    PROMPT_VERSION,
+from evalsec.tasks import (
+    VEX_STATUS_TO_VERDICT,
     build_judge_prompt,
+    get_prompt_version,
     get_task_config,
 )
 
@@ -274,19 +274,19 @@ class JsonValidationResult:
 
 
 class JsonValidator:
-    """Validates model JSON output against EXPECTED_OUTPUT_SCHEMA and ground truth.
+    """Validates model VEX JSON output against ground truth.
 
     This is the structural grading pass (1.5) — evaluates:
-      - JSON validity and schema conformance (format_score)
+      - JSON validity and VEX schema conformance (format_score)
       - CVE coverage vs ground truth (coverage_score)
-      - Verdict accuracy vs ground truth (verdict_score)
+      - Verdict accuracy via VEX status mapping (verdict_score)
       - Priority accuracy vs expected ordering (priority_score)
       - Hallucinated CVE detection (hallucination_penalty)
     """
 
-    # Required fields per CVE item in the analysis array
-    _REQUIRED_FIELDS: frozenset[str] = frozenset(
-        {"cve", "verdict", "priority", "reasoning", "action", "timeline"}
+    # Required fields per VEX statement
+    _VEX_REQUIRED_FIELDS: frozenset[str] = frozenset(
+        {"vulnerability", "status", "priority", "impact_statement", "action_statement", "timeline"}
     )
 
     @staticmethod
@@ -340,7 +340,7 @@ class JsonValidator:
                 parse_error=f"Invalid JSON: {exc}",
             )
 
-        # 3. Validate top-level structure
+        # 3. Validate top-level structure (VEX format)
         if not isinstance(data, dict):
             return JsonValidationResult(
                 format_score=0.0,
@@ -348,22 +348,29 @@ class JsonValidator:
                 parse_error=f"Expected JSON object, got {type(data).__name__}",
             )
 
-        if "analysis" not in data:
+        if "document" not in data:
             return JsonValidationResult(
                 format_score=0.0,
                 regex_score=regex_score,
-                parse_error=f"Missing 'analysis' key. Keys: {list(data.keys())}",
+                parse_error=f"Missing 'document' key. Keys: {list(data.keys())}",
             )
 
-        analysis = data["analysis"]
-        if not isinstance(analysis, list):
+        if "statements" not in data:
+            return JsonValidationResult(
+                format_score=0.0,
+                regex_score=regex_score,
+                parse_error=f"Missing 'statements' key. Keys: {list(data.keys())}",
+            )
+
+        statements = data["statements"]
+        if not isinstance(statements, list):
             return JsonValidationResult(
                 format_score=30.0,
                 regex_score=regex_score,
-                parse_error=f"'analysis' must be an array, got {type(analysis).__name__}",
+                parse_error=f"'statements' must be an array, got {type(statements).__name__}",
             )
 
-        # 4. Validate each analysis item against schema
+        # 4. Validate each VEX statement against schema
         item_scores: list[float] = []
         parsed_cves: list[dict[str, Any]] = []
 
@@ -379,41 +386,46 @@ class JsonValidator:
         # Normalise ground-truth priority order
         gt_priority_order: list[str] = [cve.upper() for cve in ground_truth.priority_order]
 
-        for item in analysis:
-            if not isinstance(item, dict):
+        for stmt in statements:
+            if not isinstance(stmt, dict):
                 item_scores.append(0.0)
                 continue
 
-            missing = cls._REQUIRED_FIELDS - set(item.keys())
+            missing = cls._VEX_REQUIRED_FIELDS - set(stmt.keys())
             if missing:
                 item_scores.append(0.0)
                 continue
 
             item_ok = True
 
-            cve: str = str(item.get("cve", ""))
-            verdict: str = str(item.get("verdict", ""))
-            priority: str = str(item.get("priority", ""))
-            reasoning: str = str(item.get("reasoning", ""))
-            action: str = str(item.get("action", ""))
-            timeline: str = str(item.get("timeline", ""))
+            # Extract VEX fields
+            vuln = stmt.get("vulnerability", {})
+            cve: str = str(vuln.get("id", "")) if isinstance(vuln, dict) else ""
+            status: str = str(stmt.get("status", ""))
+            priority: str = str(stmt.get("priority", ""))
+            impact_statement: str = str(stmt.get("impact_statement", ""))
+            action_statement: str = str(stmt.get("action_statement", ""))
+            timeline: str = str(stmt.get("timeline", ""))
+
+            # Map VEX status to internal verdict
+            verdict: str = VEX_STATUS_TO_VERDICT.get(status.strip().lower(), "unknown")
 
             # CVE must match pattern
             if not re.match(r"^CVE-\d{4}-\d{4,}$", cve, re.IGNORECASE):
                 item_ok = False
 
-            # Verdict must be a valid value
-            if verdict.strip().lower() not in VALID_VERDICTS:
+            # VEX status must be valid (via VEX_STATUS_TO_VERDICT mapping)
+            if verdict == "unknown":
                 item_ok = False
 
             # Priority must be valid
             if priority not in VALID_PRIORITIES:
                 item_ok = False
 
-            # Reasoning and action must be non-empty
-            if not reasoning.strip():
+            # Impact and action statements must be non-empty
+            if not impact_statement.strip():
                 item_ok = False
-            if not action.strip():
+            if not action_statement.strip():
                 item_ok = False
 
             # Timeline must be valid
@@ -424,10 +436,10 @@ class JsonValidator:
             parsed_cves.append(
                 {
                     "cve": cve.upper(),
-                    "verdict": verdict.strip().lower(),
+                    "verdict": verdict,  # mapped from VEX status
                     "priority": priority,
-                    "reasoning": reasoning,
-                    "action": action,
+                    "reasoning": impact_statement,
+                    "action": action_statement,
                     "timeline": timeline,
                 }
             )
@@ -540,22 +552,33 @@ class JsonValidator:
 class JudgeGrader:
     """Pass 2 LLM-as-judge grader.
 
-    Uses Claude Opus 4.7 (routed via OpenRouter) to score a model's response
-    against the task rubric. Returns a per-dimension breakdown.
+    Uses a configurable judge model (default: Claude Opus 4.7 via OpenRouter)
+    to score a model's response against the task rubric.
+    Returns a per-dimension breakdown.
     """
 
     def __init__(self, judge_model_key: str = "claude_opus_47") -> None:
-        api_key = settings.openrouter_api_key
-        if not api_key:
-            raise ValueError(
-                "OPENROUTER_API_KEY is required for the judge model "
-                f"('{judge_model_key}'). Set it in your .env file."
-            )
         if judge_model_key not in ALL_MODELS:
             valid = list(ALL_MODELS.keys())
             raise ValueError(f"Unknown judge model '{judge_model_key}'. Available models: {valid}")
 
         model_config = ALL_MODELS[judge_model_key]
+
+        # Select the correct API key based on provider
+        if model_config.provider == "deepseek":
+            api_key = settings.deepseek_api_key
+            key_name = "DEEPSEEK_API_KEY"
+        else:
+            api_key = settings.openrouter_api_key
+            key_name = "OPENROUTER_API_KEY"
+
+        if not api_key:
+            raise ValueError(
+                f"{key_name} is required for the judge model "
+                f"('{judge_model_key}', provider='{model_config.provider}'). "
+                f"Set it in your .env file."
+            )
+
         self._adapter = OpenAICompatAdapter(
             model_config=model_config,
             api_key=api_key,
@@ -610,9 +633,13 @@ class JudgeGrader:
             rubric=rubric_str,
         )
 
+        # Look up judge system prompt from task config (supports multi-task)
+        task_config = get_task_config(task_name)
+        judge_system_prompt = task_config["judge_system_prompt"]
+
         request = LLMRequest(
             model_id=self._adapter.model_config.model_id,
-            system_prompt=JUDGE_SYSTEM_PROMPT,
+            system_prompt=judge_system_prompt,
             user_prompt=judge_user_prompt,
             max_tokens=1024,
             temperature=0.0,  # deterministic judge
@@ -939,7 +966,7 @@ class Grader:
                         {
                             "case_id": case_id,
                             "model_id": baseline_key,
-                            "prompt_version": PROMPT_VERSION,
+                            "prompt_version": get_prompt_version(self.task_name),
                             "score": score,
                         }
                     )
@@ -1041,7 +1068,7 @@ class Grader:
         payload: dict[str, Any] = {
             "metadata": {
                 "task": self.task_name,
-                "prompt_version": PROMPT_VERSION,
+                "prompt_version": get_prompt_version(self.task_name),
                 "judge_model": self.judge_model_key,
                 "graded_at": now.isoformat(),
                 "source_file": input_path.name,

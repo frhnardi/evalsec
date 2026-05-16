@@ -53,6 +53,13 @@ JUDGE_MODELS: dict[str, ModelConfig] = {
         input_cost_per_1m=Decimal("5.00"),
         output_cost_per_1m=Decimal("25.00"),
     ),
+    "deepseek_v4_pro": ModelConfig(
+        model_id="deepseek-chat",
+        provider="deepseek",
+        base_url="https://api.deepseek.com/v1",
+        input_cost_per_1m=Decimal("0.50"),
+        output_cost_per_1m=Decimal("2.00"),
+    ),
 }
 
 # Combined dict for lookup convenience (e.g. grader validation).

@@ -1,0 +1,6155 @@
+{
+  "metadata": {
+    "task": "trivy_triage",
+    "prompt_version": "trivy_triage/v1",
+    "judge_model": "deepseek_v4_pro",
+    "graded_at": "2026-05-14T21:37:12.079185+07:00",
+    "source_file": "responses_trivy_triage_20260514_213500.json",
+    "response_count": 90,
+    "model_averages": {
+      "deepseek_v4_pro": 85.16,
+      "baseline_cvss": 61.72,
+      "baseline_trivy": 54.69,
+      "baseline_epss": 61.72,
+      "baseline_reachability": 68.84
+    }
+  },
+  "grades": [
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 97.6,
+        "pass1_score": 17.6,
+        "pass2_score": 80.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 80.0,
+        "priority_score": 80.0,
+        "regex_score": 80.0,
+        "judge_score": 100.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 88.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Correctly identifies log4j as exploitable (reachable from public HTTP handlers), Pillow as not exploitable (eval dead code), runc as not exploitable (mitigated by runtime hardening), openssl as not exploitable (no attacker-controlled cert path), and libxml2 as not exploitable (not used by app). All 5 findings addressed with stack context."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Correctly ranks log4j as P0 (actively exploited, reachable), and all others as P3 (not exploitable). No non-exploitable findings placed ahead of runc; runc correctly deferred due to mitigations. Matches real-world urgency."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Actions are specific: upgrade log4j-core to 2.17.1 with JVM flag, Pillow to 10.2.0, runc to 1.1.12, openssl to 1.1.1t, libxml2 to 2.9.14. Includes interim mitigation for log4j. Recognizes OJK 22/2023 72-hour timeline for P0."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Response is under 12 sentences (5 findings, each with 1-sentence reasoning and 1-2 sentence action). No preamble, disclaimers, or irrelevant details. Direct and professional tone."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_002",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 81.33,
+        "pass1_score": 9.33,
+        "pass2_score": 72.0,
+        "format_score": 100.0,
+        "coverage_score": 30.0,
+        "verdict_score": 66.7,
+        "priority_score": 33.3,
+        "regex_score": 50.0,
+        "judge_score": 90.0,
+        "hallucination_penalty": 4.0,
+        "deterministic_total": 46.67,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2023-3128",
+            "CVE-2021-43798",
+            "CVE-2022-31107",
+            "CVE-2022-27191",
+            "CVE-2022-41715",
+            "CVE-2022-2880",
+            "CVE-2022-2879"
+          ],
+          "hallucinated_cves": [
+            "CVE-2024-45337",
+            "CVE-2022-23806"
+          ],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-41244",
+              "expected": "P1",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P1"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies CVE-2021-41244 as exploitable due to reachable API path, and CVE-2021-3711 as potentially reachable via TLS. However, it overestimates reachability for CVE-2022-37434 (zlib) and CVE-2024-45337 (SSH) given the stack context (no gzip decompression from external sources, no SSH usage), and CVE-2022-23806 (P-224 curve) is unlikely to be forced by a client. Partial marks for using context but not fully accurate."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 22,
+            "max_score": 25,
+            "reasoning": "The model correctly assigns P0 to the most critical and reachable CVE (CVE-2021-41244) and P1 to CVE-2021-3711. However, it assigns P2 to three CVEs that are likely not exploitable or only partially, which is reasonable but could be more precise (e.g., P3 for CVE-2022-23806). Good overall ranking but slightly conservative."
+          },
+          {
+            "dimension": "actionability",
+            "score": 23,
+            "max_score": 25,
+            "reasoning": "Actions are specific with version numbers (e.g., upgrade to 8.2.4, 1.1.1l-r0, 1.2.12-r2, v0.31.0, 1.16.14) and include config changes (WAF rule, disable gzip, enforce TLS 1.2+). One action could be more precise (e.g., 'rebuild image with Alpine 3.14+' is slightly vague but acceptable). Very good."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is a direct JSON object with no preamble, disclaimers, or irrelevant details. Each reasoning and action is one sentence, and the entire response is well under 12 sentences. Perfect conciseness."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_003",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 80.6,
+        "pass1_score": 11.0,
+        "pass2_score": 69.6,
+        "format_score": 100.0,
+        "coverage_score": 50.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 75.0,
+        "judge_score": 87.0,
+        "hallucination_penalty": 2.5,
+        "deterministic_total": 55.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2024-21626",
+            "CVE-2025-31133",
+            "CVE-2025-52565",
+            "CVE-2024-37371"
+          ],
+          "hallucinated_cves": [
+            "CVE-2023-27561"
+          ],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "exploitable",
+              "got": "partial"
+            },
+            {
+              "cve": "CVE-2024-3596",
+              "expected": "not_exploitable",
+              "got": "partial"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P0",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-3596",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies reachability for most CVEs, but for CVE-2024-2961 and CVE-2024-3596 it marks them as 'partial' without fully considering that the writable filesystem and local access are already mitigated by non-root user and seccomp, making them effectively not exploitable in this context."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "Prioritization is generally correct (P2 for partial, P3 for not exploitable), but CVE-2024-2961 and CVE-2024-3596 are given P2 when they could be P3 given the strong runtime controls, and CVE-2023-27561 is P2 but could be P3 due to mitigations."
+          },
+          {
+            "dimension": "actionability",
+            "score": 22,
+            "max_score": 25,
+            "reasoning": "Actions are specific with version numbers and commands (e.g., 'Update glibc to 2.17-326.0.9.el7_9.3 via yum update'), but could be more precise for CVE-2023-27561 (e.g., specify exact gosu version or rebuild steps)."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Response is very concise, directly in JSON format with no preamble, disclaimers, or extra text. Each reasoning and action is a single sentence, well within the token limit."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_004",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 92.45,
+        "pass1_score": 12.45,
+        "pass2_score": 80.0,
+        "format_score": 100.0,
+        "coverage_score": 62.5,
+        "verdict_score": 80.0,
+        "priority_score": 60.0,
+        "regex_score": 25.0,
+        "judge_score": 100.0,
+        "hallucination_penalty": 5.0,
+        "deterministic_total": 62.25,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2024-2961",
+            "CVE-2023-4863",
+            "CVE-2019-15847"
+          ],
+          "hallucinated_cves": [
+            "CVE-2021-33574",
+            "CVE-2018-25009"
+          ],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-1271",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2022-1271",
+              "expected": "P3",
+              "got": "P1"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The model correctly uses stack context to determine exploitability: CVE-2022-32221 (curl used for proxy requests), CVE-2021-3711 (TLS termination), CVE-2021-33574 (DNS resolution), CVE-2018-25009 (static assets served), CVE-2022-1271 (gzip decompression), and marks CVE-2022-1304 and CVE-2018-12886 as not_exploitable due to read-only root filesystem and unused packages."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Priorities correctly reflect real-world urgency: P0 for actively exploitable, internet-facing CRITICAL CVEs (72-hour timeline per OJK 22/2023), P1 for reachable but no active exploitation (this sprint), and P3 for non-exploitable (next quarter)."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Actions are specific with version numbers (e.g., '7.64.0-4+deb10u4', '1.1.1d-0+deb10u7', '2.28-10+deb10u2') and include fallback migration to Debian 11 where needed, plus timelines aligned with regulatory requirements."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Response is under 12 sentences, directly in JSON format with no preamble, disclaimers, or irrelevant details. Each reasoning and action is concise (1-2 sentences)."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_005",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 86.33,
+        "pass1_score": 6.33,
+        "pass2_score": 80.0,
+        "format_score": 91.7,
+        "coverage_score": 50.0,
+        "verdict_score": 25.0,
+        "priority_score": 25.0,
+        "regex_score": 0.0,
+        "judge_score": 100.0,
+        "hallucination_penalty": 5.0,
+        "deterministic_total": 31.67,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2025-31133",
+            "CVE-2025-52565",
+            "CVE-2025-52881",
+            "CVE-2024-21626"
+          ],
+          "hallucinated_cves": [
+            "CVE-2023-27561",
+            "ASYMMETRICPRIVATEKEY"
+          ],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2019-12900",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-33560",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2019-12900",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2021-33560",
+              "expected": "P3",
+              "got": "P1"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The model correctly uses stack context to determine exploitability: marks libbz2, libdb5.3, and libgcrypt20 as exploitable because they are used by PostgreSQL; marks gnupg/dirmngr as not_exploitable because GPG is not configured; marks runc as not_exploitable due to runtime hardening; and correctly identifies the exposed private key as exploitable."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The model correctly prioritizes the exposed private key as P0 (72 hours) due to active risk to PII, marks reachable library CVEs as P1 (this sprint), and non-reachable CVEs as P3 (next quarter), aligning with real-world urgency and OJK requirements."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Actions are specific: includes version numbers (e.g., libbz2 >= 1.0.6-9.2), concrete steps (remove snakeoil key, generate cert at runtime, rotate TLS secrets), and clear timelines per OJK 22/2023."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is under 12 sentences, directly starts with JSON, no preamble or disclaimers, and each reasoning/action is a single sentence as required."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_006",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 90.37,
+        "pass1_score": 15.17,
+        "pass2_score": 75.2,
+        "format_score": 100.0,
+        "coverage_score": 75.0,
+        "verdict_score": 83.3,
+        "priority_score": 66.7,
+        "regex_score": 50.0,
+        "judge_score": 94.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 75.83,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2025-69419",
+            "CVE-2026-28387"
+          ],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "not_exploitable",
+              "got": "partial"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 23,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies reachability for OpenSSL and curl based on outbound TLS usage, correctly marks ImageMagick, libaom3, and BlueZ as not exploitable due to lack of usage, and correctly assigns partial to glib due to runtime mitigations. Minor deduction for not explicitly noting that CVE-2025-15467 is CRITICAL but still correctly assessed as reachable."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 24,
+            "max_score": 25,
+            "reasoning": "Priorities are well-aligned with real-world urgency: P1 for reachable CVEs with no active exploitation, P2 for partially mitigated glib, P3 for non-exploitable packages. No P0 is justified given internal-only exposure. Slight deduction for not explicitly stating why no P0 exists."
+          },
+          {
+            "dimension": "actionability",
+            "score": 22,
+            "max_score": 25,
+            "reasoning": "Actions are specific with version numbers and apt commands for upgrades, and clear removal instructions for unused packages. Minor deduction for not including a specific timeline for the P2 glib upgrade (e.g., 'this sprint' is acceptable but could be more precise)."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Response is extremely concise, directly in JSON format with no preamble, disclaimers, or unnecessary text. Each reasoning and action is a single sentence, well within the token budget."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_008",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 93.5,
+        "pass1_score": 13.5,
+        "pass2_score": 80.0,
+        "format_score": 100.0,
+        "coverage_score": 25.0,
+        "verdict_score": 100.0,
+        "priority_score": 100.0,
+        "regex_score": 50.0,
+        "judge_score": 100.0,
+        "hallucination_penalty": 5.0,
+        "deterministic_total": 67.5,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2024-21626",
+            "CVE-2025-31133",
+            "CVE-2025-52565",
+            "CVE-2025-52881",
+            "CVE-2024-2961",
+            "CVE-2023-50868"
+          ],
+          "hallucinated_cves": [
+            "CVE-2023-4911",
+            "CVE-2023-27561"
+          ],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The model correctly uses stack context (read-only rootfs, non-root user, no SYS_ADMIN, seccomp, Pod Security baseline, no systemd, no Berkeley DB usage) to determine that all four CVEs are not exploitable in this deployment."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "All CVEs are correctly assigned P3 (not exploitable) based on reachability analysis, matching the real-world urgency for this internal-only, hardened container."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Actions are specific with version numbers (e.g., libc6 to 2.31-13+deb11u7, libdb5.3 to 5.3.28+dfsg1-0.8+deb11u1, runc v1.1.5) and clear timelines (next quarter)."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Response is under 12 sentences, no preamble or disclaimers, direct JSON format with concise reasoning and actions."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_009",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 95.2,
+        "pass1_score": 15.2,
+        "pass2_score": 80.0,
+        "format_score": 100.0,
+        "coverage_score": 50.0,
+        "verdict_score": 100.0,
+        "priority_score": 80.0,
+        "regex_score": 50.0,
+        "judge_score": 100.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 76.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2025-24813",
+            "CVE-2024-50379",
+            "CVE-2025-55752",
+            "CVE-2020-8169",
+            "CVE-2020-8177"
+          ],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-52316",
+              "expected": "P1",
+              "got": "P0"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies CVE-2024-52316 as exploitable because catalina.jar is core to the public-facing web server, and correctly marks all other CVEs as not_exploitable based on stack context (curl, git, libbsd0, libdb5.3 are not used by the application or runtime)."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The model correctly assigns P0 to the only exploitable CVE (CVE-2024-52316) and P3 to all non-exploitable CVEs, aligning with real-world urgency and OJK 22/2023 requirements."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Actions are specific: upgrade tomcat-catalina to 9.0.96, rebuild from tomcat:9.0.96-jdk11, and for non-exploitable CVEs, specific version upgrades are provided (e.g., curl to 7.64.0-4+deb10u1)."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is under 12 sentences, has no preamble or disclaimers, and directly presents the analysis in the required JSON format with concise reasoning and actions."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_010",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 80.0,
+        "pass1_score": 0.0,
+        "pass2_score": 80.0,
+        "format_score": 50.0,
+        "coverage_score": 0.0,
+        "verdict_score": 0.0,
+        "priority_score": 0.0,
+        "regex_score": 66.7,
+        "judge_score": 100.0,
+        "hallucination_penalty": 20.0,
+        "deterministic_total": 0.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "NONE"
+          ],
+          "hallucinated_cves": [
+            "N/A"
+          ],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies that no vulnerabilities exist in the scan, and uses the stack context (pre-deployment review, no data processed) to confirm not_exploitable status."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "With no vulnerabilities found, the model assigns P3 priority appropriately, reflecting the lack of urgency."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The action is specific and appropriate: 'Proceed with evaluation; no remediation needed.' No vague advice."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is extremely concise, with no preamble, disclaimers, or irrelevant details. It directly provides the JSON output."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_011",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 72.57,
+        "pass1_score": 10.17,
+        "pass2_score": 62.4,
+        "format_score": 100.0,
+        "coverage_score": 75.0,
+        "verdict_score": 16.7,
+        "priority_score": 16.7,
+        "regex_score": 100.0,
+        "judge_score": 78.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 50.85,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2026-42584",
+            "CVE-2026-42587"
+          ],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-52999",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-52428",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-1370",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-12183",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-1471",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-52999",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2023-52428",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2023-1370",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2025-12183",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2022-1471",
+              "expected": "P0",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies snakeyaml as not_exploitable based on runtime context, but for other CVEs it assumes reachability without fully leveraging stack context (e.g., TLS not configured on transport layer could affect netty-codec-http reachability, and internal ClusterIP exposure limits external attack surface)."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 15,
+            "max_score": 25,
+            "reasoning": "All exploitable CVEs are assigned P1, but the model fails to differentiate urgency: CVE-2025-52999 (jackson-core) and CVE-2026-33870 (netty-codec-http) are reachable via REST API and should be P0 given the lack of TLS and regulatory context, while others like lz4-java (internal transport only) could be P2."
+          },
+          {
+            "dimension": "actionability",
+            "score": 18,
+            "max_score": 25,
+            "reasoning": "Actions include version numbers and upgrade paths, but are vague (e.g., 'in the next ES version upgrade') and lack specific timelines or workarounds (e.g., WAF rules, JVM flags) that could be applied immediately per OJK 22/2023."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is concise, with no preamble or disclaimers, and each entry is limited to a single sentence for reasoning and action, staying well under 12 sentences total."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_013",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 99.33,
+        "pass1_score": 19.33,
+        "pass2_score": 80.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 100.0,
+        "priority_score": 100.0,
+        "regex_score": 66.7,
+        "judge_score": 100.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 96.67,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Correctly identifies both CVEs as not exploitable based on stack context: CVE-2023-24538 is in build-time toolchain not affecting production binaries, and CVE-2022-3715 is in a build-only container with no network exposure."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Correctly assigns P3 to both findings, matching the real-world urgency of non-exploitable build-time vulnerabilities, and does not over-prioritize based on CVSS score."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Provides specific remediation actions: upgrade to golang:1.19.8 or later for CVE-2023-24538, and rebuild with updated base image for CVE-2022-3715, with clear timelines."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Response is under 12 sentences, no preamble or disclaimers, direct and professional tone, with each reasoning and action kept to one sentence."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_015",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 79.55,
+        "pass1_score": 9.95,
+        "pass2_score": 69.6,
+        "format_score": 100.0,
+        "coverage_score": 62.5,
+        "verdict_score": 40.0,
+        "priority_score": 20.0,
+        "regex_score": 75.0,
+        "judge_score": 87.0,
+        "hallucination_penalty": 2.5,
+        "deterministic_total": 49.75,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "GHSA-4V48-4Q5M-8VX4",
+            "CVE-2026-34040",
+            "CVE-2022-30580"
+          ],
+          "hallucinated_cves": [
+            "CVE-2022-23806"
+          ],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-41110",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-21698",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-65637",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-41110",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2025-30204",
+              "expected": "P2",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2022-21698",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-65637",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies most CVEs as not exploitable based on stack context, but for CVE-2025-30204 it assumes JWT usage without evidence from the context, and for CVE-2024-41110 it overstates reachability given the runtime hardening (read-only rootfs, non-root user, seccomp) that limits Docker API access."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "The model assigns P1 to two CVEs and P3 to the rest, which is reasonable, but CVE-2024-41110 is likely not reachable due to runtime controls, so it should be P3, and CVE-2025-30204's reachability is speculative, so P2 or P3 would be more appropriate."
+          },
+          {
+            "dimension": "actionability",
+            "score": 22,
+            "max_score": 25,
+            "reasoning": "Actions include specific version numbers and timelines, which is good, but for CVE-2024-41110 the action lacks detail on how to upgrade in the context of the container image build, and for CVE-2025-30204 it could mention verifying JWT usage first."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is concise, with no preamble or disclaimers, and each entry is brief and to the point, well within the token budget."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_016",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 80.0,
+        "pass1_score": 0.0,
+        "pass2_score": 80.0,
+        "format_score": 0.0,
+        "coverage_score": 0.0,
+        "verdict_score": 0.0,
+        "priority_score": 0.0,
+        "regex_score": 0.0,
+        "judge_score": 100.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 0.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "NONE"
+          ],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The scan output shows zero vulnerabilities for the target, so the model correctly returns an empty analysis. No reachability reasoning is needed, but the model accurately reflects the scan results."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "With no vulnerabilities to prioritize, the model correctly provides an empty list, which is appropriate given the scan output."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "No actions are required since there are no vulnerabilities. The empty analysis is the correct actionable response."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is extremely concise, containing only the required JSON with an empty analysis array. No preamble, disclaimers, or unnecessary text."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_017",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 80.0,
+        "pass1_score": 0.0,
+        "pass2_score": 80.0,
+        "format_score": 50.0,
+        "coverage_score": 0.0,
+        "verdict_score": 0.0,
+        "priority_score": 0.0,
+        "regex_score": 33.3,
+        "judge_score": 100.0,
+        "hallucination_penalty": 20.0,
+        "deterministic_total": 0.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "NONE"
+          ],
+          "hallucinated_cves": [
+            "N/A"
+          ],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies that no vulnerabilities were found, and implicitly uses the stack context (CI/CD only, not deployed) to conclude not_exploitable."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "With no vulnerabilities, the model assigns P3 (lowest priority) appropriately, consistent with the non-production context."
+          },
+          {
+            "dimension": "actionability",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The action is specific: 'No action required; continue monitoring CI/CD images for vulnerabilities.' This is concrete and appropriate given the clean scan."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is extremely concise (3 sentences total), no preamble, no disclaimers, direct JSON output."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_018",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 84.8,
+        "pass1_score": 8.8,
+        "pass2_score": 76.0,
+        "format_score": 100.0,
+        "coverage_score": 20.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 50.0,
+        "judge_score": 95.0,
+        "hallucination_penalty": 2.0,
+        "deterministic_total": 44.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [
+            "CVE-2023-24999",
+            "CVE-2025-6000",
+            "CVE-2025-5999",
+            "CVE-2026-5807",
+            "CVE-2026-3605",
+            "CVE-2026-4525",
+            "CVE-2026-33413",
+            "CVE-2023-24540"
+          ],
+          "hallucinated_cves": [
+            "CVE-2020-15114"
+          ],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "P2",
+              "got": "P1"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Correctly identifies CVE-2022-40186 as exploitable due to internal exposure, CVE-2020-15114 as not_exploitable because Vault uses Consul not etcd, and CVE-2023-24538 as exploitable via web UI/API, all based on stack context."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Correctly assigns P0 to actively exploitable CVE-2022-40186 with internal exposure, P1 to CVE-2023-24538 (reachable but no active exploitation), and P3 to non-exploitable CVE-2020-15114, matching real-world urgency."
+          },
+          {
+            "dimension": "actionability",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "Actions include specific version numbers for upgrades (e.g., 1.11.3, 1.19.8) and WAF rule suggestion, but the WAF rule is vague ('block suspicious requests') and the etcd action could be more precise (e.g., 'remove dependency' is clear but not a version patch)."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Response is under 12 sentences, no preamble, no disclaimers, direct and professional tone, with each reasoning and action kept to 1-2 sentences."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_019",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 67.8,
+        "pass1_score": 11.8,
+        "pass2_score": 56.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 10.0,
+        "regex_score": 50.0,
+        "judge_score": 70.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 59.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2026-33937",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-45853",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-33845",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-29078",
+              "expected": "P2",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2024-21508",
+              "expected": "P2",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2022-24434",
+              "expected": "P1",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2026-33937",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2023-45853",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2026-33845",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "P2",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "P2",
+              "got": "P0"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 15,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies that ejs, mysql2, dicer, body-parser, and handlebars are reachable via the admin panel or public HTTP, but it fails to consider that the container runs with a read-only root filesystem, non-root user, and restricted seccomp profile, which significantly mitigate many of these vulnerabilities; it also does not assess the Kerberos and zlib CVEs in the context of the actual network exposure (ALB + CloudFront) and runtime controls, treating all CRITICAL as exploitable without deeper analysis."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 10,
+            "max_score": 25,
+            "reasoning": "The model assigns P0 to all ten CVEs without distinguishing between those that are actively exploited in the wild (e.g., CVE-2022-29078) and those that are merely critical but not actively exploited; it ignores the regulatory context (non-financial, non-PII marketing site) and the mitigating runtime controls, which would lower the priority of many findings to P1 or P2."
+          },
+          {
+            "dimension": "actionability",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "Actions include specific version numbers and file paths for most CVEs, but the dicer action is vague ('replace multer with a maintained alternative') and the libgnutls30 action lacks a specific patched version; overall, the actions are mostly concrete but could be more precise."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is a valid JSON object with no preamble, disclaimers, or irrelevant details; each entry is concise with a single-sentence reasoning and brief action, staying well within the token budget."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_020",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 84.5,
+        "pass1_score": 16.5,
+        "pass2_score": 68.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 75.0,
+        "priority_score": 50.0,
+        "regex_score": 100.0,
+        "judge_score": 85.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 82.5,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-56171",
+              "expected": "P1",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "P2",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "P2",
+              "got": "P1"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies ImageMagick, GnuPG, gdk-pixbuf, and Git as not reachable, but overestimates reachability for libxml2 (no evidence of XML input handling in Express.js) and glib (a core library, but the specific CVE may not be exploitable via the API)."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 18,
+            "max_score": 25,
+            "reasoning": "P0 assignments for OpenSSL and libxml2 are reasonable given CRITICAL severity, but glib is also P0 without clear evidence of active exploitation or direct reachability, and curl is P1 despite being reachable and HIGH severity, which is inconsistent."
+          },
+          {
+            "dimension": "actionability",
+            "score": 22,
+            "max_score": 25,
+            "reasoning": "Actions include specific version numbers and timelines, which is good, but lack details like 'deploy within 72 hours per OJK 22/2023 Article 18' or mention of runtime controls (e.g., WAF rules) for partial mitigations."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "The response is concise, directly in JSON format, with no preamble or disclaimers, and each entry is brief and focused."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_021",
+      "model_id": "deepseek_v4_pro",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 87.0,
+        "pass1_score": 15.0,
+        "pass2_score": 72.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 100.0,
+        "judge_score": 90.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 75.0,
+        "model_type": "llm",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-28879",
+              "expected": "exploitable",
+              "got": "partial"
+            },
+            {
+              "cve": "CVE-2022-22822",
+              "expected": "not_exploitable",
+              "got": "partial"
+            },
+            {
+              "cve": "CVE-2022-2509",
+              "expected": "not_exploitable",
+              "got": "partial"
+            },
+            {
+              "cve": "CVE-2021-36222",
+              "expected": "not_exploitable",
+              "got": "partial"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2022-22822",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-2509",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2021-36222",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        },
+        "rubric_scores": [
+          {
+            "dimension": "reachability_reasoning",
+            "score": 20,
+            "max_score": 25,
+            "reasoning": "The model correctly identifies reachability for most CVEs, but for CVE-2021-36222 it incorrectly marks as 'partial' despite stating Kerberos auth is not configured, which should be 'not_exploitable'."
+          },
+          {
+            "dimension": "prioritization",
+            "score": 22,
+            "max_score": 25,
+            "reasoning": "Prioritization is mostly correct with P0 for actively exploited CVEs, but CVE-2021-36222 should be P3 instead of P2, and CVE-2022-2509 could be P3 due to low likelihood."
+          },
+          {
+            "dimension": "actionability",
+            "score": 23,
+            "max_score": 25,
+            "reasoning": "Actions are specific with version numbers and timelines, but could include more context like WAF rules or config changes for partial mitigations."
+          },
+          {
+            "dimension": "conciseness",
+            "score": 25,
+            "max_score": 25,
+            "reasoning": "Response is concise, directly in JSON format, no preamble or disclaimers, and each entry is brief."
+          }
+        ],
+        "judge_error": null
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 64.0,
+        "pass1_score": 12.8,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 20.0,
+        "priority_score": 60.0,
+        "regex_score": 60.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 64.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-50447",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-0286",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-29824",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-44228",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 56.0,
+        "pass1_score": 11.2,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 20.0,
+        "priority_score": 20.0,
+        "regex_score": 60.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 56.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-50447",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-0286",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-29824",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2023-50447",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2023-0286",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-29824",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 64.0,
+        "pass1_score": 12.8,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 20.0,
+        "priority_score": 60.0,
+        "regex_score": 60.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 64.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-50447",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-0286",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-29824",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-44228",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_001",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 76.0,
+        "pass1_score": 15.2,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 60.0,
+        "priority_score": 60.0,
+        "regex_score": 60.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 76.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2021-44228",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-44228",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_002",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-27191",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-41715",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-2880",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-2879",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-37434",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2023-3128",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-43798",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-41244",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-31107",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-37434",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_002",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 58.0,
+        "pass1_score": 11.6,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 30.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 58.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-37434",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-27191",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-41715",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-2880",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-2879",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-41244",
+              "expected": "P1",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2023-3128",
+              "expected": "P0",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-27191",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-41715",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-2880",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-2879",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_002",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-27191",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-41715",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-2880",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-2879",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-37434",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2023-3128",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-43798",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-41244",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-31107",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-37434",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_002",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-3128",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2021-43798",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2021-41244",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2022-31107",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "partial",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2022-37434",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2023-3128",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-43798",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-41244",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-31107",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-37434",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_003",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-3596",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-4519",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2020-36242",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_003",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 62.5,
+        "pass1_score": 12.5,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 37.5,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 62.5,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2020-36242",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-3596",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-4519",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2020-36242",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-3596",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2026-4519",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_003",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-3596",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-4519",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2020-36242",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_003",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_004",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-1304",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2018-12886",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-15847",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-1271",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-32221",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-4863",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_004",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 25.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-1304",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-1271",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2018-12886",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-15847",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2022-1304",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-1271",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P1",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2018-12886",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2019-15847",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_004",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-1304",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2018-12886",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-15847",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-1271",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-32221",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-4863",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_004",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-32221",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2023-4863",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-32221",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-4863",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_005",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2019-12900",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2018-1000858",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-33560",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52881",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_005",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 25.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2019-12900",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2018-1000858",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-33560",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2019-12900",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P0",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P1",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2018-1000858",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2021-33560",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_005",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2019-12900",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2018-1000858",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-33560",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52881",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_005",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-52881",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52881",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_006",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-6879",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-44431",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-69419",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-28387",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_006",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 25.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-6879",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-44431",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2023-6879",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "P1",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2023-44431",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_006",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-6879",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-44431",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-69419",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-28387",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_006",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-69419",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2026-28387",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-69419",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-28387",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_008",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-50387",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-50868",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52881",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_008",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 25.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-50387",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-50868",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P0",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P1",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2023-50387",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2023-50868",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_008",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-2961",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-50387",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-50868",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52881",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_008",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-52881",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-21626",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-31133",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52565",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-52881",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_009",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2019-5481",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-23521",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-20367",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2020-8169",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2020-8177",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-24813",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-52316",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-50379",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-55752",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2020-8169",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2020-8177",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_009",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2019-5481",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-23521",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-20367",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2020-8169",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2020-8177",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-52316",
+              "expected": "P1",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2019-5481",
+              "expected": "P3",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2022-23521",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2019-20367",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2025-24813",
+              "expected": "P0",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_009",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2019-5481",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-23521",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-20367",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2019-8457",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2020-8169",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2020-8177",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-24813",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-52316",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-50379",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-55752",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2020-8169",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2020-8177",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_009",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-24813",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-52316",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-50379",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-55752",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2020-8169",
+              "expected": "partial",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2020-8177",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-24813",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-52316",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-50379",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-55752",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2020-8169",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2020-8177",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_010",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 55.0,
+        "pass1_score": 11.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 55.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_010",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 35.0,
+        "pass1_score": 7.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 0.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 35.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "P3",
+              "got": "P0"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_010",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 55.0,
+        "pass1_score": 11.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 55.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_010",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 85.0,
+        "pass1_score": 17.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 100.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 85.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_011",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-52428",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-1370",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-12183",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-52999",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-1471",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-33870",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-42584",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-42587",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_011",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 25.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-52999",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-52428",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-1370",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-12183",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-52999",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2022-1471",
+              "expected": "P0",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2026-33870",
+              "expected": "P1",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2023-52428",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2023-1370",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2025-12183",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_011",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-52428",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-1370",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-12183",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-52999",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-1471",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-33870",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-42584",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-42587",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_011",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-1471",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2026-33870",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2026-42584",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2026-42587",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-1471",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-33870",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-42584",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-42587",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_013",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-3715",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_013",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 40.0,
+        "pass1_score": 8.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 0.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 40.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-3715",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2022-3715",
+              "expected": "P3",
+              "got": "P1"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_013",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-3715",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_013",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 90.0,
+        "pass1_score": 18.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 100.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 90.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_015",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 64.38,
+        "pass1_score": 12.88,
+        "pass2_score": 0.0,
+        "format_score": 93.8,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 64.38,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-41110",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-34040",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-30580",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-2253",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-21698",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "GHSA-4V48-4Q5M-8VX4",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-30204",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-65637",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_015",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 61.88,
+        "pass1_score": 12.38,
+        "pass2_score": 0.0,
+        "format_score": 93.8,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 37.5,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 61.88,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-41110",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-34040",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-30580",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-2253",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-41110",
+              "expected": "P3",
+              "got": "P0"
+            },
+            {
+              "cve": "GHSA-4V48-4Q5M-8VX4",
+              "expected": "P0",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2026-34040",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-30580",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2023-2253",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_015",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 64.38,
+        "pass1_score": 12.88,
+        "pass2_score": 0.0,
+        "format_score": 93.8,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 64.38,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-41110",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-34040",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-30580",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-2253",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-21698",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "GHSA-4V48-4Q5M-8VX4",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-30204",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-65637",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_015",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 64.38,
+        "pass1_score": 12.88,
+        "pass2_score": 0.0,
+        "format_score": 93.8,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 64.38,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-21698",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "GHSA-4V48-4Q5M-8VX4",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-30204",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-65637",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-21698",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "GHSA-4V48-4Q5M-8VX4",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-30204",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-65637",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_016",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 55.0,
+        "pass1_score": 11.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 55.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_016",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 35.0,
+        "pass1_score": 7.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 0.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 35.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "P3",
+              "got": "P0"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_016",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 55.0,
+        "pass1_score": 11.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 55.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_016",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 85.0,
+        "pass1_score": 17.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 100.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 85.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_017",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 55.0,
+        "pass1_score": 11.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 55.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_017",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 35.0,
+        "pass1_score": 7.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 0.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 35.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "P3",
+              "got": "P0"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_017",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 55.0,
+        "pass1_score": 11.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 0.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 55.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "NONE",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_017",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 85.0,
+        "pass1_score": 17.0,
+        "pass2_score": 0.0,
+        "format_score": 50.0,
+        "coverage_score": 100.0,
+        "verdict_score": 100.0,
+        "priority_score": 100.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 85.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [],
+          "priority_mismatches": [],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_018",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2026-5807",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-3605",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-4525",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-33413",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-24540",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-40186",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24999",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-6000",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-5999",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24540",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_018",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-5807",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-3605",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-4525",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-33413",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-24540",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "P2",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2025-6000",
+              "expected": "P1",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2026-5807",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2026-3605",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2026-4525",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2026-33413",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_018",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2026-5807",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-3605",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-4525",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-33413",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-24540",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-40186",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24999",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-6000",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-5999",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24540",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_018",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-40186",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2023-24999",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-6000",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-5999",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "partial",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2023-24540",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-40186",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24999",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-6000",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-5999",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24538",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-24540",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_019",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2026-33845",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-45853",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-33937",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-45590",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-24434",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-29078",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21508",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_019",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 56.0,
+        "pass1_score": 11.2,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 20.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 56.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2026-33845",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-45853",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-33937",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2022-29078",
+              "expected": "P2",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2024-21508",
+              "expected": "P2",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2026-33845",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2023-45853",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2026-33937",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2024-45590",
+              "expected": "P0",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-24434",
+              "expected": "P1",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_019",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2026-33845",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2024-37371",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2023-45853",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-33937",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-45590",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-24434",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-29078",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21508",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_019",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 40.0,
+        "priority_score": 40.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2024-45590",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2022-24434",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2022-29078",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-21508",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "partial",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-45590",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-24434",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-29078",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-21508",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-6020",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_020",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 62.5,
+        "pass1_score": 12.5,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 37.5,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 62.5,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-7345",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-48384",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-56171",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_020",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 60.0,
+        "pass1_score": 12.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 25.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 60.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "partial",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-7345",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-48384",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2024-56171",
+              "expected": "P1",
+              "got": "P0"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "P2",
+              "got": "P1"
+            },
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2025-7345",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2025-48384",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_020",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 62.5,
+        "pass1_score": 12.5,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 37.5,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 62.5,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-68973",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-7345",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2025-48384",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "partial",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-56171",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_020",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 58.75,
+        "pass1_score": 11.75,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 37.5,
+        "priority_score": 37.5,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 58.75,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2024-56171",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "partial",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2025-15467",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2024-56171",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-14087",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2025-53014",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2026-5773",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_021",
+      "model_id": "baseline_cvss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-2509",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-36222",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-22822",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-39537",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-26691",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-32221",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-28879",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_021",
+      "model_id": "baseline_trivy",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2021-36222",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-22822",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-2509",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-39537",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-36222",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-22822",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2022-2509",
+              "expected": "P3",
+              "got": "P2"
+            },
+            {
+              "cve": "CVE-2021-39537",
+              "expected": "P3",
+              "got": "P2"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_021",
+      "model_id": "baseline_epss",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2022-2509",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-36222",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2022-22822",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            },
+            {
+              "cve": "CVE-2021-39537",
+              "expected": "not_exploitable",
+              "got": "exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-26691",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-32221",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-28879",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    },
+    {
+      "case_id": "trivy_triage_021",
+      "model_id": "baseline_reachability",
+      "prompt_version": "trivy_triage/v1",
+      "score": {
+        "total": 65.0,
+        "pass1_score": 13.0,
+        "pass2_score": 0.0,
+        "format_score": 100.0,
+        "coverage_score": 100.0,
+        "verdict_score": 50.0,
+        "priority_score": 50.0,
+        "regex_score": 0.0,
+        "judge_score": 0.0,
+        "hallucination_penalty": 0.0,
+        "deterministic_total": 65.0,
+        "model_type": "baseline",
+        "validation": {
+          "missing_cves": [],
+          "hallucinated_cves": [],
+          "verdict_mismatches": [
+            {
+              "cve": "CVE-2021-26691",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2022-32221",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            },
+            {
+              "cve": "CVE-2023-28879",
+              "expected": "exploitable",
+              "got": "not_exploitable"
+            }
+          ],
+          "priority_mismatches": [
+            {
+              "cve": "CVE-2021-26691",
+              "expected": "P0",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2022-32221",
+              "expected": "P1",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2021-3711",
+              "expected": "P2",
+              "got": "P3"
+            },
+            {
+              "cve": "CVE-2023-28879",
+              "expected": "P2",
+              "got": "P3"
+            }
+          ],
+          "parse_error": null
+        }
+      }
+    }
+  ]
+}

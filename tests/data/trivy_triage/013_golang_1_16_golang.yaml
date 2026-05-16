@@ -2,7 +2,7 @@ id: trivy_triage_013
 task: trivy_triage
 version: v1
 source:
-  type: ai_assisted_deepseek_v4
+  type: human_verified
   image: golang:1.16
   scanned_at: 2026-05-14
   trivy_version: auto_detected

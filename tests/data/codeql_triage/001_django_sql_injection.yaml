@@ -1,0 +1,223 @@
+# tests/data/codeql_triage/001_django_sql_injection.yaml
+#
+# CodeQL SAST triage case: Python SQL Injection in Django.
+# The application uses raw SQL via cursor.execute() with string interpolation
+# in a public-facing API endpoint. No input sanitization, no ORM.
+# This is a textbook must-fix finding.
+
+id: codeql_triage_001
+task: codeql_triage
+version: v1
+
+source:
+  type: self_scan
+  image: payments-api:2.4.1
+  scanned_at: 2026-05-14
+  codeql_version: 2.18.0
+  notes: |
+    Scanned locally with CodeQL. The Python security query pack detected
+    a SQL injection via cursor.execute() with string interpolation in the
+    payment reconciliation endpoint. The endpoint is exposed via ALB on port 443.
+
+input: |
+  CodeQL SAST Scan Results
+  ════════════════════════
+  Tool: CodeQL 2.18.0
+  Query pack: codeql/python-queries@1.2.0
+  Language: Python 3.11
+  Scan target: payments-api/
+
+  ┌──────┬──────────────────────────┬──────────┬─────────────────────────────────┬──────────┐
+  │  #   │ Rule ID                  │ Severity │ Location                        │ Line     │
+  ├──────┼──────────────────────────┼──────────┼─────────────────────────────────┼──────────┤
+  │    1 │ py/sql-injection         │ error    │ src/reconciliation/views.py     │ 142      │
+  │    2 │ py/clear-text-storage-   │ warning  │ src/reconciliation/views.py     │ 145      │
+  │      │ sensitive-data           │          │                                 │          │
+  │    3 │ py/hardcoded-credentials │ warning  │ src/reconciliation/config.py    │ 22       │
+  │    4 │ py/stack-trace-exposure  │ note     │ src/middleware/error_handler.py  │ 55       │
+  └──────┴──────────────────────────┴──────────┴─────────────────────────────────┴──────────┘
+
+  Finding 1: py/sql-injection [ERROR]
+  ═══════════════════════════════════════
+  Location: src/reconciliation/views.py:142
+  Message: Query built with string interpolation — possible SQL injection.
+
+  Vulnerable code:
+    140   def reconcile(request: HttpRequest) -> JsonResponse:
+    141       tx_ref = request.GET.get("reference", "")
+    142       cursor.execute(f"SELECT * FROM transactions WHERE ref = '{tx_ref}'")
+    143       rows = cursor.fetchall()
+
+  Code flow:
+    (1) src/reconciliation/views.py:141 — User input enters via request.GET
+    (2) src/reconciliation/views.py:142 — Input flows directly into cursor.execute()
+    (3) src/reconciliation/views.py:142 — No sanitization, no parameterized query
+
+  Finding 2: py/clear-text-storage-sensitive-data [WARNING]
+  ════════════════════════════════════════════════════════════
+  Location: src/reconciliation/views.py:145
+  Message: Sensitive data stored in database without encryption.
+
+  Vulnerable code:
+    143       rows = cursor.fetchall()
+    144       for row in rows:
+    145           db.session.add(ReconReport(data=json.dumps(row)))
+    146       db.session.commit()
+
+  Finding 3: py/hardcoded-credentials [WARNING]
+  ═══════════════════════════════════════════════
+  Location: src/reconciliation/config.py:22
+  Message: Password appears in source code as a string literal.
+
+  Vulnerable code:
+    20   # Database configuration
+    21   DB_USER = "app_user"
+    22   DB_PASSWORD = "P@ssw0rd!2024"
+    23   DB_HOST = "internal-db.cluster.local"
+
+  Finding 4: py/stack-trace-exposure [NOTE]
+  ═══════════════════════════════════════════
+  Location: src/middleware/error_handler.py:55
+  Message: Exception handler exposes stack trace in HTTP response.
+
+  Vulnerable code:
+    53   @app.errorhandler(Exception)
+    54   def handle_error(error: Exception) -> tuple[Response, int]:
+    55       return jsonify({"error": str(error), "trace": traceback.format_exc()}), 500
+
+stack_context: |
+  Service: payments-reconciliation-api
+  Language: Python 3.11 (Django 4.2)
+  Exposure: public internet via ALB on port 443
+  Authentication: JWT-based, Cognito authorizer at ALB level
+  Data classification: PCI-DSS Level 1 (payment transaction data)
+
+  Architecture:
+    - Django REST API with 3 pods behind ALB
+    - PostgreSQL 15 on RDS (internal subnet)
+    - Redis 7 for task queue (ElastiCache)
+    - No WAF in front of ALB
+    - No input sanitization middleware
+
+  Code analysis:
+    - py/sql-injection: REACHABLE. The `/api/v1/reconcile` endpoint is public
+      (authenticated only, not rate-limited). User-controlled `reference` parameter
+      flows directly into cursor.execute() with zero sanitization.
+      CVSS:9.8 / CWE-89. The database stores PCI-DSS Level 1 transaction data.
+    - py/clear-text-storage-sensitive-data: REACHABLE but lower priority.
+      ReconReport serializes transaction data including PAN last-4 (not full PAN).
+      Encryption-at-rest is enabled at RDS level (AES-256).
+    - py/hardcoded-credentials: REACHABLE. The credentials are for a
+      read-only reporting user with limited schema access. However, hardcoded
+      passwords violate PCI-DSS 4.0 requirement 8.3.2 (unique credentials).
+    - py/stack-trace-exposure: REACHABLE but informational severity. Stack traces
+      are returned in JSON format, which could leak internal paths.
+      In production, ALB drops all 5xx responses but the trace is logged.
+
+  Regulatory context: PCI-DSS v4.0 Requirements 6.4 (public-facing web apps
+  must be reviewed for injection flaws), 8.3.2 (unique passwords), and
+  3.4 (render PAN unreadable).
+
+ground_truth:
+  exploitable_findings:
+    - cve: py/sql-injection
+      verdict: exploitable
+      reasoning: |
+        SQL injection via cursor.execute() in a public internet-facing endpoint.
+        No WAF, no input sanitization, no parameterized queries. Attacker can
+        exfiltrate PCI-DSS Level 1 transaction data via SQL injection in the
+        `reference` GET parameter. CVSS:9.8.
+      action: |
+        Rewrite line 142 using parameterized query:
+        cursor.execute("SELECT * FROM transactions WHERE ref = %s", (tx_ref,))
+        Deploy within 72 hours per PCI-DSS 6.4.
+
+  non_exploitable_findings:
+    - cve: py/hardcoded-credentials
+      verdict: not_exploitable
+      reasoning: |
+        While technically reachable, the exposed DB_PASSWORD is for a
+        read-only reporting user with no write access to transaction tables.
+        NetworkPolicy restricts database access to only the payments-api
+        service account. Still needs remediation for PCI-DSS compliance.
+      action: |
+        Migrate DB_PASSWORD to AWS Secrets Manager with IAM-based access.
+        Rotate the current password immediately.
+
+  partial_findings:
+    - cve: py/clear-text-storage-sensitive-data
+      verdict: partial
+      reasoning: |
+        Transaction data is stored with RDS AES-256 encryption-at-rest.
+        Only PAN last-4 digits are stored, not full PAN. However, the
+        data is logged in clear text before storage. Medium priority.
+      action: |
+        Add field-level encryption for sensitive fields in ReconReport.
+        Remove json.dumps(row) logging in production.
+
+    - cve: py/stack-trace-exposure
+      verdict: partial
+      reasoning: |
+        Stack trace exposure is limited by ALB dropping 5xx responses.
+        However, stack traces are logged internally and could be accessed
+        by insiders. Low priority but worth fixing.
+      action: |
+        Remove traceback from error response. Log to structured logger instead.
+
+  priority_order:
+    - py/sql-injection          # P0 — 72 hours, PCI-DSS 6.4
+    - py/hardcoded-credentials  # P2 — this sprint, PCI-DSS 8.3.2
+    - py/clear-text-storage-sensitive-data  # P2 — this sprint
+    - py/stack-trace-exposure   # P3 — next quarter
+
+expected_response_includes:
+  - "(?i)sql.injection|cursor.execute|parameterized"
+  - "(?i)py/sql-injection|CWE-89|injection"
+  - "(?i)P0|72 hours"
+  - "(?i)hardcoded|credentials|Secrets Manager"
+  - "(?i)stack.trace|traceback"
+
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: |
+      Does the model correctly assess exploitability for each finding?
+      Specifically:
+      - SQL injection is exploitable (public endpoint, no WAF, no sanitization).
+      - Hardcoded credentials are not_exploitable (limited access, NetworkPolicy).
+      - Clear-text storage is partial (encryption-at-rest exists but logging is
+        clear text).
+      - Stack trace exposure is partial (ALB drops 5xx but traces are logged
+        internally).
+
+      Full marks: correctly classifies all 4 findings.
+      Half marks: gets the main SQL injection right but misses nuance on others.
+      Zero marks: everything is "exploitable" or everything is "not_exploitable".
+
+  prioritization:
+    max_score: 25
+    description: |
+      Does the model rank findings correctly by real-world urgency?
+      Expected order: SQL injection first (P0/72h), then credentials and
+      clear-text storage (this sprint), stack trace last (next quarter).
+
+      Penalize if it treats the hardcoded credentials as P0.
+      Penalize if it puts stack trace exposure above SQL injection.
+
+  actionability:
+    max_score: 25
+    description: |
+      Are recommended actions concrete and specific?
+      Good: "Replace cursor.execute(f'...') with parameterized query using %s."
+      Bad: "Sanitize user input."
+
+      Bonus if the model references PCI-DSS requirements and gives file:line
+      references for code changes.
+
+  conciseness:
+    max_score: 25
+    description: |
+      Response is under 15 sentences. No preamble. No disclaimers.
+      Direct, professional tone.
+
+weight: 1.3   # Core SAST capability — premium weighting

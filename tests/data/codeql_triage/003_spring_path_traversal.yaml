@@ -1,0 +1,247 @@
+# tests/data/codeql_triage/003_spring_path_traversal.yaml
+#
+# CodeQL SAST triage case: Java Path Traversal in Spring Boot.
+# The application has a file download endpoint vulnerable to path traversal
+# in code, but protected by WAF rules and input validation at the ingress level.
+# This tests whether the model can distinguish code-level vulnerability from
+# real-world exploitability.
+
+id: codeql_triage_003
+task: codeql_triage
+version: v1
+
+source:
+  type: self_scan
+  image: document-service:3.1.0
+  scanned_at: 2026-05-14
+  codeql_version: 2.18.0
+  notes: |
+    Scanned in CI pipeline. CodeQL Java security queries detected path
+    traversal in the document download endpoint. The WAF team confirmed
+    that ../ patterns are blocked at the ingress level, but the code
+    itself does not validate the path.
+
+input: |
+  CodeQL SAST Scan Results
+  ════════════════════════
+  Tool: CodeQL 2.18.0
+  Query pack: codeql/java-queries@1.2.0
+  Language: Java 21 (Spring Boot 3.2)
+  Scan target: document-service/
+
+  ┌──────┬──────────────────────────────────┬──────────┬─────────────────────────────────┬──────────┐
+  │  #   │ Rule ID                          │ Severity │ Location                        │ Line     │
+  ├──────┼──────────────────────────────────┼──────────┼─────────────────────────────────┼──────────┤
+  │    1 │ java/path-injection              │ error    │ src/controller/DocController   │ 67       │
+  │      │                                  │          │   .java                         │          │
+  │    2 │ java/unsafe-deserialization      │ error    │ src/service/DocParser.java     │ 102      │
+  │    3 │ java/xxe                         │ warning  │ src/service/DocParser.java     │ 88       │
+  │    4 │ java/ldap-injection              │ warning  │ src/auth/LdapAuthProvider.java │ 42       │
+  └──────┴──────────────────────────────────┴──────────┴─────────────────────────────────┴──────────┘
+
+  Finding 1: java/path-injection [ERROR]
+  ═════════════════════════════════════════
+  Location: src/controller/DocController.java:67
+  Message: Path traversal — file path is constructed with user input.
+
+  Vulnerable code:
+    65    @GetMapping("/documents/{filename}")
+    66    public ResponseEntity<Resource> getDocument(@PathVariable String filename) {
+    67        Path filePath = Paths.get("/var/data/docs/", filename);
+    68        Resource resource = new FileSystemResource(filePath);
+    69        return ResponseEntity.ok(resource);
+    70    }
+
+  Code flow:
+    (1) DocController.java:65 — User-controlled filename from URL path
+    (2) DocController.java:67 — filename concatenated into Paths.get()
+    (3) DocController.java:68 — FileSystemResource loads arbitrary file
+
+  Finding 2: java/unsafe-deserialization [ERROR]
+  ════════════════════════════════════════════════
+  Location: src/service/DocParser.java:102
+  Message: Deserialization of untrusted data.
+
+  Vulnerable code:
+    100   public Document parse(byte[] data) {
+    101       try (ObjectInputStream ois = new ObjectInputStream(
+    102               new ByteArrayInputStream(data))) {
+    103           return (Document) ois.readObject();
+    104       }
+    105   }
+
+  Finding 3: java/xxe [WARNING]
+  ═════════════════════════════════════════
+  Location: src/service/DocParser.java:88
+  Message: XML external entity processing is enabled.
+
+  Vulnerable code:
+    86    public Document parseXml(String xmlContent) {
+    87        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    88        Document doc = factory.newDocumentBuilder().parse(
+    89            new InputSource(new StringReader(xmlContent)));
+    90        return doc;
+    91    }
+
+  Finding 4: java/ldap-injection [WARNING]
+  ═══════════════════════════════════════════
+  Location: src/auth/LdapAuthProvider.java:42
+  Message: LDAP query constructed with user input.
+
+  Vulnerable code:
+    40    public LdapUser authenticate(String username, String password) {
+    41        String filter = String.format(
+    42            "(uid=%s)", username);
+    43        return ldapTemplate.search("ou=users", filter, ...);
+    44    }
+
+stack_context: |
+  Service: document-service
+  Language: Java 21 (Spring Boot 3.2, Spring Security 6.2)
+  Exposure: internal network only (VPC, no public ALB)
+  Authentication: OAuth2 (Keycloak), mTLS between services
+  Data classification: Internal business documents
+
+  Architecture:
+    - Spring Boot API in EKS Fargate (private subnets)
+    - Internal NLB with AWS WAF (rate-based rules + path traversal rule set)
+    - Documents stored in S3 via VPC Endpoint, accessed through presigned URLs
+    - The /documents/{filename} endpoint is actually a legacy endpoint;
+      all new clients use S3 presigned URLs
+    - Service mesh (Istio) with mTLS and fine-grained RBAC
+
+  Code analysis:
+    - java/path-injection: COMPENSATED. The WAF rule set includes path
+      traversal detection (blocks ../, ..\\, %2e%2e%2f, etc.). Additionally,
+      the endpoint is only accessible within the VPC via internal NLB,
+      not from the public internet. The code itself is vulnerable but the
+      compensating controls render it not exploitable in practice.
+    - java/unsafe-deserialization: NOT REACHABLE. The parse() method is
+      called only on documents uploaded by authenticated internal users
+      via a validated upload workflow. No untrusted data reaches this
+      code path. The input goes through MIME type validation and AV scanning
+      before reaching DocParser.
+    - java/xxe: PARTIALLY PROTECTED. External entities are not explicitly
+      disabled. However, the XML input comes from the same internal upload
+      pipeline (authenticated users, validated documents). The risk is SSRF
+      from within the VPC if an attacker compromises an internal account.
+      XXE is enabled by default in Java 21's DocumentBuilderFactory, so this
+      is a genuine gap.
+    - java/ldap-injection: NOT REACHABLE. LDAP authentication is performed
+      only for service-to-service calls within the mesh. The username is
+      extracted from the mTLS client certificate, not from user input.
+      The CodeQL finding is a false positive — the code pattern matches but
+      the data flow prevents injection.
+
+  Regulatory context: NIST SP 800-53 controls SI-10 (information input
+  validation) and SC-7 (boundary protection). WAF provides SC-7 coverage.
+
+ground_truth:
+  exploitable_findings: []
+
+  non_exploitable_findings:
+    - cve: java/path-injection
+      verdict: not_exploitable
+      reasoning: |
+        WAF at the NLB (internal) blocks path traversal patterns (.., ..\\,
+        URL-encoded variants). The endpoint is internal-only (no public ingress).
+        The code is vulnerable in theory but compensating controls fully
+        mitigate the risk. A code fix should be scheduled but is not urgent.
+      action: |
+        Add input validation using Spring's PathResourceResolver:
+        new PathResourceResolver().getResource("/var/data/docs/", filename);
+        Schedule for next sprint. In the meantime, WAF rules provide coverage.
+
+    - cve: java/unsafe-deserialization
+      verdict: not_exploitable
+      reasoning: |
+        The ObjectInputStream is only reached via authenticated, validated
+        upload workflow with MIME and AV scanning. No untrusted data flows
+        through this path. The finding is a code-level anti-pattern but not
+        exploitable in this deployment.
+      action: |
+        Replace with safer deserialization approach (e.g., Jackson for
+        structured data). Schedule for next sprint.
+
+    - cve: java/ldap-injection
+      verdict: not_exploitable
+      reasoning: |
+        LDAP filter uses mTLS certificate subject, not user-supplied input.
+        CodeQL pattern match is a false positive in this context.
+        Service mesh authentication guarantees the username is validated
+        by the client certificate before reaching this code.
+      action: |
+        Document in security exception register. No action needed.
+
+  partial_findings:
+    - cve: java/xxe
+      verdict: partial
+      reasoning: |
+        XXE is enabled by default in Java 21's DocumentBuilderFactory.
+        While the XML input comes from authenticated internal users,
+        an account compromise could enable SSRF attacks within the VPC.
+        The impact is limited by VPC networking (no public exfiltration path),
+        but internal resource enumeration is possible.
+      action: |
+        Disable external entities explicitly:
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        Deploy this sprint.
+
+  priority_order:
+    - java/xxe                        # P2 — this sprint, genuine gap
+    - java/path-injection             # P3 — next quarter (WAF-compensated)
+    - java/unsafe-deserialization     # P3 — next quarter (not reachable)
+    - java/ldap-injection             # P3 — next quarter (false positive)
+
+expected_response_includes:
+  - "(?i)path.traversal|WAF|compensating|internal.*only"
+  - "(?i)XXE|external.entity|DocumentBuilderFactory"
+  - "(?i)not.reachable|false.positive|not.exploitable"
+  - "(?i)mTLS|certificate.*auth"
+  - "(?i)P2|this.sprint|next.quarter"
+
+rubric:
+  reachability_reasoning:
+    max_score: 25
+    description: |
+      Does the model correctly assess exploitability?
+      CRITICAL TEST: All 4 findings should be NOT exploitable or partial.
+      - Path traversal is NOT exploitable (WAF blocks patterns, internal-only).
+      - Unsafe deserialization is NOT exploitable (authenticated-only pipeline).
+      - XXE is PARTIAL (internal account compromise could enable SSRF in VPC).
+      - LDAP injection is NOT exploitable (mTLS certificate source, not user input).
+
+      Full marks: understands compensating controls and correctly identifies
+      that NONE of these are actively exploitable from the public internet.
+      Half marks: flags path traversal as exploitable despite WAF rules.
+      Zero marks: treats all findings as P0/exploitable.
+
+  prioritization:
+    max_score: 25
+    description: |
+      Does the model correctly deprioritize compensated findings?
+      Expected order: XXE first (P2, this sprint — genuine gap), then path
+      traversal (P3, WAF-compensated), then the other two (P3, not reachable).
+
+      Penalize if it puts path traversal above XXE.
+      CREDIT if it notes that compensating controls exist but a code fix
+      should still be scheduled.
+
+  actionability:
+    max_score: 25
+    description: |
+      Are actions specific and implementable?
+      Good: "Disable external entities: factory.setFeature(..., false)"
+      Bad: "Fix XXE vulnerability."
+
+      Bonus for understanding that WAF + internal-only network = defense in depth.
+      Penalty for suggesting urgent fix on WAF-compensated path traversal.
+
+  conciseness:
+    max_score: 25
+    description: |
+      Response is under 15 sentences. No preamble.
+      Correctly focuses on XXE as the only real action item.
+
+weight: 1.4   # Tests compensating controls reasoning — key differentiator

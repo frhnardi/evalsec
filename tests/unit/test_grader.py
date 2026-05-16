@@ -66,88 +66,117 @@ def sample_ground_truth() -> GroundTruth:
 
 @pytest.fixture
 def perfect_json_response() -> str:
-    """A model response that perfectly matches ground truth."""
+    """A VEX model response that perfectly matches ground truth.
+
+    VEX status mappings:
+      - status="affected" → verdict "exploitable"
+      - status="under_investigation" → verdict "partial"
+      - status="not_affected" → verdict "not_exploitable"
+    """
     return json.dumps(
         {
-            "analysis": [
+            "document": {
+                "type": "vex",
+                "author": "evalsec-benchmark",
+            },
+            "statements": [
                 {
-                    "cve": "CVE-2021-44228",
-                    "verdict": "exploitable",
+                    "vulnerability": {"id": "CVE-2021-44228"},
+                    "status": "affected",
+                    "justification": "code_not_reachable",
+                    "impact_statement": "Log4Shell reachable from HTTP",
+                    "action_statement": "Patch to 2.17.1 within 72 hours",
                     "priority": "P0",
-                    "reasoning": "Log4Shell reachable from HTTP",
-                    "action": "Patch to 2.17.1 within 72 hours",
                     "timeline": "72 hours",
                 },
                 {
-                    "cve": "CVE-2024-21626",
-                    "verdict": "partial",
+                    "vulnerability": {"id": "CVE-2024-21626"},
+                    "status": "under_investigation",
+                    "justification": "protected_by_compensating_control",
+                    "impact_statement": "Container escape but RO root mitigates",
+                    "action_statement": "Patch runc this sprint",
                     "priority": "P1",
-                    "reasoning": "Container escape but RO root mitigates",
-                    "action": "Patch runc this sprint",
                     "timeline": "this sprint",
                 },
                 {
-                    "cve": "CVE-2023-50447",
-                    "verdict": "not_exploitable",
+                    "vulnerability": {"id": "CVE-2023-50447"},
+                    "status": "not_affected",
+                    "justification": "code_not_reachable",
+                    "impact_statement": "Pillow eval() is dead code",
+                    "action_statement": "Defer to next quarter",
                     "priority": "P3",
-                    "reasoning": "Pillow eval() is dead code",
-                    "action": "Defer to next quarter",
                     "timeline": "next quarter",
                 },
-            ]
+            ],
         }
     )
 
 
 @pytest.fixture
 def hallucinated_json_response() -> str:
-    """A response with an extra CVE not in ground truth."""
+    """A VEX response with an extra CVE not in ground truth."""
     data = {
-        "analysis": [
+        "document": {
+            "type": "vex",
+            "author": "evalsec-benchmark",
+        },
+        "statements": [
             {
-                "cve": "CVE-2021-44228",
-                "verdict": "exploitable",
+                "vulnerability": {"id": "CVE-2021-44228"},
+                "status": "affected",
+                "justification": "code_not_reachable",
+                "impact_statement": "Log4Shell",
+                "action_statement": "Patch now",
                 "priority": "P0",
-                "reasoning": "Log4Shell",
-                "action": "Patch now",
                 "timeline": "72 hours",
             },
             {
-                "cve": "CVE-9999-99999",  # Hallucinated!
-                "verdict": "exploitable",
+                "vulnerability": {"id": "CVE-9999-99999"},  # Hallucinated!
+                "status": "affected",
+                "justification": "code_not_reachable",
+                "impact_statement": "Made up CVE",
+                "action_statement": "Patch",
                 "priority": "P2",
-                "reasoning": "Made up CVE",
-                "action": "Patch",
                 "timeline": "this sprint",
             },
-        ]
+        ],
     }
     return json.dumps(data)
 
 
 @pytest.fixture
 def wrong_verdict_json_response() -> str:
-    """A response with wrong verdicts for some CVEs."""
+    """A VEX response with wrong status values for some CVEs.
+
+    CVE-2021-44228: status="not_affected" → verdict "not_exploitable" (WRONG, should be exploitable)
+    CVE-2024-21626: status="affected" → verdict "exploitable" (WRONG, should be partial)
+    """
     return json.dumps(
         {
-            "analysis": [
+            "document": {
+                "type": "vex",
+                "author": "evalsec-benchmark",
+            },
+            "statements": [
                 {
-                    "cve": "CVE-2021-44228",
-                    "verdict": "not_exploitable",  # WRONG! Should be exploitable
+                    "vulnerability": {"id": "CVE-2021-44228"},
+                    "status": "not_affected",  # WRONG! Should be affected (→ exploitable)
+                    "justification": "code_not_reachable",
+                    "impact_statement": "Wrong reasoning",
+                    "action_statement": "Patch",
                     "priority": "P0",
-                    "reasoning": "Wrong reasoning",
-                    "action": "Patch",
                     "timeline": "72 hours",
                 },
                 {
-                    "cve": "CVE-2024-21626",
-                    "verdict": "exploitable",  # WRONG! Should be partial
+                    "vulnerability": {"id": "CVE-2024-21626"},
+                    "status": "affected",  # WRONG! Should be under_investigation (→ partial)
+                    "justification": "code_not_reachable",
+                    "impact_statement": "Wrong reasoning",
+                    "action_statement": "Patch",
                     "priority": "P1",
-                    "reasoning": "Wrong reasoning",
-                    "action": "Patch",
                     "timeline": "this sprint",
                 },
-            ]
+            ],
         }
     )
 
@@ -160,7 +189,7 @@ def invalid_json_response() -> str:
 
 @pytest.fixture
 def markdown_fenced_response(perfect_json_response: str) -> str:
-    """A valid JSON response wrapped in markdown code fences."""
+    """A valid VEX JSON response wrapped in markdown code fences."""
     return f"```json\n{perfect_json_response}\n```"
 
 
@@ -176,35 +205,35 @@ class TestExtractJson:
         """Plain JSON without fences is returned as-is."""
         result = JsonValidator._extract_json(perfect_json_response)
         parsed = json.loads(result)
-        assert "analysis" in parsed
+        assert "document" in parsed
 
     def test_markdown_fenced(self, markdown_fenced_response: str) -> None:
         """Markdown fences are stripped, including the json language tag."""
         result = JsonValidator._extract_json(markdown_fenced_response)
         parsed = json.loads(result)
-        assert "analysis" in parsed
-        assert len(parsed["analysis"]) == 3
+        assert "document" in parsed
+        assert len(parsed["statements"]) == 3
 
     def test_markdown_no_lang_tag(self) -> None:
         """Fences without language tag are still stripped."""
-        text = '```\n{"analysis": []}\n```'
+        text = '```\n{"document": {"type": "vex"}, "statements": []}\n```'
         result = JsonValidator._extract_json(text)
         parsed = json.loads(result)
-        assert parsed == {"analysis": []}
+        assert parsed == {"document": {"type": "vex"}, "statements": []}
 
     def test_markdown_uppercase_json(self) -> None:
         """Uppercase JSON language tag is handled."""
-        text = '```JSON\n{"analysis": []}\n```'
+        text = '```JSON\n{"document": {"type": "vex"}, "statements": []}\n```'
         result = JsonValidator._extract_json(text)
         parsed = json.loads(result)
-        assert parsed == {"analysis": []}
+        assert parsed == {"document": {"type": "vex"}, "statements": []}
 
     def test_no_closing_fence(self) -> None:
         """Missing closing fence — extracts everything after opening fence."""
-        text = '```json\n{"analysis": []}'
+        text = '```json\n{"document": {"type": "vex"}, "statements": []}'
         result = JsonValidator._extract_json(text)
         parsed = json.loads(result)
-        assert parsed == {"analysis": []}
+        assert parsed == {"document": {"type": "vex"}, "statements": []}
 
 
 # ---------------------------------------------------------------------------
@@ -220,7 +249,7 @@ class TestJsonValidatorFormat:
         perfect_json_response: str,
         sample_ground_truth: GroundTruth,
     ) -> None:
-        """Perfect JSON response gets 100% format score."""
+        """Perfect VEX JSON response gets 100% format score."""
         result = JsonValidator.validate(
             response_text=perfect_json_response,
             ground_truth=sample_ground_truth,
@@ -244,11 +273,11 @@ class TestJsonValidatorFormat:
         assert result.parse_error is not None
         assert "Invalid JSON" in result.parse_error
 
-    def test_missing_analysis_key(
+    def test_missing_document_key(
         self,
         sample_ground_truth: GroundTruth,
     ) -> None:
-        """Missing 'analysis' key gets 0% format."""
+        """Missing 'document' key gets 0% format."""
         text = json.dumps({"some_other_key": True})
         result = JsonValidator.validate(
             response_text=text,
@@ -256,21 +285,25 @@ class TestJsonValidatorFormat:
             regex_patterns=[],
         )
         assert result.format_score == 0.0
-        assert "Missing 'analysis' key" in (result.parse_error or "")
+        assert "Missing 'document' key" in (result.parse_error or "")
 
     def test_missing_required_fields(
         self,
         sample_ground_truth: GroundTruth,
     ) -> None:
-        """Missing required fields in analysis items gets partial score."""
+        """Missing required fields in VEX statements gets partial score."""
         data = {
-            "analysis": [
+            "document": {
+                "type": "vex",
+                "author": "evalsec-benchmark",
+            },
+            "statements": [
                 {
-                    "cve": "CVE-2021-44228",
-                    "verdict": "exploitable",
-                    # missing priority, reasoning, action, timeline
+                    "vulnerability": {"id": "CVE-2021-44228"},
+                    "status": "affected",
+                    # missing priority, impact_statement, action_statement, timeline
                 }
-            ]
+            ],
         }
         text = json.dumps(data)
         result = JsonValidator.validate(
@@ -280,22 +313,26 @@ class TestJsonValidatorFormat:
         )
         assert result.format_score == 0.0  # item has missing required fields
 
-    def test_invalid_verdict(
+    def test_invalid_vex_status(
         self,
         sample_ground_truth: GroundTruth,
     ) -> None:
-        """Invalid verdict value gets partial format score."""
+        """Invalid VEX status value gets partial format score."""
         data = {
-            "analysis": [
+            "document": {
+                "type": "vex",
+                "author": "evalsec-benchmark",
+            },
+            "statements": [
                 {
-                    "cve": "CVE-2021-44228",
-                    "verdict": "maybe_exploitable",  # invalid
+                    "vulnerability": {"id": "CVE-2021-44228"},
+                    "status": "maybe_exploitable",  # invalid VEX status
                     "priority": "P0",
-                    "reasoning": "test",
-                    "action": "test",
+                    "impact_statement": "test",
+                    "action_statement": "test",
                     "timeline": "72 hours",
                 }
-            ]
+            ],
         }
         text = json.dumps(data)
         result = JsonValidator.validate(
@@ -311,16 +348,20 @@ class TestJsonValidatorFormat:
     ) -> None:
         """Invalid priority value gets partial format score."""
         data = {
-            "analysis": [
+            "document": {
+                "type": "vex",
+                "author": "evalsec-benchmark",
+            },
+            "statements": [
                 {
-                    "cve": "CVE-2021-44228",
-                    "verdict": "exploitable",
+                    "vulnerability": {"id": "CVE-2021-44228"},
+                    "status": "affected",
                     "priority": "P5",  # invalid
-                    "reasoning": "test",
-                    "action": "test",
+                    "impact_statement": "test",
+                    "action_statement": "test",
                     "timeline": "72 hours",
                 }
-            ]
+            ],
         }
         text = json.dumps(data)
         result = JsonValidator.validate(
@@ -335,7 +376,7 @@ class TestJsonValidatorFormat:
         markdown_fenced_response: str,
         sample_ground_truth: GroundTruth,
     ) -> None:
-        """Valid JSON wrapped in markdown fences is still validated."""
+        """Valid VEX JSON wrapped in markdown fences is still validated."""
         result = JsonValidator.validate(
             response_text=markdown_fenced_response,
             ground_truth=sample_ground_truth,
@@ -373,16 +414,20 @@ class TestJsonValidatorCoverage:
     ) -> None:
         """Only 1 of 3 CVEs addressed."""
         data = {
-            "analysis": [
+            "document": {
+                "type": "vex",
+                "author": "evalsec-benchmark",
+            },
+            "statements": [
                 {
-                    "cve": "CVE-2021-44228",
-                    "verdict": "exploitable",
+                    "vulnerability": {"id": "CVE-2021-44228"},
+                    "status": "affected",
+                    "impact_statement": "test",
+                    "action_statement": "test",
                     "priority": "P0",
-                    "reasoning": "test",
-                    "action": "test",
                     "timeline": "72 hours",
                 }
-            ]
+            ],
         }
         text = json.dumps(data)
         result = JsonValidator.validate(
@@ -399,16 +444,20 @@ class TestJsonValidatorCoverage:
     ) -> None:
         """No ground-truth CVEs addressed."""
         data = {
-            "analysis": [
+            "document": {
+                "type": "vex",
+                "author": "evalsec-benchmark",
+            },
+            "statements": [
                 {
-                    "cve": "CVE-9999-99999",
-                    "verdict": "exploitable",
+                    "vulnerability": {"id": "CVE-9999-99999"},
+                    "status": "affected",
+                    "impact_statement": "test",
+                    "action_statement": "test",
                     "priority": "P0",
-                    "reasoning": "test",
-                    "action": "test",
                     "timeline": "72 hours",
                 }
-            ]
+            ],
         }
         text = json.dumps(data)
         result = JsonValidator.validate(
@@ -426,14 +475,14 @@ class TestJsonValidatorCoverage:
 
 
 class TestJsonValidatorVerdict:
-    """Tests for verdict accuracy scoring."""
+    """Tests for verdict accuracy scoring (via VEX status mapping)."""
 
     def test_all_verdicts_correct(
         self,
         perfect_json_response: str,
         sample_ground_truth: GroundTruth,
     ) -> None:
-        """All verdicts match ground truth."""
+        """All verdicts match ground truth (correct VEX status mapping)."""
         result = JsonValidator.validate(
             response_text=perfect_json_response,
             ground_truth=sample_ground_truth,
@@ -447,7 +496,7 @@ class TestJsonValidatorVerdict:
         wrong_verdict_json_response: str,
         sample_ground_truth: GroundTruth,
     ) -> None:
-        """All verdicts are wrong."""
+        """All verdicts are wrong (wrong VEX status mapping)."""
         result = JsonValidator.validate(
             response_text=wrong_verdict_json_response,
             ground_truth=sample_ground_truth,
@@ -499,16 +548,20 @@ class TestJsonValidatorHallucination:
     ) -> None:
         """Only hallucinated CVEs, no real ones."""
         data = {
-            "analysis": [
+            "document": {
+                "type": "vex",
+                "author": "evalsec-benchmark",
+            },
+            "statements": [
                 {
-                    "cve": "CVE-9999-99999",
-                    "verdict": "exploitable",
+                    "vulnerability": {"id": "CVE-9999-99999"},
+                    "status": "affected",
+                    "impact_statement": "fake",
+                    "action_statement": "fake",
                     "priority": "P0",
-                    "reasoning": "fake",
-                    "action": "fake",
                     "timeline": "72 hours",
                 }
-            ]
+            ],
         }
         text = json.dumps(data)
         result = JsonValidator.validate(

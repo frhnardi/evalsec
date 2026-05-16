@@ -21,39 +21,51 @@ PROMPT_VERSION = "trivy_triage/v1"
 # ---------------------------------------------------------------------------
 # Pass 1 — System Prompt (shown to the benchmarked model)
 # ---------------------------------------------------------------------------
-SYSTEM_PROMPT = """You are a senior DevSecOps engineer at a financial services company supervised under OJK Regulation 22/2023 (Indonesian digital resilience).
+SYSTEM_PROMPT = """You are a senior DevSecOps engineer at a financial services company operating under NIST SP 800-53 (US security standard) and PCI-DSS v4.0 (payment card industry) regulatory frameworks.
 
-Your task is to analyze a container image vulnerability scan and produce a prioritised remediation plan. You will receive:
+Your task is to analyze a container image vulnerability scan and produce a prioritised remediation plan in VEX (Vulnerability Exploitability eXchange) format. You will receive:
 
 1. Trivy scan output — a table of vulnerable packages with CVE IDs, severity ratings, and library versions.
 2. Stack context — deployment architecture, code reachability analysis, runtime hardening controls, and regulatory requirements.
 
-You MUST respond in this exact JSON format:
+You MUST respond in this exact VEX JSON format:
 
 {
-  "analysis": [
+  "document": {
+    "type": "vex",
+    "author": "evalsec-benchmark"
+  },
+  "statements": [
     {
-      "cve": "CVE-XXXX-XXXXX",
-      "verdict": "exploitable | not_exploitable | partial",
+      "vulnerability": { "id": "CVE-XXXX-XXXXX" },
+      "status": "affected | not_affected | under_investigation",
+      "justification": "code_not_reachable | vulnerable_code_cannot_be_controlled_by_attacker | vulnerable_code_not_in_execute_path | protected_by_compensating_control | component_not_present",
+      "impact_statement": "1-sentence impact analysis using stack context...",
+      "action_statement": "Brief remediation with version numbers...",
       "priority": "P0 | P1 | P2 | P3",
-      "reasoning": "1-sentence justification using stack context...",
-      "action": "Brief remediation with version numbers...",
       "timeline": "72 hours | this sprint | next quarter"
     }
   ]
 }
 
 Priority definitions:
-- P0 = Actively exploited in the wild AND reachable from this deployment (e.g. Log4Shell with public HTTP exposure). Remediate within 72 hours per OJK 22/2023 Article 18.
+- P0 = Actively exploited in the wild AND reachable from this deployment (e.g. Log4Shell with public HTTP exposure). Remediate within 72 hours.
 - P1 = Reachable but no known active exploitation. Remediate this sprint.
 - P2 = Partial — some mitigating controls exist but risk is not fully eliminated. Remediate this sprint.
 - P3 = Not reachable / false positive. Remediate next quarter during normal dependency cycle.
 
+Justification values (required when status is not_affected):
+- code_not_reachable: The vulnerable code path is not reachable from this deployment.
+- vulnerable_code_cannot_be_controlled_by_attacker: Attacker cannot control the vulnerable input.
+- vulnerable_code_not_in_execute_path: The vulnerable function is never called.
+- protected_by_compensating_control: A compensating control (WAF, seccomp, NetworkPolicy) mitigates the risk.
+- component_not_present: The affected component is not included in this deployment.
+
 Rules:
-- Base EVERY verdict on the stack context provided. If the CVE describes a code path that is NOT reachable in this deployment, mark it not_exploitable.
-- Be specific but concise in actions: include version numbers, JVM flags, WAF rules, config changes where relevant.
+- Base EVERY status on the stack context provided. If the CVE describes a code path that is NOT reachable in this deployment, mark it not_affected.
+- Be specific but concise in action statements: include version numbers, JVM flags, WAF rules, config changes where relevant.
 - No preamble, no disclaimers, no "As an AI assistant". Begin directly with the JSON object.
-- Conciseness critical: You have a limited token budget for the entire response. Keep each reasoning to 1 sentence max, each action to 1-2 sentences max. Prioritize the most impactful CVEs."""
+- Conciseness critical: You have a limited token budget for the entire response. Keep each statement to 1-2 sentences max. Prioritize the most impactful CVEs."""
 
 # ---------------------------------------------------------------------------
 # Pass 1 — User Prompt Template
@@ -87,37 +99,59 @@ CVE_METADATA_TEMPLATE = """- {cve}:
     Internet-Facing: {facing}"""
 
 # ---------------------------------------------------------------------------
-# Expected output schema (for Pass 1 regex grader)
+# Expected output schema (VEX format — CSAF standard, Pass 1 regex grader)
 # ---------------------------------------------------------------------------
 EXPECTED_OUTPUT_SCHEMA: dict[str, Any] = {
     "type": "object",
     "properties": {
-        "analysis": {
+        "document": {
+            "type": "object",
+            "properties": {
+                "type": {"type": "string", "enum": ["vex"]},
+                "author": {"type": "string"},
+            },
+            "required": ["type"],
+        },
+        "statements": {
             "type": "array",
             "items": {
                 "type": "object",
                 "properties": {
-                    "cve": {"type": "string", "pattern": r"^CVE-\d{4}-\d{4,}$"},
-                    "verdict": {
-                        "type": "string",
-                        "enum": ["exploitable", "not_exploitable", "partial"],
+                    "vulnerability": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string", "pattern": r"^CVE-\d{4}-\d{4,}$"},
+                        },
+                        "required": ["id"],
                     },
+                    "status": {
+                        "type": "string",
+                        "enum": ["affected", "not_affected", "under_investigation"],
+                    },
+                    "justification": {"type": "string"},
+                    "impact_statement": {"type": "string"},
+                    "action_statement": {"type": "string"},
                     "priority": {
                         "type": "string",
                         "enum": ["P0", "P1", "P2", "P3"],
                     },
-                    "reasoning": {"type": "string"},
-                    "action": {"type": "string"},
                     "timeline": {
                         "type": "string",
                         "enum": ["72 hours", "this sprint", "next quarter"],
                     },
                 },
-                "required": ["cve", "verdict", "priority", "reasoning", "action", "timeline"],
+                "required": ["vulnerability", "status", "priority", "impact_statement", "action_statement", "timeline"],
             },
-        }
+        },
     },
-    "required": ["analysis"],
+    "required": ["document", "statements"],
+}
+
+# VEX status → internal verdict mapping (for grading)
+VEX_STATUS_TO_VERDICT: dict[str, str] = {
+    "affected": "exploitable",
+    "not_affected": "not_exploitable",
+    "under_investigation": "partial",
 }
 
 # ---------------------------------------------------------------------------

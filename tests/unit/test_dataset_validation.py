@@ -1,6 +1,6 @@
 """Dataset validation — load and validate all YAML test cases.
 
-This module verifies that every YAML file in the test data directory:
+This module verifies that every YAML file in the test data directories:
 - Parses as valid YAML.
 - Validates against the TaskCase Pydantic model.
 - Has internally consistent cross-field references.
@@ -19,7 +19,11 @@ import yaml
 
 from evalsec.tasks.base import FindingDetail, TaskCase
 
-TEST_DATA_DIR = Path(__file__).parent.parent / "data" / "trivy_triage"
+# All task data directories — add new tasks here
+TEST_DATA_DIRS: list[Path] = [
+    Path(__file__).parent.parent / "data" / "trivy_triage",
+    Path(__file__).parent.parent / "data" / "codeql_triage",
+]
 
 
 # ---------------------------------------------------------------------------
@@ -28,12 +32,15 @@ TEST_DATA_DIR = Path(__file__).parent.parent / "data" / "trivy_triage"
 
 
 def _discover_yaml_files() -> list[Path]:
-    """Return sorted list of all YAML files in the test data directory."""
-    if not TEST_DATA_DIR.exists():
-        pytest.fail(f"Test data directory not found: {TEST_DATA_DIR}")
-    files = sorted(TEST_DATA_DIR.glob("*.yaml"))
-    if not files:
-        pytest.fail(f"No YAML files found in {TEST_DATA_DIR}")
+    """Return sorted list of all YAML files across all task data directories."""
+    files: list[Path] = []
+    for data_dir in TEST_DATA_DIRS:
+        if not data_dir.exists():
+            pytest.fail(f"Test data directory not found: {data_dir}")
+        dir_files = sorted(data_dir.glob("*.yaml"))
+        if not dir_files:
+            pytest.fail(f"No YAML files found in {data_dir}")
+        files.extend(dir_files)
     return files
 
 
@@ -206,6 +213,7 @@ class TestCrossFieldIntegrity:
             "advisory",
             "synthetic",
             "ai_assisted_deepseek_v4",
+            "human_verified",
         }
         for case_id, case in all_cases:
             assert case.source.type in valid_types, (
@@ -246,7 +254,7 @@ class TestRunnerCompatibility:
 
     def test_roundtrip_through_runner_logic(self) -> None:
         """Replicate Runner._load_cases processing exactly."""
-        yaml_files = sorted(TEST_DATA_DIR.glob("*.yaml"))
+        yaml_files = _discover_yaml_files()
         assert len(yaml_files) >= 1
 
         cases: list[TaskCase] = []

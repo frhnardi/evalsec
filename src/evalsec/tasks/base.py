@@ -22,6 +22,7 @@ class SourceInfo(BaseModel):
     image: str | None = Field(default=None, description="Docker image scanned (if self_scan)")
     scanned_at: date | str | None = Field(default=None, description="Date the scan was performed")
     trivy_version: str | None = Field(default=None, description="Trivy version used")
+    codeql_version: str | None = Field(default=None, description="CodeQL version used")
     url: str | None = Field(default=None, description="URL if sourced from GitHub issue")
     notes: str | None = Field(default=None, description="Any additional context about the source")
     total_cves_found: int | None = Field(
