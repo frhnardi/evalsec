@@ -58,3 +58,4 @@ logs/
 
 # OS files on Windows/WSL2 mount
 ~$*
+Error/
