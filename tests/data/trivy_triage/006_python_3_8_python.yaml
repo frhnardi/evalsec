@@ -13,7 +13,7 @@ source:
     CVEs requiring manual review (7): CVE-2026-5773, CVE-2025-15467, CVE-2026-42010, CVE-2026-7598, CVE-2025-13699,
     CVE-2026-24049, CVE-2025-47273'
   total_cves_found: 172
-  cves_selected: 8
+  cves_selected: 6
   selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
 input: "2026-05-14T09:25:41+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:25:41+07:00\t\
   INFO\t[secret] Secret scanning is enabled\n2026-05-14T09:25:41+07:00\tINFO\t[secret] If your scanning\
@@ -102,32 +102,6 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2025-69419
-    verdict: exploitable
-    reasoning: RCE pada OpenSSL via PKCS#12, berpotensi dieksploitasi saat unduh model dari S3.
-    action: Update OpenSSL ke versi 3.0.18+ untuk mitigasi.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2026-28387
-    verdict: exploitable
-    reasoning: Use-after-free pada DANE TLSA OpenSSL, dapat menyebabkan RCE dari jarak jauh.
-    action: Update OpenSSL ke versi 3.0.19+.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
   non_exploitable_findings:
   - cve: CVE-2025-53014
     verdict: not_exploitable
@@ -185,8 +159,6 @@ ground_truth:
   priority_order:
   - CVE-2025-15467
   - CVE-2026-5773
-  - CVE-2025-69419
-  - CVE-2026-28387
 expected_response_includes:
 - (?i)curl
 - (?i)openssl

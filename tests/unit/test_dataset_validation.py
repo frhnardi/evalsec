@@ -12,6 +12,7 @@ if this test fails, new dataset files have structural problems.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -221,9 +222,21 @@ class TestCrossFieldIntegrity:
             )
 
     def test_priority_order_non_empty(self, all_cases: list[tuple[str, TaskCase]]) -> None:
-        """Every case should have at least one entry in priority_order."""
+        """Every case with exploitable or partial findings should have priority_order entries.
+        
+        Only non_exploitable findings with empty priority_order is valid when all
+        exploitable/partial entries were hallucinated GT-only CVEs removed.
+        """
         for case_id, case in all_cases:
-            assert len(case.ground_truth.priority_order) > 0, f"{case_id}: priority_order is empty"
+            gt = case.ground_truth
+            has_exploitable_or_partial = bool(
+                gt.exploitable_findings or gt.partial_findings
+            )
+            if has_exploitable_or_partial:
+                assert len(case.ground_truth.priority_order) > 0, (
+                    f"{case_id}: {len(gt.exploitable_findings)} exploitable + "
+                    f"{len(gt.partial_findings)} partial findings but empty priority_order"
+                )
 
     def test_all_verdicts_are_valid(self, all_cases: list[tuple[str, TaskCase]]) -> None:
         """All finding verdicts must be valid enum values."""
@@ -242,6 +255,75 @@ class TestCrossFieldIntegrity:
         for case_id, case in all_cases:
             findings = _collect_all_findings(case)
             assert len(findings) >= 1, f"{case_id}: no findings in any category"
+
+
+# ---------------------------------------------------------------------------
+# Tests — ground truth integrity (no hallucinated CVEs)
+# ---------------------------------------------------------------------------
+
+
+class TestGroundTruthIntegrity:
+    """Verify ground truth CVEs are present in the scan input."""
+
+    CVE_RE = re.compile(r"(CVE-\d{4}-\d{4,7})", re.IGNORECASE)
+    GHSA_RE = re.compile(r"(GHSA-\w+-\w+-\w+)", re.IGNORECASE)
+
+    @staticmethod
+    def _is_cve_or_ghsa(identifier: str) -> bool:
+        """Check if an identifier is a CVE or GHSA (not a CodeQL rule ID or NONE)."""
+        if identifier == "NONE":
+            return False
+        return bool(re.match(r"^(CVE-\d{4}-\d{4,7}|GHSA-[\w-]+)$", identifier, re.IGNORECASE))
+
+    def test_no_gt_only_cves(self, all_yaml_files: list[Path]) -> None:
+        """Every CVE/GHSA in ground_truth must also appear in the scan input text.
+
+        CVEs in ground_truth that are NOT in the scan input are "hallucinated" —
+        the model cannot see them in the scan, so it will never mention them,
+        resulting in unfair coverage penalties during grading.
+
+        Notes:
+        - "NONE" is a special marker for clean-scan cases (ignored).
+        - CodeQL rule IDs (e.g. PY/SQL-INJECTION) are not CVE/GHSA format and
+          are only checked in codeql_triage files, not by this test.
+        """
+        errors: list[str] = []
+        for yaml_path in all_yaml_files:
+            with open(yaml_path) as f:
+                raw = yaml.safe_load(f)
+            if raw is None:
+                continue
+
+            input_text: str = raw.get("input", "")
+            gt = raw.get("ground_truth")
+            if gt is None:
+                continue
+
+            # Extract all CVE/GHSA identifiers from the scan input
+            input_cves: set[str] = set()
+            for m in self.CVE_RE.finditer(input_text):
+                input_cves.add(m.group(1).upper())
+            for m in self.GHSA_RE.finditer(input_text):
+                input_cves.add(m.group(1).upper())
+
+            # Collect CVE/GHSA identifiers from ground_truth (skip NONE and CodeQL rule IDs)
+            gt_cves: set[str] = set()
+            for category in ("exploitable_findings", "non_exploitable_findings", "partial_findings"):
+                for finding in gt.get(category, []):
+                    cve = finding.get("cve", "").upper().strip()
+                    if self._is_cve_or_ghsa(cve):
+                        gt_cves.add(cve)
+
+            # Find GT-only CVEs (in ground_truth but NOT in scan input)
+            gt_only = sorted(gt_cves - input_cves)
+            if gt_only:
+                errors.append(f"{yaml_path.name}: GT-only CVEs not in scan input: {gt_only}")
+
+        assert not errors, (
+            "One or more test cases have CVEs in ground_truth that don't appear "
+            "in the scan input text. These cause unfair coverage penalties.\n"
+            + "\n".join(errors)
+        )
 
 
 # ---------------------------------------------------------------------------

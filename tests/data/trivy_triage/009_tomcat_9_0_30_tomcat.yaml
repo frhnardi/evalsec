@@ -15,7 +15,7 @@ source:
     CVE-2024-0553, CVE-2020-1751, CVE-2020-6096, CVE-2021-3326, CVE-2021-3999, CVE-2020-10735, CVE-2023-45853,
     CVE-2019-15847'
   total_cves_found: 96
-  cves_selected: 10
+  cves_selected: 5
   selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
 input: "2026-05-14T09:26:46+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:26:46+07:00\t\
   INFO\t[secret] Secret scanning is enabled\n2026-05-14T09:26:46+07:00\tINFO\t[secret] If your scanning\
@@ -135,49 +135,10 @@ stack_context: "Service: legacy-portal-v2\nImage: tomcat:9.0.30 (Debian 10.2 - E
   Customer PII handled, UU PDP applies."
 ground_truth:
   exploitable_findings:
-  - cve: CVE-2025-24813
-    verdict: exploitable
-    reasoning: RCE via partial PUT pada Tomcat, internet-facing, kode reachable.
-    action: Segera upgrade Tomcat ke 9.0.99 atau terapkan WAF rule.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
   - cve: CVE-2024-52316
     verdict: exploitable
     reasoning: Authentication bypass pada Jakarta Auth API, internet-facing, kritis.
     action: Upgrade Tomcat ke 9.0.96 atau lebih baru segera.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2024-50379
-    verdict: exploitable
-    reasoning: RCE via TOCTOU JSP compilation, internet-facing, reachable.
-    action: Upgrade Tomcat ke 9.0.98. Nonaktifkan JSP jika tidak perlu.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2025-55752
-    verdict: exploitable
-    reasoning: Directory traversal via rewrite berpotensi RCE, internet-facing.
-    action: Upgrade Tomcat ke 9.0.109. Review konfigurasi rewrite.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -240,40 +201,9 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  partial_findings:
-  - cve: CVE-2020-8169
-    verdict: partial
-    reasoning: Partial password leak via DNS redirect, mitigasi dengan HTTPS.
-    action: Pastikan semua traffic menggunakan HTTPS dan HSTS.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2020-8177
-    verdict: partial
-    reasoning: Curl overwrite local files, terbatas oleh RO filesystem.
-    action: Pastikan RO filesystem aktif dan tidak ada write mount.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
+  partial_findings: []
   priority_order:
-  - CVE-2025-24813
   - CVE-2024-52316
-  - CVE-2024-50379
-  - CVE-2025-55752
-  - CVE-2020-8169
-  - CVE-2020-8177
 expected_response_includes:
 - (?i)tomcat
 - (?i)upgrade

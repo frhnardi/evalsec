@@ -12,7 +12,7 @@ source:
 
     CVEs requiring manual review (2): CVE-2025-52999, CVE-2023-52428'
   total_cves_found: 12
-  cves_selected: 8
+  cves_selected: 6
   selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
 input: "\nReport Summary\n\n┌──────────────────────────────────────────────────────────────────────────────────┬────────┬─────────────────┬─────────┐\n\
   │                                      Target                                      │  Type  │ Vulnerabilities\
@@ -508,32 +508,6 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2026-42584
-    verdict: exploitable
-    reasoning: HttpClientCodec response desync memungkinkan cache poisoning atau SSRF internal.
-    action: Upgrade netty-codec-http ke >=4.1.133.Final.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2026-42587
-    verdict: exploitable
-    reasoning: Decompression bypass pada netty-codec-http berpotensi DoS atau RCE via kompresi.
-    action: Upgrade netty-codec-http ke >=4.1.133.Final.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
   non_exploitable_findings:
   - cve: CVE-2023-52428
     verdict: not_exploitable
@@ -591,8 +565,6 @@ ground_truth:
   priority_order:
   - CVE-2022-1471
   - CVE-2026-33870
-  - CVE-2026-42584
-  - CVE-2026-42587
 expected_response_includes:
 - (?i)snakeyaml
 - (?i)netty

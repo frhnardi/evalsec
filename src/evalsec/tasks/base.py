@@ -128,7 +128,12 @@ class GroundTruth(BaseModel):
     )
     priority_order: list[str] = Field(
         default_factory=list,
-        description="Ordered list of CVEs from highest to lowest priority",
+        description=(
+            "Canonical priority ordering: (1) exploitable_findings first, sorted by real-world risk; "
+            "(2) partial_findings next; (3) non_exploitable_findings last. "
+            "Every CVE in ground_truth must appear exactly once. "
+            "No CVE outside ground_truth may appear here."
+        ),
     )
 
 

@@ -23,7 +23,7 @@ source:
     CVE-2020-16156, CVE-2023-31484, CVE-2018-25032, CVE-2023-45853, CVE-2021-22946, CVE-2022-22576, CVE-2022-27781,
     CVE-2022-27782, CVE-2023-27533, CVE-2023-27534, CVE-2024-2398'
   total_cves_found: 125
-  cves_selected: 8
+  cves_selected: 5
   selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
 input: "2026-05-14T09:24:12+07:00\tINFO\t[vulndb] Need to update DB\n2026-05-14T09:24:12+07:00\tINFO\t\
   [vulndb] Downloading vulnerability DB...\n2026-05-14T09:24:12+07:00\tINFO\t[vulndb] Downloading artifact...\t\
@@ -88,36 +88,10 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2024-2961
-    verdict: exploitable
-    reasoning: Out-of-bounds write di iconv dapat menyebabkan RCE dari jarak jauh.
-    action: Upgrade libc6 dan libc-bin ke 2.28-10+deb10u3.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
   - cve: CVE-2021-3711
     verdict: exploitable
     reasoning: SM2 buffer overflow di OpenSSL dapat dieksploitasi dari jaringan.
     action: Upgrade openssl dan libssl1.1 ke 1.1.1d-0+deb10u7.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2023-4863
-    verdict: exploitable
-    reasoning: Heap buffer overflow di WebP dapat menyebabkan RCE via gambar.
-    action: Upgrade libwebp6 ke 0.6.1-2+deb10u3.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -154,19 +128,6 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2019-15847
-    verdict: not_exploitable
-    reasoning: dan 5 CVE gcc lainnya. Hanya relevan untuk arsitektur POWER9.
-    action: Tidak perlu tindakan segera.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
   - cve: CVE-2022-1271
     verdict: not_exploitable
     reasoning: dan 1 CVE gzip lainnya. Membutuhkan akses lokal untuk menulis file.
@@ -183,9 +144,7 @@ ground_truth:
   partial_findings: []
   priority_order:
   - CVE-2022-32221
-  - CVE-2024-2961
   - CVE-2021-3711
-  - CVE-2023-4863
 expected_response_includes:
 - (?i)upgrade
 - (?i)eksploitasi

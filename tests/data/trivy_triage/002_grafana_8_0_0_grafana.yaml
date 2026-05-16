@@ -17,7 +17,7 @@ source:
     CVE-2022-28327, CVE-2022-29804, CVE-2022-30630, CVE-2022-30631, CVE-2022-30632, CVE-2022-30633, CVE-2022-30634,
     CVE-2022-30635, CVE-2022-32189, CVE-2023-24537, GHSA-m425-mq94-257g'
   total_cves_found: 103
-  cves_selected: 10
+  cves_selected: 3
   selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
 input: "2026-05-14T09:53:24+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:53:24+07:00\t\
   INFO\t[secret] Secret scanning is enabled\n2026-05-14T09:53:24+07:00\tINFO\t[secret] If your scanning\
@@ -63,32 +63,6 @@ stack_context: "Service: observability-dashboard\nImage: grafana/grafana:8.0.0 (
   \ that reveal\nsystem architecture and security posture. Access is logged and audited."
 ground_truth:
   exploitable_findings:
-  - cve: CVE-2023-3128
-    verdict: exploitable
-    reasoning: Account takeover via Azure AD OAuth, SSO digunakan, akses internal via VPN.
-    action: Segera upgrade Grafana ke versi 8.5.27 atau lebih baru.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2021-43798
-    verdict: exploitable
-    reasoning: Path traversal memungkinkan akses file sensitif, plugin support aktif.
-    action: Upgrade Grafana ke 8.0.7 atau lebih baru, batasi akses plugin.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
   - cve: CVE-2021-41244
     verdict: exploitable
     reasoning: Access control bypass pada fitur fine-grained, berpotensi akses data dashboard.
@@ -102,72 +76,7 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2022-31107
-    verdict: exploitable
-    reasoning: OAuth account takeover, eksploitasi via SSO Azure AD yang digunakan.
-    action: Upgrade Grafana ke 8.5.9 atau lebih baru.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  non_exploitable_findings:
-  - cve: CVE-2022-27191
-    verdict: not_exploitable
-    reasoning: Crash di crypto/ssh server, SSH server tidak aktif.
-    action: Upgrade golang.org/x/crypto.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2022-41715
-    verdict: not_exploitable
-    reasoning: Memory limit parsing regexp, tidak reachable karena non-root.
-    action: Upgrade Go ke versi terbaru.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2022-2880
-    verdict: not_exploitable
-    reasoning: ReverseProxy forward unparseable query, Grafana tidak pakai ReverseProxy.
-    action: Upgrade Go ke versi terbaru.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2022-2879
-    verdict: not_exploitable
-    reasoning: Unbounded memory tar-split, tidak reachable karena non-root.
-    action: Upgrade Go ke versi terbaru.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
+  non_exploitable_findings: []
   partial_findings:
   - cve: CVE-2021-3711
     verdict: partial
@@ -196,10 +105,7 @@ ground_truth:
     asset_criticality: null
     internet_facing: null
   priority_order:
-  - CVE-2023-3128
   - CVE-2021-41244
-  - CVE-2021-43798
-  - CVE-2022-31107
   - CVE-2021-3711
   - CVE-2022-37434
 expected_response_includes:

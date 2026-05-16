@@ -12,7 +12,7 @@ source:
 
     CVEs requiring manual review (3): CVE-2022-41723, CVE-2023-39325, CVE-2022-27664'
   total_cves_found: 78
-  cves_selected: 8
+  cves_selected: 5
   selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
 input: "\nReport Summary\n\n┌────────────────┬──────────┬─────────────────┬─────────┐\n│     Target  \
   \   │   Type   │ Vulnerabilities │ Secrets │\n├────────────────┼──────────┼─────────────────┼─────────┤\n\
@@ -47,19 +47,6 @@ ground_truth:
     verdict: exploitable
     reasoning: DoS via InstrumentHandlerCounter, reachable via HTTP metrics endpoint.
     action: Segera upgrade prometheus/client_golang ke v1.11.1.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: GHSA-4v48-4q5m-8vx4
-    verdict: exploitable
-    reasoning: Basic auth bypass pada Prometheus, akses internal via NetworkPolicy.
-    action: Upgrade Prometheus ke v2.37.4 atau v2.40.4.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -109,32 +96,6 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2026-34040
-    verdict: not_exploitable
-    reasoning: Auth bypass pada Moby, container non-root dan RO fs.
-    action: Pantau update Docker.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2022-30580
-    verdict: not_exploitable
-    reasoning: Code injection pada os/exec, container non-root dan RO fs.
-    action: Pantau update Go.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
   - cve: CVE-2023-2253
     verdict: not_exploitable
     reasoning: DoS via API request, container non-root dan RO fs.
@@ -150,7 +111,6 @@ ground_truth:
     internet_facing: null
   partial_findings: []
   priority_order:
-  - GHSA-4v48-4q5m-8vx4
   - CVE-2022-21698
   - CVE-2025-30204
   - CVE-2025-65637

@@ -12,7 +12,7 @@ source:
 
     CVEs requiring manual review (2): CVE-2026-39836, CVE-2023-45283'
   total_cves_found: 73
-  cves_selected: 8
+  cves_selected: 4
   selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
 input: "2026-05-14T09:50:04+07:00\tINFO\t[vuln] Vulnerability scanning is enabled\n2026-05-14T09:50:04+07:00\t\
   INFO\t[secret] Secret scanning is enabled\n2026-05-14T09:50:04+07:00\tINFO\t[secret] If your scanning\
@@ -112,62 +112,10 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2024-21626
-    verdict: exploitable
-    reasoning: FD leak runc, bisa container escape walau non-root, akses host filesystem.
-    action: Upgrade runc ke >=1.1.12, rebuild image gosu.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2025-31133
-    verdict: exploitable
-    reasoning: Container escape via mount race, bypass seccomp default, akses host.
-    action: Upgrade runc ke >=1.2.8, patch segera.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2025-52565
-    verdict: exploitable
-    reasoning: Container escape via /dev/console mount, ancaman tinggi untuk host.
-    action: Upgrade runc ke versi terbaru, rebuild image.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
   non_exploitable_findings:
   - cve: CVE-2024-3596
     verdict: not_exploitable
     reasoning: Forgery attack di freeradius, tidak ada freeradius di image ini.
-    action: Tidak perlu tindakan.
-    cvss_score: null
-    epss_percentile: null
-    cisa_kev: null
-    exploit_maturity: null
-    fixed_version: null
-    package_path: null
-    runtime_exposure: null
-    asset_criticality: null
-    internet_facing: null
-  - cve: CVE-2024-37371
-    verdict: not_exploitable
-    reasoning: GSS message token handling di krb5, tidak ada layanan GSSAPI aktif.
     action: Tidak perlu tindakan.
     cvss_score: null
     epss_percentile: null
@@ -207,9 +155,6 @@ ground_truth:
   partial_findings: []
   priority_order:
   - CVE-2024-2961
-  - CVE-2024-21626
-  - CVE-2025-31133
-  - CVE-2025-52565
 expected_response_includes:
 - (?i)patch
 - (?i)upgrade

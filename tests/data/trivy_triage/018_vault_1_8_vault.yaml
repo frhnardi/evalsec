@@ -7,31 +7,14 @@ source:
   scanned_at: 2026-05-14
   trivy_version: auto_detected
   url: null
-  notes: 'Deployment summary: Vault 1.8 kritis dengan 107 CVE, akses NetworkPolicy luas, non-root, filesystem
-    writable, infrastruktur kritis OJK.
+  notes: 'Deployment summary: Vault 1.8 kritis dengan 107 CVE, akses NetworkPolicy luas, non-root, filesystem writable, infrastruktur kritis OJK.
 
     CVEs requiring manual review (4): CVE-2026-3605, CVE-2026-4525, CVE-2026-5807, CVE-2026-33413'
   total_cves_found: 99
   cves_selected: 10
   selection_criteria: top 4 exploitable + 2 partial + 4 not_exploitable (interesting)
-input: "\nReport Summary\n\n┌─────────────────────────────────────┬──────────┬─────────────────┬─────────┐\n\
-  │               Target                │   Type   │ Vulnerabilities │ Secrets │\n├─────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
-  │ hashicorp/vault:1.8 (alpine 3.15.4) │  alpine  │       10        │    -    │\n├─────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n\
-  │ bin/vault                           │ gobinary │       97        │    -    │\n└─────────────────────────────────────┴──────────┴─────────────────┴─────────┘\n\
-  Legend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\nhashicorp/vault:1.8 (alpine\
-  \ 3.15.4)\n===================================\nTotal: 10 (HIGH: 9, CRITICAL: 1)\n\n\nbin/vault (gobinary)\n\
-  ====================\nTotal: 97 (HIGH: 88, CRITICAL: 9)\n\n  github.com/hashicorp/vault | CVE-2022-40186\
-  \ | CRITICAL | affected | 1.8.12 -> 1.11.3, 1.10.6, 1.9.9 | https://avd.aquasec.com/nvd/cve-2022-40186\n\
-  \  go.etcd.io/etcd | CVE-2020-15114 | affected | v0.5.0-alpha.5.0.20200425165423-262c93980547 -> 3.4.10,\
-  \ 3.3.23 | https://avd.aquasec.com/nvd/cve-2020-15114\n  stdlib | CVE-2023-24538 | CRITICAL | v1.16.15\
-  \ -> 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538"
-stack_context: "Service: platform-secrets-v1\nImage: hashicorp/vault:1.8 (Alpine 3.14)\nExposure: internal\
-  \ ClusterIP only, namespace: security\nContainer runtime: EKS 1.28 with:\n  - writable filesystem (required\
-  \ for Vault storage)\n  - non-root user (uid 100)\n  - seccomp default profile\n  - Pod Security Standard:\
-  \ baseline\n  - NetworkPolicy: allow inbound from all namespaces (infra)\n\nUsage: Manages secrets for\
-  \ all microservices via Vault Agent injector.\nStorage backend: Consul on separate cluster. TLS enabled\
-  \ with internal CA.\nAudit log to encrypted S3. Kubernetes auth method.\nCritical infrastructure — compromise\
-  \ = total secrets disclosure.\n\nRegulatory context: OJK POJK 22/2023. Critical infrastructure."
+input: "\nReport Summary\n\n┌─────────────────────────────────────┬──────────┬─────────────────┬─────────┐\n│               Target                │   Type   │ Vulnerabilities │ Secrets │\n├─────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n│ hashicorp/vault:1.8 (alpine 3.15.4) │  alpine  │       10        │    -    │\n├─────────────────────────────────────┼──────────┼─────────────────┼─────────┤\n│ bin/vault                           │ gobinary │       97        │    -    │\n└─────────────────────────────────────┴──────────┴─────────────────┴─────────┘\nLegend:\n- '-': Not scanned\n- '0': Clean (no security findings detected)\n\n\nhashicorp/vault:1.8 (alpine 3.15.4)\n===================================\nTotal: 10 (HIGH: 9, CRITICAL: 1)\n\n\nbin/vault (gobinary)\n====================\nTotal: 97 (HIGH: 88, CRITICAL: 9)\n\n  github.com/hashicorp/vault | CVE-2022-40186 | CRITICAL | affected | 1.8.12 -> 1.11.3, 1.10.6, 1.9.9 | https://avd.aquasec.com/nvd/cve-2022-40186\n  go.etcd.io/etcd | CVE-2020-15114 | affected | v0.5.0-alpha.5.0.20200425165423-262c93980547 -> 3.4.10, 3.3.23 | https://avd.aquasec.com/nvd/cve-2020-15114\n  stdlib | CVE-2023-24538 | CRITICAL | v1.16.15 -> 1.19.8, 1.20.3 | https://avd.aquasec.com/nvd/cve-2023-24538\n  github.com/hashicorp/vault | CVE-2025-6000 | CRITICAL | fixed | 1.8.12 -> 1.20.1 | https://avd.aquasec.com/nvd/cve-2025-6000\n  github.com/hashicorp/vault | CVE-2023-24999 | HIGH | fixed | 1.8.12 -> 1.10.11, 1.11.8, 1.12.4 | https://avd.aquasec.com/nvd/cve-2023-24999\n  github.com/hashicorp/vault | CVE-2025-5999 | HIGH | fixed | 1.8.12 -> 1.20.0 | https://avd.aquasec.com/nvd/cve-2025-5999\n  stdlib | CVE-2023-24540 | HIGH | fixed | v1.16.15 -> 1.19.9, 1.20.4 | https://avd.aquasec.com/nvd/cve-2023-24540\n  go.etcd.io/etcd | CVE-2026-33413 | HIGH | affected | v0.5.0-alpha.5.0.20200425165423-262c93980547 | https://avd.aquasec.com/nvd/cve-2026-33413\n  github.com/hashicorp/vault | CVE-2026-3605 | HIGH | affected | 1.8.12 | https://avd.aquasec.com/nvd/cve-2026-3605\n  github.com/hashicorp/vault | CVE-2026-4525 | HIGH | affected | 1.8.12 | https://avd.aquasec.com/nvd/cve-2026-4525\n  github.com/hashicorp/vault | CVE-2026-5807 | HIGH | affected | 1.8.12 | https://avd.aquasec.com/nvd/cve-2026-5807\n  github.com/hashicorp/vault | CVE-2025-6000 | CRITICAL | fixed | 1.8.12 -> 1.20.1 | https://avd.aquasec.com/nvd/cve-2025-6000\n  github.com/hashicorp/vault | CVE-2023-24999 | HIGH | fixed | 1.8.12 -> 1.10.11, 1.11.8, 1.12.4 | https://avd.aquasec.com/nvd/cve-2023-24999\n  github.com/hashicorp/vault | CVE-2025-5999 | HIGH | fixed | 1.8.12 -> 1.20.0 | https://avd.aquasec.com/nvd/cve-2025-5999\n  stdlib | CVE-2023-24540 | HIGH | fixed | v1.16.15 -> 1.19.9, 1.20.4 | https://avd.aquasec.com/nvd/cve-2023-24540\n  go.etcd.io/etcd | CVE-2026-33413 | HIGH | affected | v0.5.0-alpha.5.0.20200425165423-262c93980547 | https://avd.aquasec.com/nvd/cve-2026-33413\n  github.com/hashicorp/vault | CVE-2026-3605 | HIGH | affected | 1.8.12 | https://avd.aquasec.com/nvd/cve-2026-3605\n  github.com/hashicorp/vault | CVE-2026-4525 | HIGH | affected | 1.8.12 | https://avd.aquasec.com/nvd/cve-2026-4525\n  github.com/hashicorp/vault | CVE-2026-5807 | HIGH | affected | 1.8.12 | https://avd.aquasec.com/nvd/cve-2026-5807"
+stack_context: "Service: platform-secrets-v1\nImage: hashicorp/vault:1.8 (Alpine 3.14)\nExposure: internal ClusterIP only, namespace: security\nContainer runtime: EKS 1.28 with:\n  - writable filesystem (required for Vault storage)\n  - non-root user (uid 100)\n  - seccomp default profile\n  - Pod Security Standard: baseline\n  - NetworkPolicy: allow inbound from all namespaces (infra)\n\nUsage: Manages secrets for all microservices via Vault Agent injector.\nStorage backend: Consul on separate cluster. TLS enabled with internal CA.\nAudit log to encrypted S3. Kubernetes auth method.\nCritical infrastructure — compromise = total secrets disclosure.\n\nRegulatory context: OJK POJK 22/2023. Critical infrastructure."
 ground_truth:
   exploitable_findings:
   - cve: CVE-2022-40186
@@ -47,10 +30,10 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2023-24999
+  - cve: CVE-2025-6000
     verdict: exploitable
-    reasoning: AppRole SecretID bypass, akses dari semua ns, risiko total secrets disclosure.
-    action: Upgrade Vault ke 1.10.11+ atau 1.12.4+ segera.
+    reasoning: Vault Plugin Code Execution — Vault core vuln, critical infra dengan NetworkPolicy allow all inbound, dampak total secrets disclosure.
+    action: Segera upgrade Vault ke versi 1.20.1+.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -60,10 +43,10 @@ ground_truth:
     runtime_exposure: null
     asset_criticality: null
     internet_facing: null
-  - cve: CVE-2025-6000
+  - cve: CVE-2023-24999
     verdict: exploitable
-    reasoning: Plugin code execution, akses NetworkPolicy luas, dampak kompromi total.
-    action: Upgrade Vault ke 1.20.1+ untuk patch kritis ini.
+    reasoning: Vault fails to verify Approle SecretID belongs to role — auth bypass, akses NetworkPolicy luas, dampak kritis untuk secrets manager.
+    action: Segera upgrade Vault ke versi 1.10.11+, 1.11.8+, atau 1.12.4+.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -75,8 +58,8 @@ ground_truth:
     internet_facing: null
   - cve: CVE-2025-5999
     verdict: exploitable
-    reasoning: Identity token privilege escalation, akses dari semua ns, risiko tinggi.
-    action: Upgrade Vault ke 1.20.0+ segera.
+    reasoning: Vault Identity Token Privilege Escalation — Vault core vuln, memungkinkan privesc, dampak kritis pada platform secrets.
+    action: Segera upgrade Vault ke versi 1.20.0+.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -89,8 +72,8 @@ ground_truth:
   non_exploitable_findings:
   - cve: CVE-2026-5807
     verdict: not_exploitable
-    reasoning: DoS via root token, but Vault 1.8 not affected.
-    action: Monitor patch.
+    reasoning: Vault DoS via unauthenticated root token generation — DoS only, tidak menyebabkan kebocoran data, Vault di internal cluster.
+    action: Monitor untuk patch selanjutnya.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -102,8 +85,8 @@ ground_truth:
     internet_facing: null
   - cve: CVE-2026-3605
     verdict: not_exploitable
-    reasoning: DoS via policy, but Vault 1.8 not affected by this future CVE.
-    action: Monitor patch.
+    reasoning: Vault DoS via unauthorized secret deletion — DoS only, Vault diaudit, terdeteksi, dampak terbatas.
+    action: Monitor untuk patch selanjutnya.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -115,8 +98,8 @@ ground_truth:
     internet_facing: null
   - cve: CVE-2026-4525
     verdict: not_exploitable
-    reasoning: Info disclosure via header, but Vault 1.8 not affected.
-    action: Monitor patch.
+    reasoning: Vault info disclosure via incorrect header handling — membutuhkan akses network ke Vault API, internal cluster.
+    action: Terapkan NetworkPolicy yang lebih ketat.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -128,8 +111,8 @@ ground_truth:
     internet_facing: null
   - cve: CVE-2026-33413
     verdict: not_exploitable
-    reasoning: Etcd auth bypass, but etcd is separate cluster not in this image.
-    action: Monitor patch.
+    reasoning: etcd authorization bypass — etcd embedded, Vault tidak expose etcd API, tidak dapat dieksploitasi dari luar.
+    action: Monitor untuk patch selanjutnya.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -155,8 +138,8 @@ ground_truth:
     internet_facing: null
   - cve: CVE-2023-24540
     verdict: partial
-    reasoning: HTML template JS whitespace, but Vault likely not rendering user HTML.
-    action: Upgrade Go, verify template usage.
+    reasoning: HTML template JS whitespace handling — Go stdlib vuln, Vault kemungkinan tidak render user HTML, tapi ada resiko XSS jika template digunakan.
+    action: Upgrade Go, verifikasi template usage.
     cvss_score: null
     epss_percentile: null
     cisa_kev: null
@@ -168,10 +151,10 @@ ground_truth:
     internet_facing: null
   priority_order:
   - CVE-2022-40186
+  - CVE-2023-24538
   - CVE-2025-6000
   - CVE-2023-24999
   - CVE-2025-5999
-  - CVE-2023-24538
   - CVE-2023-24540
 expected_response_includes:
 - (?i)upgrade vault
@@ -181,20 +164,14 @@ expected_response_includes:
 rubric:
   reachability_reasoning:
     max_score: 25
-    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly
-      identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats
-      all CRITICAL as exploitable.'
+    description: 'Does the model use the stack context to determine real exploitability? Full marks: correctly identifies which CVEs are reachable vs unreachable. Zero marks: ignores deployment context, treats all CRITICAL as exploitable.'
   prioritization:
     max_score: 25
-    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing
-      CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as
-      equally urgent.
+    description: Does the model rank findings correctly by real-world urgency? Exploitable internet-facing CVEs must be prioritised over non-exploitable ones. Penalize if the model treats all CRITICAL as equally urgent.
   actionability:
     max_score: 25
-    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y,
-      deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
+    description: 'Are recommended actions concrete and specific? Good: ''Patch library X to version Y, deploy within 72 hours per OJK 22/2023.'' Bad: ''Update vulnerable dependencies.'''
   conciseness:
     max_score: 25
-    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional
-      tone.
+    description: Response is under 12 sentences. No preamble. No excessive caveats. Direct, professional tone.
 weight: 1.0
