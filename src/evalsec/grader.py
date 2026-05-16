@@ -26,13 +26,13 @@ from evalsec.adapters.base import LLMRequest
 from evalsec.adapters.openai_compat import OpenAICompatAdapter
 from evalsec.baselines import BASELINE_GENERATORS, grade_baselines
 from evalsec.config import settings
-from evalsec.tasks.base import FindingDetail, GroundTruth, Rubric, RubricItem, TaskCase
 from evalsec.tasks import (
     VEX_STATUS_TO_VERDICT,
     build_judge_prompt,
     get_prompt_version,
     get_task_config,
 )
+from evalsec.tasks.base import FindingDetail, GroundTruth, Rubric, RubricItem, TaskCase
 
 logger = structlog.get_logger(__name__)
 console = Console()

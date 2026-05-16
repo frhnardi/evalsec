@@ -28,12 +28,12 @@ from evalsec.adapters import ALL_MODELS, BENCHMARK_MODELS
 from evalsec.adapters.base import LLMRequest
 from evalsec.adapters.openai_compat import OpenAICompatAdapter
 from evalsec.config import settings
-from evalsec.tasks.base import TaskCase
 from evalsec.tasks import (
     build_user_prompt,
     get_prompt_version,
     get_task_config,
 )
+from evalsec.tasks.base import TaskCase
 
 logger = structlog.get_logger(__name__)
 console = Console()

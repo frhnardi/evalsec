@@ -1,0 +1,4 @@
+Run uv run mypy src/evalsec/
+src/evalsec/tasks/__init__.py:81: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+Found 1 error in 1 file (checked 14 source files)
+Error: Process completed with exit code 1.

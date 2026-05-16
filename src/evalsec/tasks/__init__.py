@@ -27,27 +27,26 @@ TASK_CONFIGS: dict[str, Any] = {}
 # Import and register from each task module
 # ---------------------------------------------------------------------------
 
-from evalsec.tasks.trivy_triage import TASK_CONFIGS as _TRIVY_TC  # noqa: E402
 from evalsec.tasks.trivy_triage import (  # noqa: E402
-    VEX_STATUS_TO_VERDICT,
     PROMPT_VERSION as TRIVY_PROMPT_VERSION,
 )
 from evalsec.tasks.trivy_triage import (  # noqa: E402
+    TASK_CONFIGS as _TRIVY_TC,
+)
+from evalsec.tasks.trivy_triage import (  # noqa: E402
+    VEX_STATUS_TO_VERDICT,
     _render_risk_metadata,
-    build_user_prompt as _trivy_build_user_prompt,
-    build_judge_prompt as _trivy_build_judge_prompt,
 )
 
 TASK_CONFIGS.update(_TRIVY_TC)
 
-# Import and register codeql_triage (will be created next)
+# Import and register codeql_triage
 try:
-    from evalsec.tasks.codeql_triage import TASK_CONFIGS as _CODEQL_TC  # noqa: E402
-    from evalsec.tasks.codeql_triage import PROMPT_VERSION as CODEQL_PROMPT_VERSION  # noqa: E402
+    from evalsec.tasks.codeql_triage import PROMPT_VERSION as CODEQL_PROMPT_VERSION
+    from evalsec.tasks.codeql_triage import TASK_CONFIGS as _CODEQL_TC
 
     TASK_CONFIGS.update(_CODEQL_TC)
 except ImportError:
-    # codeql_triage not yet available — fine for minimal installs
     CODEQL_PROMPT_VERSION = "codeql_triage/unknown"
 
 # ---------------------------------------------------------------------------
@@ -78,7 +77,7 @@ def get_task_config(task_name: str) -> dict[str, Any]:
     if task_name not in TASK_CONFIGS:
         valid = list(TASK_CONFIGS.keys())
         raise KeyError(f"Unknown task '{task_name}'. Registered tasks: {valid}")
-    return TASK_CONFIGS[task_name]
+    return TASK_CONFIGS[task_name]  # type: ignore[no-any-return]
 
 
 def build_user_prompt(

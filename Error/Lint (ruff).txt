@@ -1,0 +1,161 @@
+Run uv run ruff check src/ tests/
+   Building evalsec @ file:///home/runner/work/evalsec/evalsec
+Downloading pydantic-core (2.0MiB)
+ Downloaded pydantic-core
+      Built evalsec @ file:///home/runner/work/evalsec/evalsec
+Installed 26 packages in 37ms
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/evalsec/grader.py:11:1
+   |
+ 9 |   """
+10 |
+11 | / from __future__ import annotations
+12 | |
+13 | | import json
+14 | | import re
+15 | | from datetime import datetime, timedelta, timezone
+16 | | from pathlib import Path
+17 | | from typing import Any
+18 | |
+19 | | import structlog
+20 | | from pydantic import BaseModel, ConfigDict, Field
+21 | | from rich.console import Console
+22 | | from rich.table import Table
+23 | |
+24 | | from evalsec.adapters import ALL_MODELS
+25 | | from evalsec.adapters.base import LLMRequest
+26 | | from evalsec.adapters.openai_compat import OpenAICompatAdapter
+27 | | from evalsec.baselines import BASELINE_GENERATORS, grade_baselines
+28 | | from evalsec.config import settings
+29 | | from evalsec.tasks.base import FindingDetail, GroundTruth, Rubric, RubricItem, TaskCase
+30 | | from evalsec.tasks import (
+31 | |     VEX_STATUS_TO_VERDICT,
+32 | |     build_judge_prompt,
+33 | |     get_prompt_version,
+34 | |     get_task_config,
+35 | | )
+   | |_^
+36 |
+37 |   logger = structlog.get_logger(__name__)
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/evalsec/runner.py:12:1
+   |
+10 |   """
+11 |
+12 | / from __future__ import annotations
+13 | |
+14 | | import asyncio
+15 | | import json
+16 | | import time
+17 | | from datetime import datetime, timedelta, timezone
+18 | | from decimal import Decimal
+19 | | from pathlib import Path
+20 | | from typing import Any
+21 | |
+22 | | import structlog
+23 | | import yaml
+24 | | from rich.console import Console
+25 | | from rich.table import Table
+26 | |
+27 | | from evalsec.adapters import ALL_MODELS, BENCHMARK_MODELS
+28 | | from evalsec.adapters.base import LLMRequest
+29 | | from evalsec.adapters.openai_compat import OpenAICompatAdapter
+30 | | from evalsec.config import settings
+31 | | from evalsec.tasks.base import TaskCase
+32 | | from evalsec.tasks import (
+33 | |     build_user_prompt,
+34 | |     get_prompt_version,
+35 | |     get_task_config,
+36 | | )
+   | |_^
+37 |
+38 |   logger = structlog.get_logger(__name__)
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/evalsec/tasks/__init__.py:30:1
+   |
+28 |   # ---------------------------------------------------------------------------
+29 |
+30 | / from evalsec.tasks.trivy_triage import TASK_CONFIGS as _TRIVY_TC  # noqa: E402
+31 | | from evalsec.tasks.trivy_triage import (  # noqa: E402
+32 | |     VEX_STATUS_TO_VERDICT,
+33 | |     PROMPT_VERSION as TRIVY_PROMPT_VERSION,
+34 | | )
+35 | | from evalsec.tasks.trivy_triage import (  # noqa: E402
+36 | |     _render_risk_metadata,
+37 | |     build_user_prompt as _trivy_build_user_prompt,
+38 | |     build_judge_prompt as _trivy_build_judge_prompt,
+39 | | )
+   | |_^
+40 |
+41 |   TASK_CONFIGS.update(_TRIVY_TC)
+   |
+help: Organize imports
+
+F401 `evalsec.tasks.trivy_triage.build_user_prompt` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> src/evalsec/tasks/__init__.py:37:26
+   |
+35 | from evalsec.tasks.trivy_triage import (  # noqa: E402
+36 |     _render_risk_metadata,
+37 |     build_user_prompt as _trivy_build_user_prompt,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^
+38 |     build_judge_prompt as _trivy_build_judge_prompt,
+39 | )
+   |
+help: Add unused import `_trivy_build_user_prompt` to __all__
+
+F401 `evalsec.tasks.trivy_triage.build_judge_prompt` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> src/evalsec/tasks/__init__.py:38:27
+   |
+36 |     _render_risk_metadata,
+37 |     build_user_prompt as _trivy_build_user_prompt,
+38 |     build_judge_prompt as _trivy_build_judge_prompt,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+39 | )
+   |
+help: Add unused import `_trivy_build_judge_prompt` to __all__
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/evalsec/tasks/__init__.py:45:5
+   |
+43 |   # Import and register codeql_triage (will be created next)
+44 |   try:
+45 | /     from evalsec.tasks.codeql_triage import TASK_CONFIGS as _CODEQL_TC  # noqa: E402
+46 | |     from evalsec.tasks.codeql_triage import PROMPT_VERSION as CODEQL_PROMPT_VERSION  # noqa: E402
+   | |___________________________________________________________________________________^
+47 |
+48 |       TASK_CONFIGS.update(_CODEQL_TC)
+   |
+help: Organize imports
+
+RUF100 [*] Unused `noqa` directive (unused: `E402`)
+  --> src/evalsec/tasks/__init__.py:45:73
+   |
+43 | # Import and register codeql_triage (will be created next)
+44 | try:
+45 |     from evalsec.tasks.codeql_triage import TASK_CONFIGS as _CODEQL_TC  # noqa: E402
+   |                                                                         ^^^^^^^^^^^^
+46 |     from evalsec.tasks.codeql_triage import PROMPT_VERSION as CODEQL_PROMPT_VERSION  # noqa: E402
+   |
+help: Remove unused `noqa` directive
+
+RUF100 [*] Unused `noqa` directive (unused: `E402`)
+  --> src/evalsec/tasks/__init__.py:46:86
+   |
+44 | try:
+45 |     from evalsec.tasks.codeql_triage import TASK_CONFIGS as _CODEQL_TC  # noqa: E402
+46 |     from evalsec.tasks.codeql_triage import PROMPT_VERSION as CODEQL_PROMPT_VERSION  # noqa: E402
+   |                                                                                      ^^^^^^^^^^^^
+47 |
+48 |     TASK_CONFIGS.update(_CODEQL_TC)
+   |
+help: Remove unused `noqa` directive
+
+Found 8 errors.
+[*] 6 fixable with the `--fix` option.
+Error: Process completed with exit code 1.
