@@ -223,7 +223,7 @@ class TestCrossFieldIntegrity:
 
     def test_priority_order_non_empty(self, all_cases: list[tuple[str, TaskCase]]) -> None:
         """Every case with exploitable or partial findings should have priority_order entries.
-        
+
         Only non_exploitable findings with empty priority_order is valid when all
         exploitable/partial entries were hallucinated GT-only CVEs removed.
         """
