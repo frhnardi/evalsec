@@ -229,9 +229,7 @@ class TestCrossFieldIntegrity:
         """
         for case_id, case in all_cases:
             gt = case.ground_truth
-            has_exploitable_or_partial = bool(
-                gt.exploitable_findings or gt.partial_findings
-            )
+            has_exploitable_or_partial = bool(gt.exploitable_findings or gt.partial_findings)
             if has_exploitable_or_partial:
                 assert len(case.ground_truth.priority_order) > 0, (
                     f"{case_id}: {len(gt.exploitable_findings)} exploitable + "
@@ -308,7 +306,11 @@ class TestGroundTruthIntegrity:
 
             # Collect CVE/GHSA identifiers from ground_truth (skip NONE and CodeQL rule IDs)
             gt_cves: set[str] = set()
-            for category in ("exploitable_findings", "non_exploitable_findings", "partial_findings"):
+            for category in (
+                "exploitable_findings",
+                "non_exploitable_findings",
+                "partial_findings",
+            ):
                 for finding in gt.get(category, []):
                     cve = finding.get("cve", "").upper().strip()
                     if self._is_cve_or_ghsa(cve):
@@ -321,8 +323,7 @@ class TestGroundTruthIntegrity:
 
         assert not errors, (
             "One or more test cases have CVEs in ground_truth that don't appear "
-            "in the scan input text. These cause unfair coverage penalties.\n"
-            + "\n".join(errors)
+            "in the scan input text. These cause unfair coverage penalties.\n" + "\n".join(errors)
         )
 
 

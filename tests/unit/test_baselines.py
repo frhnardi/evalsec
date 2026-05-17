@@ -619,7 +619,14 @@ class TestGenerateBaselineResponse:
         self, ground_truth_with_metadata: GroundTruth
     ) -> None:
         """Each VEX statement has vulnerability.id, status, priority, impact_statement, action_statement, timeline."""
-        required = {"vulnerability", "status", "priority", "impact_statement", "action_statement", "timeline"}
+        required = {
+            "vulnerability",
+            "status",
+            "priority",
+            "impact_statement",
+            "action_statement",
+            "timeline",
+        }
         for key in BASELINE_GENERATORS:
             response = generate_baseline_response(key, ground_truth_with_metadata)
             data = json.loads(response)
