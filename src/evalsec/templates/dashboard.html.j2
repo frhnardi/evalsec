@@ -18,7 +18,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <script src="./chart.umd.min.js"></script>
 
@@ -31,63 +31,113 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ─────────────────────────────────────────────
+       DESIGN TOKENS — Electric Violet on near-black
+       ───────────────────────────────────────────── */
     :root {
-      --bg:           #fafafa;
-      --surface:      #ffffff;
-      --surface-2:    #f5f5f5;
-      --border:       #e5e7eb;
-      --border-soft:  #ececef;
-      --border-strong:#d4d4d8;
-      --text:         #0a0a0a;
-      --text-soft:    #27272a;
-      --muted:        #71717a;
-      --muted-2:      #a1a1aa;
-      --accent:       #14b8a6;
-      --accent-2:     #5eead4;
-      --accent-deep:  #0d9488;
-      --accent-soft:  rgba(20, 184, 166, 0.10);
-      --accent-line:  rgba(20, 184, 166, 0.28);
-      --warn:         #f59e0b;
-      --warn-soft:    rgba(245, 158, 11, 0.10);
-      --success:      #10b981;
-      --danger:       #ef4444;
+      color-scheme: dark;
+
+      /* Background layers */
+      --bg-base:        #08080C;
+      --bg-elevated:    #0E0E14;
+      --bg-overlay:     #14141C;
+      --bg-glass:       rgba(20, 20, 28, 0.6);
+
+      /* Primary accent — Electric Violet */
+      --accent-primary:    #7C5CFF;
+      --accent-primary-hi: #9D85FF;
+      --accent-primary-lo: #5538E5;
+      --accent-glow:       rgba(124, 92, 255, 0.15);
+
+      /* Secondary accent — Cyber Lime (baselines / "no AI" metrics) */
+      --accent-secondary:      #C6FF3D;
+      --accent-secondary-hi:   #DEFF7A;
+      --accent-secondary-lo:   #9CCC1F;
+      --accent-secondary-soft: rgba(198, 255, 61, 0.10);
+      --accent-secondary-line: rgba(198, 255, 61, 0.30);
+      --accent-secondary-glow: rgba(198, 255, 61, 0.18);
+
+      /* Semantic */
+      --success: #34D399;
+      --warning: #FBA94C;
+      --danger:  #F87171;
+      --info:    #60A5FA;
+
+      /* Text hierarchy */
+      --text-primary:   #F4F4F7;
+      --text-secondary: #A1A1AA;
+      --text-tertiary:  #71717A;
+      --text-disabled:  #52525B;
+
+      /* Borders */
+      --border-subtle:  rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.10);
+      --border-stronger: rgba(255, 255, 255, 0.16);
+      --border-accent:  rgba(124, 92, 255, 0.30);
+
+      /* Spacing — 8px grid */
+      --space-1:  4px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-6:  24px;
+      --space-8:  32px;
+      --space-12: 48px;
+      --space-16: 64px;
+      --space-24: 96px;
+
+      /* Tracking */
+      --tracking-tight: -0.04em;
+      --tracking-body:  -0.01em;
+      --tracking-wide:   0.12em;
+
+      /* Premium easing */
+      --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+
+      /* ────────────────────────────────────────────
+         Backward-compat aliases (mapped to new tokens
+         so existing CSS selectors keep working without
+         renaming every reference in this commit).
+         ──────────────────────────────────────────── */
+      --bg:           var(--bg-base);
+      --surface:      var(--bg-elevated);
+      --surface-2:    var(--bg-overlay);
+      --text:         var(--text-primary);
+      --text-soft:    #E4E4E7;
+      --muted:        var(--text-secondary);
+      --muted-2:      var(--text-tertiary);
+      --accent:       var(--accent-primary);
+      --accent-2:     var(--accent-primary-hi);
+      --accent-deep:  var(--accent-primary-lo);
+      --accent-soft:  rgba(124, 92, 255, 0.10);
+      --accent-line:  var(--border-accent);
+      --warn:         var(--warning);
+      --warn-soft:    rgba(251, 169, 76, 0.10);
+      --border:       var(--border-default);
+      --border-soft:  var(--border-subtle);
+      --border-strong: var(--border-stronger);
+
+      /* Radii */
       --radius-sm:    8px;
       --radius:       12px;
       --radius-lg:    16px;
       --radius-xl:    24px;
       --radius-2xl:   28px;
-      --shadow-1:     0 1px 2px rgba(0,0,0,0.04);
-      --shadow-2:     0 8px 24px -8px rgba(0,0,0,0.08);
-      --font-sans:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-      --grain:        radial-gradient(1px 1px at 25% 35%, rgba(0,0,0,0.04) 50%, transparent 50%),
-                      radial-gradient(1px 1px at 75% 65%, rgba(0,0,0,0.04) 50%, transparent 50%);
-    }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg:           #08070b;
-        --surface:      #0f0e13;
-        --surface-2:    #141319;
-        --border:       rgba(255,255,255,0.07);
-        --border-soft:  rgba(255,255,255,0.04);
-        --border-strong:rgba(255,255,255,0.14);
-        --text:         #fafafa;
-        --text-soft:    #e4e4e7;
-        --muted:        #a1a1aa;
-        --muted-2:      #71717a;
-        --accent:       #14b8a6;
-        --accent-2:     #5eead4;
-        --accent-deep:  #0d9488;
-        --accent-soft:  rgba(20, 184, 166, 0.14);
-        --accent-line:  rgba(20, 184, 166, 0.40);
-        --warn:         #fbbf24;
-        --warn-soft:    rgba(251, 191, 36, 0.10);
-        --shadow-1:     0 1px 2px rgba(0,0,0,0.4);
-        --shadow-2:     0 12px 32px -12px rgba(0,0,0,0.6);
-        --grain:        radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.04) 50%, transparent 50%),
-                        radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.04) 50%, transparent 50%);
-      }
+      /* Shadows */
+      --shadow-1:     0 1px 2px rgba(0,0,0,0.4);
+      --shadow-2:     0 12px 32px -12px rgba(0,0,0,0.6);
+      --shadow-glow:  0 0 0 1px rgba(124,92,255,0.10),
+                      0 20px 40px -20px rgba(124,92,255,0.25),
+                      inset 0 1px 0 rgba(255,255,255,0.05);
+
+      /* Typography */
+      --font-sans: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      /* Legacy grain (kept for card-internal usage) */
+      --grain: radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.04) 50%, transparent 50%),
+               radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.04) 50%, transparent 50%);
     }
 
     html, body {
