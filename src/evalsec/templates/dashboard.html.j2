@@ -26,48 +26,54 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ─────────────────────────────────────────────
-       DESIGN TOKENS — Electric Violet on near-black
+       DESIGN TOKENS — Deep Plum + Copper on warm black
        ───────────────────────────────────────────── */
     :root {
       color-scheme: dark;
 
-      /* Background layers */
-      --bg-base:        #08080C;
-      --bg-elevated:    #0E0E14;
-      --bg-overlay:     #14141C;
-      --bg-glass:       rgba(20, 20, 28, 0.6);
+      /* Background layers — warm-shifted */
+      --bg-base:        #0A0708;
+      --bg-elevated:    #14100F;
+      --bg-overlay:     #1C1614;
+      --bg-glass:       rgba(28, 22, 20, 0.55);
 
-      /* Primary accent — Electric Violet */
-      --accent-primary:    #7C5CFF;
-      --accent-primary-hi: #9D85FF;
-      --accent-primary-lo: #5538E5;
-      --accent-glow:       rgba(124, 92, 255, 0.15);
+      /* Primary accent — Deep Plum (muted wine, NOT neon) */
+      --accent-primary:    #8B4A6B;
+      --accent-primary-hi: #A8627F;
+      --accent-primary-lo: #6B3852;
+      --accent-glow:       rgba(139, 74, 107, 0.12);
 
-      /* Secondary accent — Cyber Lime (baselines / "no AI" metrics) */
-      --accent-secondary:      #C6FF3D;
-      --accent-secondary-hi:   #DEFF7A;
-      --accent-secondary-lo:   #9CCC1F;
-      --accent-secondary-soft: rgba(198, 255, 61, 0.10);
-      --accent-secondary-line: rgba(198, 255, 61, 0.30);
-      --accent-secondary-glow: rgba(198, 255, 61, 0.18);
+      /* Secondary accent — Copper / Bronze (baselines / "no AI" metrics) */
+      --accent-secondary:      #C77D4A;
+      --accent-secondary-hi:   #E09968;
+      --accent-secondary-lo:   #9D5E33;
+      --accent-secondary-soft: rgba(199, 125, 74, 0.10);
+      --accent-secondary-line: rgba(199, 125, 74, 0.25);
+      --accent-secondary-glow: rgba(199, 125, 74, 0.12);
 
-      /* Semantic */
-      --success: #34D399;
-      --warning: #FBA94C;
-      --danger:  #F87171;
-      --info:    #60A5FA;
+      /* Champagne — premium highlights for metric numbers */
+      --accent-tertiary:   #D4AF7A;
 
-      /* Text hierarchy */
-      --text-primary:   #F4F4F7;
-      --text-secondary: #A1A1AA;
-      --text-tertiary:  #71717A;
-      --text-disabled:  #52525B;
+      /* Semantic — warm-toned */
+      --success: #7FB069;
+      --warning: #E8A04E;
+      --danger:  #D45D5D;
+      --info:    #6B8FA8;
 
-      /* Borders */
-      --border-subtle:  rgba(255, 255, 255, 0.06);
-      --border-default: rgba(255, 255, 255, 0.10);
-      --border-stronger: rgba(255, 255, 255, 0.16);
-      --border-accent:  rgba(124, 92, 255, 0.30);
+      /* Warm Slate neutrals — mid-tone palette per redesign.md */
+      --neutral-600:    #524A44;
+
+      /* Text hierarchy — warm off-white */
+      --text-primary:   #F5EFE6;
+      --text-secondary: #B0A498;
+      --text-tertiary:  #6E6359;
+      --text-disabled:  #524A44;
+
+      /* Borders — warm tinted */
+      --border-subtle:  rgba(245, 239, 230, 0.05);
+      --border-default: rgba(245, 239, 230, 0.08);
+      --border-stronger: rgba(245, 239, 230, 0.14);
+      --border-accent:  rgba(199, 125, 74, 0.25);
 
       /* Spacing — 8px grid */
       --space-1:  4px;
@@ -97,16 +103,16 @@
       --surface:      var(--bg-elevated);
       --surface-2:    var(--bg-overlay);
       --text:         var(--text-primary);
-      --text-soft:    #E4E4E7;
+      --text-soft:    #EAE2D7;
       --muted:        var(--text-secondary);
       --muted-2:      var(--text-tertiary);
       --accent:       var(--accent-primary);
       --accent-2:     var(--accent-primary-hi);
       --accent-deep:  var(--accent-primary-lo);
-      --accent-soft:  rgba(124, 92, 255, 0.10);
+      --accent-soft:  rgba(139, 74, 107, 0.08);
       --accent-line:  var(--border-accent);
       --warn:         var(--warning);
-      --warn-soft:    rgba(251, 169, 76, 0.10);
+      --warn-soft:    rgba(232, 160, 78, 0.08);
       --border:       var(--border-default);
       --border-soft:  var(--border-subtle);
       --border-strong: var(--border-stronger);
@@ -118,12 +124,12 @@
       --radius-xl:    24px;
       --radius-2xl:   28px;
 
-      /* Shadows */
+      /* Shadows — softened, no stacking glow */
       --shadow-1:     0 1px 2px rgba(0,0,0,0.4);
       --shadow-2:     0 12px 32px -12px rgba(0,0,0,0.6);
-      --shadow-glow:  0 0 0 1px rgba(124,92,255,0.10),
-                      0 20px 40px -20px rgba(124,92,255,0.25),
-                      inset 0 1px 0 rgba(255,255,255,0.05);
+      --shadow-glow:  0 0 0 1px rgba(199,125,74,0.08),
+                      0 12px 28px -16px rgba(139,74,107,0.30),
+                      inset 0 1px 0 rgba(245,239,230,0.04);
 
       /* Typography */
       --font-sans: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -153,9 +159,9 @@
     body {
       position: relative;
       background:
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 92, 255, 0.12), transparent 70%),
-        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(198, 255, 61, 0.04), transparent 60%),
-        radial-gradient(ellipse 70% 45% at 15% 75%, rgba(124, 92, 255, 0.06), transparent 70%),
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(139, 74, 107, 0.08), transparent 60%),
+        radial-gradient(ellipse 50% 30% at 85% 30%, rgba(199, 125, 74, 0.04), transparent 70%),
+        radial-gradient(ellipse 70% 45% at 15% 75%, rgba(139, 74, 107, 0.05), transparent 70%),
         var(--bg-base);
       background-attachment: fixed;
       isolation: isolate;
@@ -167,7 +173,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.025;
+      opacity: 0.018;
       mix-blend-mode: overlay;
       background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       z-index: 0;
@@ -191,30 +197,30 @@
 
     /* Selection highlight */
     ::selection {
-      background: rgba(124, 92, 255, 0.30);
+      background: rgba(139, 74, 107, 0.30);
       color: var(--text-primary);
     }
     ::-moz-selection {
-      background: rgba(124, 92, 255, 0.30);
+      background: rgba(139, 74, 107, 0.30);
       color: var(--text-primary);
     }
 
-    /* Custom scrollbar — thin, transparent track, violet thumb */
+    /* Custom scrollbar — thin, transparent track, plum thumb */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb {
-      background: rgba(124, 92, 255, 0.25);
+      background: rgba(139, 74, 107, 0.25);
       border-radius: 999px;
       border: 2px solid transparent;
       background-clip: padding-box;
     }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(124, 92, 255, 0.45); background-clip: padding-box; }
-    html { scrollbar-color: rgba(124, 92, 255, 0.30) transparent; scrollbar-width: thin; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(139, 74, 107, 0.45); background-clip: padding-box; }
+    html { scrollbar-color: rgba(139, 74, 107, 0.30) transparent; scrollbar-width: thin; }
 
-    /* Focus ring — violet, visible only for keyboard focus */
+    /* Focus ring — plum, visible only for keyboard focus */
     :focus { outline: none; }
     :focus-visible {
-      outline: 2px solid rgba(124, 92, 255, 0.55);
+      outline: 2px solid rgba(139, 74, 107, 0.55);
       outline-offset: 2px;
       border-radius: 4px;
     }
@@ -248,7 +254,7 @@
       transform: translateX(-50%);
       width: 1200px;
       height: 600px;
-      background: radial-gradient(closest-side, rgba(124, 92, 255, 0.18), transparent 70%);
+      background: radial-gradient(closest-side, rgba(139, 74, 107, 0.18), transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -264,8 +270,8 @@
       width: 480px;
       height: 480px;
       background: radial-gradient(closest-side,
-        rgba(124, 92, 255, 0.40) 0%,
-        rgba(124, 92, 255, 0.18) 35%,
+        rgba(139, 74, 107, 0.40) 0%,
+        rgba(139, 74, 107, 0.18) 35%,
         transparent 70%);
       filter: blur(40px);
       z-index: -1;
@@ -279,8 +285,8 @@
       gap: 0.55rem;
       padding: 0.42rem 0.95rem;
       background: linear-gradient(135deg,
-        rgba(124, 92, 255, 0.16) 0%,
-        rgba(124, 92, 255, 0.06) 100%);
+        rgba(139, 74, 107, 0.16) 0%,
+        rgba(139, 74, 107, 0.06) 100%);
       color: var(--accent-primary-hi);
       border: 1px solid var(--border-accent);
       border-radius: 999px;
@@ -303,9 +309,9 @@
       animation: pulse 2.4s var(--ease-premium) infinite;
     }
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(124, 92, 255, 0.55); }
-      70%  { box-shadow: 0 0 0 9px rgba(124, 92, 255, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(124, 92, 255, 0); }
+      0%   { box-shadow: 0 0 0 0 rgba(139, 74, 107, 0.55); }
+      70%  { box-shadow: 0 0 0 9px rgba(139, 74, 107, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(139, 74, 107, 0); }
     }
 
     .hero-title {
@@ -315,14 +321,14 @@
       letter-spacing: -0.055em;
       line-height: 0.95;
       margin-bottom: 1.1rem;
-      background: linear-gradient(135deg, #F4F4F7 0%, #C9BAFF 55%, #9D85FF 100%);
+      background: linear-gradient(135deg, #F5EFE6 0%, #D4AF7A 55%, #A8627F 100%);
       -webkit-background-clip: text;
               background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
     }
     .hero-title .accent-dot {
-      /* keep the period solid violet so it pops against the gradient */
+      /* keep the period solid plum so it pops against the gradient */
       -webkit-text-fill-color: var(--accent-primary);
       color: var(--accent-primary);
       background: none;
@@ -360,7 +366,7 @@
       font-family: var(--font-mono);
       font-size: 0.72rem;
       color: var(--text-secondary);
-      background: rgba(20, 20, 28, 0.55);
+      background: rgba(28, 22, 20, 0.55);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       transition: border-color 0.2s var(--ease-premium), color 0.2s var(--ease-premium);
@@ -414,8 +420,8 @@
     .stat {
       position: relative;
       background: linear-gradient(135deg,
-        rgba(20, 20, 28, 0.80) 0%,
-        rgba(14, 14, 20, 0.60) 100%);
+        rgba(28, 22, 20, 0.80) 0%,
+        rgba(20, 16, 15, 0.60) 100%);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
       padding: 1.6rem 1.5rem 1.35rem;
@@ -437,7 +443,7 @@
       height: 1px;
       background: linear-gradient(90deg,
         transparent,
-        rgba(124, 92, 255, 0.55),
+        rgba(139, 74, 107, 0.55),
         transparent);
       opacity: 0.5;
       transition: opacity 0.35s var(--ease-premium);
@@ -455,8 +461,7 @@
       right: 1.1rem;
       width: 18px;
       height: 18px;
-      color: var(--text-primary);
-      opacity: 0.28;
+      color: var(--neutral-600);
       pointer-events: none;
       transition:
         opacity 0.35s var(--ease-premium),
@@ -474,7 +479,7 @@
       letter-spacing: -0.045em;
       line-height: 1;
       font-variant-numeric: tabular-nums;
-      background: linear-gradient(135deg, #F4F4F7 0%, #C9BAFF 100%);
+      background: linear-gradient(135deg, #F5EFE6 0%, #D4AF7A 100%);
       -webkit-background-clip: text;
               background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -521,7 +526,7 @@
       align-items: center;
       gap: 0.55rem;
       padding: 0.7rem 1.15rem;
-      background: rgba(20, 20, 28, 0.55);
+      background: rgba(28, 22, 20, 0.55);
       border: 1px solid var(--border-subtle);
       border-radius: 999px;
       font-family: inherit;
@@ -556,8 +561,8 @@
     .method-tab.selected {
       color: var(--text-primary);
       background: linear-gradient(135deg,
-        rgba(124, 92, 255, 0.18) 0%,
-        rgba(124, 92, 255, 0.05) 100%);
+        rgba(139, 74, 107, 0.18) 0%,
+        rgba(139, 74, 107, 0.05) 100%);
       border-color: var(--border-accent);
       box-shadow:
         0 0 22px -6px var(--accent-glow),
@@ -633,8 +638,8 @@
       border-radius: var(--radius-2xl);
       padding: 0.65rem;
       background: linear-gradient(135deg,
-        rgba(20, 20, 28, 0.80) 0%,
-        rgba(14, 14, 20, 0.60) 100%);
+        rgba(28, 22, 20, 0.80) 0%,
+        rgba(20, 16, 15, 0.60) 100%);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       box-shadow: var(--shadow-2);
@@ -647,7 +652,7 @@
       height: 1px;
       background: linear-gradient(90deg,
         transparent,
-        rgba(124, 92, 255, 0.50),
+        rgba(139, 74, 107, 0.50),
         transparent);
     }
     .charts-inner {
@@ -663,7 +668,7 @@
     }
 
     .chart-card {
-      background: rgba(8, 8, 12, 0.45);
+      background: rgba(10, 7, 8, 0.45);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
       padding: 1.45rem 1.5rem 1.2rem;
@@ -711,9 +716,9 @@
       align-items: flex-start;
       gap: 1rem;
       background: linear-gradient(135deg,
-        rgba(251, 169, 76, 0.10) 0%,
-        rgba(251, 169, 76, 0.03) 100%);
-      border: 1px solid rgba(251, 169, 76, 0.30);
+        rgba(232, 160, 78, 0.10) 0%,
+        rgba(232, 160, 78, 0.03) 100%);
+      border: 1px solid rgba(232, 160, 78, 0.30);
       border-radius: var(--radius-lg);
       padding: 1.1rem 1.35rem;
       margin-bottom: 1.5rem;
@@ -723,9 +728,9 @@
     .disclaimer-icon {
       width: 30px; height: 30px;
       border-radius: 50%;
-      background: rgba(251, 169, 76, 0.16);
+      background: rgba(232, 160, 78, 0.16);
       color: var(--warning);
-      border: 1px solid rgba(251, 169, 76, 0.40);
+      border: 1px solid rgba(232, 160, 78, 0.40);
       font-family: var(--font-mono);
       font-size: 0.92rem;
       font-weight: 600;
@@ -757,8 +762,8 @@
     .leaderboard {
       position: relative;
       background: linear-gradient(135deg,
-        rgba(20, 20, 28, 0.80) 0%,
-        rgba(14, 14, 20, 0.60) 100%);
+        rgba(28, 22, 20, 0.80) 0%,
+        rgba(20, 16, 15, 0.60) 100%);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-xl);
       overflow: hidden;
@@ -772,7 +777,7 @@
       height: 1px;
       background: linear-gradient(90deg,
         transparent,
-        rgba(124, 92, 255, 0.50),
+        rgba(139, 74, 107, 0.50),
         transparent);
       z-index: 1;
     }
@@ -794,7 +799,7 @@
     .leaderboard.baseline-board::before {
       background: linear-gradient(90deg,
         transparent,
-        rgba(198, 255, 61, 0.40),
+        rgba(199, 125, 74, 0.40),
         transparent);
     }
     .leaderboard.baseline-board .lb-header h2 { color: var(--text-secondary); font-weight: 500; }
@@ -837,17 +842,17 @@
 
     tbody tr.top-row {
       background: linear-gradient(90deg,
-        rgba(124, 92, 255, 0.10) 0%,
-        rgba(124, 92, 255, 0.02) 35%,
+        rgba(139, 74, 107, 0.10) 0%,
+        rgba(139, 74, 107, 0.02) 35%,
         transparent 100%);
     }
     tbody tr.top-row td:first-child {
-      box-shadow: inset 2px 0 0 var(--accent-primary);
+      box-shadow: inset 2px 0 0 var(--accent-secondary);  /* copper accent line per redesign.md §6 */
     }
     tbody tr.top-row:hover {
       background: linear-gradient(90deg,
-        rgba(124, 92, 255, 0.16) 0%,
-        rgba(124, 92, 255, 0.04) 35%,
+        rgba(139, 74, 107, 0.16) 0%,
+        rgba(139, 74, 107, 0.04) 35%,
         transparent 100%);
     }
 
@@ -870,7 +875,7 @@
       font-size: 0.76rem;
       font-weight: 500;
       color: var(--text-secondary);
-      background: rgba(20, 20, 28, 0.55);
+      background: rgba(28, 22, 20, 0.55);
       border: 1px solid var(--border-subtle);
       font-variant-numeric: tabular-nums;
     }
@@ -878,14 +883,14 @@
       color: var(--accent-primary-hi);
       border-color: var(--border-accent);
       background: linear-gradient(135deg,
-        rgba(124, 92, 255, 0.22) 0%,
-        rgba(124, 92, 255, 0.06) 100%);
+        rgba(139, 74, 107, 0.22) 0%,
+        rgba(139, 74, 107, 0.06) 100%);
       box-shadow:
         0 0 14px -2px var(--accent-glow),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
     .rank-pill.rank-2 {
-      color: #F4F4F7;
+      color: #F5EFE6;
       border-color: rgba(255, 255, 255, 0.20);
       background: linear-gradient(135deg,
         rgba(255, 255, 255, 0.10) 0%,
@@ -893,10 +898,10 @@
     }
     .rank-pill.rank-3 {
       color: var(--warning);
-      border-color: rgba(251, 169, 76, 0.30);
+      border-color: rgba(232, 160, 78, 0.30);
       background: linear-gradient(135deg,
-        rgba(251, 169, 76, 0.14) 0%,
-        rgba(251, 169, 76, 0.03) 100%);
+        rgba(232, 160, 78, 0.14) 0%,
+        rgba(232, 160, 78, 0.03) 100%);
     }
 
     .model-name-cell {
@@ -948,7 +953,7 @@
       align-items: center;
       gap: 0.42rem;
       padding: 0.22rem 0.65rem 0.22rem 0.55rem;
-      background: rgba(251, 169, 76, 0.10);
+      background: rgba(232, 160, 78, 0.10);
       color: var(--warning);
       font-family: var(--font-mono);
       font-size: 0.64rem;
@@ -957,7 +962,7 @@
       text-transform: uppercase;
       border-radius: 999px;
       margin-left: 0.55rem;
-      border: 1px solid rgba(251, 169, 76, 0.30);
+      border: 1px solid rgba(232, 160, 78, 0.30);
       white-space: nowrap;
       vertical-align: middle;
     }
@@ -1021,8 +1026,8 @@
       text-transform: uppercase;
       color: var(--accent-secondary);
       background: linear-gradient(135deg,
-        rgba(198, 255, 61, 0.10) 0%,
-        rgba(198, 255, 61, 0.04) 100%);
+        rgba(199, 125, 74, 0.10) 0%,
+        rgba(199, 125, 74, 0.04) 100%);
       border: 1px solid var(--accent-secondary-line);
       border-radius: 999px;
       box-shadow:
@@ -1033,7 +1038,7 @@
     .baseline-chart-frame::before {
       background: linear-gradient(90deg,
         transparent,
-        rgba(198, 255, 61, 0.45),
+        rgba(199, 125, 74, 0.45),
         transparent);
     }
 
@@ -1051,8 +1056,8 @@
     .model-card {
       position: relative;
       background: linear-gradient(135deg,
-        rgba(20, 20, 28, 0.80) 0%,
-        rgba(14, 14, 20, 0.60) 100%);
+        rgba(28, 22, 20, 0.80) 0%,
+        rgba(20, 16, 15, 0.60) 100%);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-xl);
       padding: 1.65rem;
@@ -1071,7 +1076,7 @@
       height: 1px;
       background: linear-gradient(90deg,
         transparent,
-        rgba(124, 92, 255, 0.50),
+        rgba(139, 74, 107, 0.50),
         transparent);
       opacity: 0.5;
       transition: opacity 0.35s var(--ease-premium), background 0.35s var(--ease-premium);
@@ -1082,11 +1087,11 @@
       box-shadow: var(--shadow-glow);
     }
     .model-card:hover::before { opacity: 1; }
-    /* Baseline drill-down cards swap the accent line + bar fill to lime */
+    /* Baseline drill-down cards swap the accent line + bar fill to copper */
     .model-card--baseline::before {
       background: linear-gradient(90deg,
         transparent,
-        rgba(198, 255, 61, 0.45),
+        rgba(199, 125, 74, 0.45),
         transparent);
     }
 
@@ -1121,12 +1126,12 @@
       flex-shrink: 0;
     }
     .type-llm {
-      background: rgba(124, 92, 255, 0.10);
+      background: rgba(139, 74, 107, 0.10);
       color: var(--accent-primary-hi);
       border: 1px solid var(--border-accent);
     }
     .type-baseline {
-      background: rgba(198, 255, 61, 0.08);
+      background: rgba(199, 125, 74, 0.08);
       color: var(--accent-secondary);
       border: 1px solid var(--accent-secondary-line);
     }
@@ -1140,14 +1145,14 @@
       letter-spacing: -0.045em;
       line-height: 1;
       font-variant-numeric: tabular-nums;
-      background: linear-gradient(135deg, #F4F4F7 0%, #C9BAFF 100%);
+      background: linear-gradient(135deg, #F5EFE6 0%, #D4AF7A 100%);
       -webkit-background-clip: text;
               background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
     }
     .model-card--baseline .score-value {
-      background: linear-gradient(135deg, #F4F4F7 0%, var(--accent-secondary) 100%);
+      background: linear-gradient(135deg, #F5EFE6 0%, var(--accent-secondary) 100%);
       -webkit-background-clip: text;
               background-clip: text;
     }
@@ -1562,7 +1567,13 @@
           </thead>
           <tbody>
             {% for entry in llm_entries %}
-            {% set is_truncated = entry.details | selectattr("score.validation.parse_error") | list | length > 0 %}
+            {% set ns = namespace(truncated=false) %}
+            {% for d in (entry.details or []) %}
+              {% if d.score is mapping and d.score.get('validation', {}).get('parse_error') %}
+                {% set ns.truncated = true %}
+              {% endif %}
+            {% endfor %}
+            {% set is_truncated = ns.truncated %}
             {% set reach = entry.dimension_scores.get("reachability_reasoning", 0) %}
             {% set prio  = entry.dimension_scores.get("prioritization", 0) %}
             {% set act   = entry.dimension_scores.get("actionability", 0) %}
@@ -1760,8 +1771,8 @@ try {
 
   let chartLoaded = false;
   try {
-    Chart.defaults.color       = '#A1A1AA';
-    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.06)';
+    Chart.defaults.color       = '#B0A498';
+    Chart.defaults.borderColor = 'rgba(245, 239, 230, 0.06)';
     Chart.defaults.font.family = FONT_SANS;
     Chart.defaults.font.size   = 12;
     chartLoaded = true;
@@ -1773,31 +1784,39 @@ try {
     });
   }
 
-  // ── Palette ──
-  const VIOLET    = '#7C5CFF';
-  const VIOLET_HI = '#9D85FF';
-  const VIOLET_LO = '#5538E5';
-  const LIME      = '#C6FF3D';
-  const LIME_HI   = '#DEFF7A';
-  const LIME_LO   = '#9CCC1F';
-  const INFO      = '#60A5FA';
-  const MINT      = '#34D399';
-  const CORAL     = '#F87171';
-  const NEUTRAL   = '#52525B';
+  // ── Palette — Deep Plum + Copper (warm premium) ──
+  const PLUM      = '#8B4A6B';
+  const PLUM_HI   = '#A8627F';
+  const PLUM_LO   = '#6B3852';
+  const COPPER    = '#C77D4A';
+  const COPPER_HI = '#E09968';
+  const COPPER_LO = '#9D5E33';
+  const CHAMPAGNE = '#D4AF7A';
+  const INFO      = '#6B8FA8';   // warm steel blue
+  const SAGE      = '#7FB069';   // sage green (was MINT)
+  const TERRA     = '#D45D5D';   // terracotta red (was CORAL)
+  const NEUTRAL   = '#524A44';
 
   // Cycled palette for multi-series charts (radar). Order chosen so adjacent
   // series have maximum hue separation, distinguishable even at low alpha.
-  const SERIES_PALETTE = [VIOLET, LIME, INFO, VIOLET_HI, MINT, CORAL];
+  const SERIES_PALETTE = [PLUM, COPPER, INFO, PLUM_HI, SAGE, CHAMPAGNE];
   function paletteFor(n) {
     return Array.from({ length: n }, (_, i) => SERIES_PALETTE[i % SERIES_PALETTE.length]);
   }
 
   // Build a left→right linear gradient on a bar's chartArea.
-  function makeBarGradient(c, area, from, to) {
+  // Supports optional 3-stop fade: from → mid (60%) → fadeEnd (transparent at 100%).
+  function makeBarGradient(c, area, from, mid, fadeEnd) {
     if (!area) return from;
     const g = c.createLinearGradient(area.left, 0, area.right, 0);
-    g.addColorStop(0, from);
-    g.addColorStop(1, to);
+    if (fadeEnd) {
+      g.addColorStop(0, from);
+      g.addColorStop(0.6, mid || from);
+      g.addColorStop(1, fadeEnd);
+    } else {
+      g.addColorStop(0, from);
+      g.addColorStop(1, mid || from);
+    }
     return g;
   }
 
@@ -1815,8 +1834,34 @@ try {
       },
     };
   }
-  const violetGlow = glowPlugin('violetGlow', 'rgba(124, 92, 255, 0.45)', 18);
-  const limeGlow   = glowPlugin('limeGlow',   'rgba(198, 255, 61, 0.40)', 16);
+  // Glow plugins kept defined for backward-compat but with greatly reduced
+  // blur radius + opacity. Bars rely on gradient fill for signal, not glow.
+  const plumGlow   = glowPlugin('plumGlow',   'rgba(139, 74, 107, 0.18)', 6);
+  const copperGlow = glowPlugin('copperGlow', 'rgba(199, 125, 74, 0.15)', 5);
+
+  // Copper edge highlight — draws a 1px vertical line at the right edge of
+  // each horizontal bar, creating an "engraved tip" effect (redesign.md §3).
+  function copperEdgePlugin() {
+    return {
+      id: 'copperEdge',
+      afterDatasetDraw(chart) {
+        const ctx = chart.ctx;
+        const meta = chart.getDatasetMeta(0);
+        if (!meta || !meta.data) return;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(212, 175, 122, 0.40)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        meta.data.forEach(bar => {
+          const x = bar.x + bar.width;
+          ctx.moveTo(x, bar.y);
+          ctx.lineTo(x, bar.y + bar.height);
+        });
+        ctx.stroke();
+        ctx.restore();
+      }
+    };
+  }
 
   // Convert hex → rgba string with given alpha (for radar fills).
   function hexToRgba(hex, alpha) {
@@ -1954,15 +1999,15 @@ try {
         datasets: [{
           label: 'Composite Score',
           data: llmEntries.map(e => e.avg_score),
-          // Uniform violet horizontal gradient across all bars; bar length
-          // carries the signal, not bar color.
+          // Plum gradient with fade-to-transparent at the right edge, plus
+          // copper engraved-tip border rendered via copperEdge plugin.
           backgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, VIOLET_LO, VIOLET_HI);
+            return makeBarGradient(chart.ctx, chart.chartArea, PLUM_LO, PLUM_HI, 'rgba(168, 98, 127, 0)');
           },
           hoverBackgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, VIOLET, VIOLET_HI);
+            return makeBarGradient(chart.ctx, chart.chartArea, PLUM, PLUM_HI, 'rgba(168, 98, 127, 0)');
           },
           borderRadius: 6,
           borderSkipped: false,
@@ -1979,11 +2024,11 @@ try {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(14, 14, 20, 0.92)',
-            borderColor: 'rgba(124, 92, 255, 0.30)',
+            backgroundColor: 'rgba(20, 16, 15, 0.92)',
+            borderColor: 'rgba(139, 74, 107, 0.30)',
             borderWidth: 1,
-            titleColor: '#F4F4F7',
-            bodyColor: '#E4E4E7',
+            titleColor: '#F5EFE6',
+            bodyColor: '#EAE2D7',
             padding: 10,
             cornerRadius: 8,
             titleFont: { family: FONT_SANS, weight: '500' },
@@ -1994,44 +2039,58 @@ try {
           x: {
             min: 0, max: 100,
             grid: {
-              color: 'rgba(255, 255, 255, 0.04)',
+              color: 'rgba(245, 239, 230, 0.04)',
               borderDash: [4, 4],
               drawTicks: false,
             },
-            ticks: { color: '#71717A', font: { family: FONT_MONO, size: 10 } },
+            ticks: { color: '#6E6359', font: { family: FONT_MONO, size: 10 } },
             border: { display: false },
           },
           y: {
             grid: { display: false },
             ticks: {
-              color: '#E4E4E7',
+              color: '#EAE2D7',
               font: { family: FONT_SANS, weight: '500', size: 12 },
             },
             border: { display: false },
           }
         }
       },
-      plugins: [violetGlow],
+      plugins: [plumGlow, copperEdgePlugin()],
     });
+  }
+
+  // Map known model IDs to specific plum/copper colors (redesign.md §4)
+  // instead of cycling through a generic palette.
+  function modelColor(modelId, index) {
+    const map = {
+      "deepseek_v4_pro":  PLUM,
+      "claude_sonnet_46": COPPER,
+      "kimi_k2_thinking": PLUM_HI,
+      "qwen_3_5":         COPPER_LO,
+    };
+    return map[modelId] || (index % 2 === 0 ? PLUM : COPPER);
   }
 
   // ── Radar Chart (LLM only, readable dim labels) ──
   if (chartLoaded && llmEntries.length > 0) {
-    const colors = paletteFor(llmEntries.length);
-    const radarDatasets = llmEntries.map((entry, i) => ({
-      label: displayName(entry.model_id),
-      data: dimNames.map(d => (entry.dimension_scores[d] || 0)),
-      borderColor: colors[i],
-      backgroundColor: hexToRgba(colors[i], 0.15),
-      borderWidth: 2,
-      pointRadius: 3,
-      pointBackgroundColor: colors[i],
-      pointBorderColor: colors[i],
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: colors[i],
-      pointHoverBorderColor: '#F4F4F7',
-      pointHoverBorderWidth: 2,
-    }));
+    const radarDatasets = llmEntries.map((entry, i) => {
+      const stroke = modelColor(entry.model_id, i);
+      return {
+        label: displayName(entry.model_id),
+        data: dimNames.map(d => (entry.dimension_scores[d] || 0)),
+        borderColor: stroke,
+        backgroundColor: hexToRgba(stroke, 0.15),
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: stroke,
+        pointBorderColor: stroke,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: stroke,
+        pointHoverBorderColor: '#F5EFE6',
+        pointHoverBorderWidth: 2,
+      };
+    });
 
     new Chart(document.getElementById('radarChart'), {
       type: 'radar',
@@ -2049,13 +2108,23 @@ try {
             ticks: {
               stepSize: 25,
               backdropColor: 'transparent',
-              color: '#52525B',
+              color: '#524A44',
               font: { family: FONT_MONO, size: 9 },
             },
-            grid:       { color: 'rgba(255, 255, 255, 0.05)', circular: true },
-            angleLines: { color: 'rgba(255, 255, 255, 0.05)' },
+            // Dotted grid rings per redesign.md §4 — subtle, industrial feel
+            grid: {
+              color: 'rgba(245, 239, 230, 0.06)',
+              circular: true,
+              lineWidth: 1,
+              borderDash: [2, 4],
+            },
+            angleLines: {
+              color: 'rgba(245, 239, 230, 0.06)',
+              lineWidth: 1,
+              borderDash: [2, 4],
+            },
             pointLabels: {
-              color: '#A1A1AA',
+              color: '#B0A498',
               font: { family: FONT_MONO, size: 10, weight: '500' },
             },
           }
@@ -2067,18 +2136,18 @@ try {
               boxWidth: 10,
               boxHeight: 10,
               padding: 14,
-              color: '#E4E4E7',
+              color: '#EAE2D7',
               font: { family: FONT_SANS, size: 11, weight: '500' },
               usePointStyle: true,
               pointStyle: 'circle',
             },
           },
           tooltip: {
-            backgroundColor: 'rgba(14, 14, 20, 0.92)',
-            borderColor: 'rgba(124, 92, 255, 0.30)',
+            backgroundColor: 'rgba(20, 16, 15, 0.92)',
+            borderColor: 'rgba(139, 74, 107, 0.30)',
             borderWidth: 1,
-            titleColor: '#F4F4F7',
-            bodyColor: '#E4E4E7',
+            titleColor: '#F5EFE6',
+            bodyColor: '#EAE2D7',
             padding: 10,
             cornerRadius: 8,
             titleFont: { family: FONT_SANS, weight: '500' },
@@ -2089,7 +2158,7 @@ try {
     });
   }
 
-  // ── Baseline Bar Chart (cyber lime, "no AI" tier) ──
+  // ── Baseline Bar Chart (copper, "no AI" tier) ──
   const baselineCanvas = document.getElementById('baselineBarChart');
   if (chartLoaded && baselineCanvas && baselineEntries.length > 0) {
     new Chart(baselineCanvas, {
@@ -2101,11 +2170,11 @@ try {
           data: baselineEntries.map(e => e.avg_score),
           backgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, LIME_LO, LIME);
+            return makeBarGradient(chart.ctx, chart.chartArea, COPPER_LO, COPPER);
           },
           hoverBackgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, LIME, LIME_HI);
+            return makeBarGradient(chart.ctx, chart.chartArea, COPPER, COPPER_HI);
           },
           borderRadius: 6,
           borderSkipped: false,
@@ -2122,11 +2191,11 @@ try {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(14, 14, 20, 0.92)',
-            borderColor: 'rgba(198, 255, 61, 0.30)',
+            backgroundColor: 'rgba(20, 16, 15, 0.92)',
+            borderColor: 'rgba(199, 125, 74, 0.30)',
             borderWidth: 1,
-            titleColor: '#F4F4F7',
-            bodyColor: '#E4E4E7',
+            titleColor: '#F5EFE6',
+            bodyColor: '#EAE2D7',
             padding: 10,
             cornerRadius: 8,
             titleFont: { family: FONT_SANS, weight: '500' },
@@ -2137,24 +2206,24 @@ try {
           x: {
             min: 0, max: 100,
             grid: {
-              color: 'rgba(255, 255, 255, 0.04)',
+              color: 'rgba(245, 239, 230, 0.04)',
               borderDash: [4, 4],
               drawTicks: false,
             },
-            ticks: { color: '#71717A', font: { family: FONT_MONO, size: 10 } },
+            ticks: { color: '#6E6359', font: { family: FONT_MONO, size: 10 } },
             border: { display: false },
           },
           y: {
             grid: { display: false },
             ticks: {
-              color: '#E4E4E7',
+              color: '#EAE2D7',
               font: { family: FONT_SANS, weight: '500', size: 12 },
             },
             border: { display: false },
           }
         }
       },
-      plugins: [limeGlow],
+      plugins: [copperGlow],
     });
   }
 
