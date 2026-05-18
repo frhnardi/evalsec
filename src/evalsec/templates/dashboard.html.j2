@@ -140,19 +140,47 @@
                radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.04) 50%, transparent 50%);
     }
 
+    html {
+      color-scheme: dark;
+      background: var(--bg-base);
+    }
+
     html, body {
-      background: var(--bg);
-      color: var(--text);
+      color: var(--text-primary);
       font-family: var(--font-sans);
+      font-feature-settings: "ss01", "cv11";
       line-height: 1.55;
+      letter-spacing: var(--tracking-body);
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      min-height: 100%;
     }
 
     body {
-      background-image: var(--grain);
-      background-size: 28px 28px;
+      position: relative;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 92, 255, 0.12), transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(198, 255, 61, 0.04), transparent 60%),
+        radial-gradient(ellipse 70% 45% at 15% 75%, rgba(124, 92, 255, 0.06), transparent 70%),
+        var(--bg-base);
+      background-attachment: fixed;
+      isolation: isolate;
     }
+
+    /* Subtle SVG noise overlay — kills the "flat digital" feel */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.025;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    /* Lift actual content above the noise overlay */
+    body > * { position: relative; z-index: 1; }
 
     .container {
       max-width: 1200px;
@@ -160,8 +188,52 @@
       padding: 0 1.5rem;
     }
 
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    a {
+      color: var(--accent-primary-hi);
+      text-decoration: none;
+      transition: color 0.18s ease;
+    }
+    a:hover { color: var(--accent-primary); }
+
+    /* Selection highlight */
+    ::selection {
+      background: rgba(124, 92, 255, 0.30);
+      color: var(--text-primary);
+    }
+    ::-moz-selection {
+      background: rgba(124, 92, 255, 0.30);
+      color: var(--text-primary);
+    }
+
+    /* Custom scrollbar — thin, transparent track, violet thumb */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(124, 92, 255, 0.25);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(124, 92, 255, 0.45); background-clip: padding-box; }
+    html { scrollbar-color: rgba(124, 92, 255, 0.30) transparent; scrollbar-width: thin; }
+
+    /* Focus ring — violet, visible only for keyboard focus */
+    :focus { outline: none; }
+    :focus-visible {
+      outline: 2px solid rgba(124, 92, 255, 0.55);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* Respect reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
 
     /* ─────────────────────────────────────────────
        HERO
