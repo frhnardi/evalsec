@@ -23,12 +23,6 @@
   <script src="./chart.umd.min.js"></script>
 
   <style>
-    @property --angle {
-      syntax: "<angle>";
-      initial-value: 0deg;
-      inherits: false;
-    }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ─────────────────────────────────────────────
@@ -526,41 +520,50 @@
       display: inline-flex;
       align-items: center;
       gap: 0.55rem;
-      padding: 0.75rem 1.25rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
+      padding: 0.7rem 1.15rem;
+      background: rgba(20, 20, 28, 0.55);
+      border: 1px solid var(--border-subtle);
       border-radius: 999px;
       font-family: inherit;
-      font-size: 0.86rem;
+      font-size: 0.84rem;
       font-weight: 500;
-      color: var(--text-soft);
+      color: var(--text-secondary);
       cursor: pointer;
-      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition:
+        color 0.2s var(--ease-premium),
+        border-color 0.2s var(--ease-premium),
+        background 0.2s var(--ease-premium),
+        box-shadow 0.2s var(--ease-premium);
     }
-    .method-tab:hover { border-color: var(--border-strong); color: var(--text); }
+    .method-tab:hover {
+      border-color: var(--border-default);
+      color: var(--text-primary);
+    }
     .method-tab .method-tab-icon {
-      font-size: 1rem;
-      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      transition: color 0.2s var(--ease-premium);
     }
+    .method-tab .method-tab-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+    .method-tab:hover .method-tab-icon { color: var(--text-secondary); }
     .method-tab.selected {
-      color: var(--text);
-      background: var(--surface);
+      color: var(--text-primary);
+      background: linear-gradient(135deg,
+        rgba(124, 92, 255, 0.18) 0%,
+        rgba(124, 92, 255, 0.05) 100%);
+      border-color: var(--border-accent);
+      box-shadow:
+        0 0 22px -6px var(--accent-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
-    .method-tab.selected::after {
-      content: "";
-      position: absolute;
-      inset: -1.5px;
-      border-radius: inherit;
-      padding: 1.5px;
-      background: conic-gradient(from var(--angle), transparent 0%, var(--accent) 18%, transparent 30%, transparent 60%, var(--accent-2) 78%, transparent 90%);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-              mask-composite: exclude;
-      animation: spin 4.5s linear infinite;
-      pointer-events: none;
-    }
-    @keyframes spin { to { --angle: 360deg; } }
+    .method-tab.selected .method-tab-icon { color: var(--accent-primary-hi); }
 
     .method-frame {
       border: 1px solid var(--border);
@@ -699,11 +702,6 @@
       border-radius: var(--radius);
     }
     .chart-fallback.visible { display: block; }
-    .chart-fallback-icon {
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-      opacity: 0.45;
-    }
 
     /* ─────────────────────────────────────────────
        DISCLAIMER
@@ -712,38 +710,44 @@
       display: flex;
       align-items: flex-start;
       gap: 1rem;
-      background: var(--warn-soft);
-      border: 1px solid var(--warn);
+      background: linear-gradient(135deg,
+        rgba(251, 169, 76, 0.10) 0%,
+        rgba(251, 169, 76, 0.03) 100%);
+      border: 1px solid rgba(251, 169, 76, 0.30);
       border-radius: var(--radius-lg);
       padding: 1.1rem 1.35rem;
       margin-bottom: 1.5rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
     .disclaimer.is-dismissed { display: none; }
     .disclaimer-icon {
-      width: 32px; height: 32px;
+      width: 30px; height: 30px;
       border-radius: 50%;
-      background: var(--warn);
-      color: #000;
-      font-size: 0.95rem;
-      font-weight: 700;
+      background: rgba(251, 169, 76, 0.16);
+      color: var(--warning);
+      border: 1px solid rgba(251, 169, 76, 0.40);
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
     .disclaimer-body { flex: 1; color: var(--text-soft); font-size: 0.92rem; line-height: 1.5; }
-    .disclaimer-body strong { color: var(--warn); font-weight: 600; }
+    .disclaimer-body strong { color: var(--warning); font-weight: 600; }
     .disclaimer-close {
       background: transparent;
       border: none;
-      color: var(--muted);
-      font-size: 1.5rem;
+      color: var(--text-tertiary);
+      font-size: 1.4rem;
       line-height: 1;
       cursor: pointer;
       padding: 0 0.35rem;
       font-family: inherit;
+      transition: color 0.2s var(--ease-premium);
     }
-    .disclaimer-close:hover { color: var(--text); }
+    .disclaimer-close:hover { color: var(--text-primary); }
 
     /* ─────────────────────────────────────────────
        LEADERBOARD
@@ -1246,29 +1250,54 @@
        FOOTER
        ───────────────────────────────────────────── */
     footer {
+      position: relative;
       margin-top: 5rem;
       padding: 3rem 0 2.5rem;
-      border-top: 1px solid var(--border);
       text-align: center;
-      color: var(--muted);
-      font-size: 0.83rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: -0.005em;
+    }
+    footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent,
+        var(--border-default),
+        transparent);
     }
     .footer-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem 1.5rem;
+      gap: 0.5rem 1.6rem;
       justify-content: center;
       align-items: center;
     }
-    .footer-cell { white-space: nowrap; }
-    .footer-value { color: var(--text-soft); font-family: var(--font-mono); font-size: 0.78rem; }
-    .footer-mark {
-      margin-top: 1.25rem;
-      font-size: 0.72rem;
-      color: var(--muted-2);
-      letter-spacing: 0.08em;
+    .footer-cell {
+      white-space: nowrap;
+      color: var(--text-secondary);
     }
-    .footer-mark .accent-dot { color: var(--accent); }
+    .footer-cell a { color: var(--text-secondary); }
+    .footer-cell a:hover { color: var(--accent-primary-hi); }
+    .footer-value {
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+    .footer-mark {
+      margin-top: 1.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-disabled);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+    }
+    .footer-mark .accent-dot { color: var(--accent-primary); }
 
     /* ─────────────────────────────────────────────
        SCROLL REVEAL — IntersectionObserver-driven
@@ -1324,6 +1353,19 @@
       <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
       <path d="M20 3v4"/><path d="M22 5h-4"/>
       <path d="M4 17v2"/><path d="M5 18H3"/>
+    </symbol>
+    <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+    </symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+      <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+      <path d="M7 21h10"/><path d="M12 3v18"/>
+      <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+    </symbol>
+    <symbol id="i-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+      <path d="m9 12 2 2 4-4"/>
     </symbol>
   </defs>
 </svg>
@@ -1400,13 +1442,16 @@
 
     <div class="method-tabs" role="tablist">
       <button class="method-tab selected" type="button" data-tab="what" role="tab" aria-selected="true">
-        <span class="method-tab-icon">🎯</span><span>What We Test</span>
+        <span class="method-tab-icon"><svg aria-hidden="true"><use href="#i-target"/></svg></span>
+        <span>What We Test</span>
       </button>
       <button class="method-tab" type="button" data-tab="how" role="tab" aria-selected="false">
-        <span class="method-tab-icon">⚖</span><span>How We Score</span>
+        <span class="method-tab-icon"><svg aria-hidden="true"><use href="#i-scale"/></svg></span>
+        <span>How We Score</span>
       </button>
       <button class="method-tab" type="button" data-tab="why" role="tab" aria-selected="false">
-        <span class="method-tab-icon">🔒</span><span>Why It Matters</span>
+        <span class="method-tab-icon"><svg aria-hidden="true"><use href="#i-shield-check"/></svg></span>
+        <span>Why It Matters</span>
       </button>
     </div>
 
@@ -1467,8 +1512,7 @@
           <div class="chart-sub">Higher is better · 0–100 scale</div>
           <canvas id="barChart"></canvas>
           <div class="chart-fallback" id="barChartFallback">
-            <div class="chart-fallback-icon">📊</div>
-            <div>Chart requires Chart.js — check browser console for details.</div>
+            Chart requires Chart.js — check browser console for details.
           </div>
         </div>
         <div class="chart-card">
@@ -1476,8 +1520,7 @@
           <div class="chart-sub">Strengths across rubric dimensions</div>
           <canvas id="radarChart"></canvas>
           <div class="chart-fallback" id="radarChartFallback">
-            <div class="chart-fallback-icon">🕸️</div>
-            <div>Chart requires Chart.js — check browser console for details.</div>
+            Chart requires Chart.js — check browser console for details.
           </div>
         </div>
       </div>
@@ -1568,8 +1611,7 @@
           <div class="chart-sub">Deterministic methods · for reference only, not directly comparable to LLMs</div>
           <canvas id="baselineBarChart"></canvas>
           <div class="chart-fallback" id="baselineBarChartFallback">
-            <div class="chart-fallback-icon">📊</div>
-            <div>Chart requires Chart.js — check browser console for details.</div>
+            Chart requires Chart.js — check browser console for details.
           </div>
         </div>
       </div>
