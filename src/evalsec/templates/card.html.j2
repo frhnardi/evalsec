@@ -1,6 +1,6 @@
-<article class="model-card" data-rank="{{ entry.rank }}">
+<article class="model-card{% if entry.model_type == 'baseline' %} model-card--baseline{% endif %}" data-rank="{{ entry.rank }}">
   <div class="card-header">
-    <span class="rank-badge">#{{ entry.rank }}</span>
+    <span class="rank-pill rank-{{ entry.rank if entry.rank <= 3 else 'n' }}">{{ entry.rank }}</span>
     <h3 class="model-name">{{ entry.model_id }}</h3>
     {% if entry.model_type == "baseline" %}
     <span class="type-badge type-baseline">baseline</span>

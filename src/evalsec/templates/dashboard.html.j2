@@ -1034,7 +1034,7 @@
     }
 
     /* ─────────────────────────────────────────────
-       MODEL CARDS
+       MODEL CARDS (drill-down)
        ───────────────────────────────────────────── */
     .cards-section { margin-bottom: 5rem; }
 
@@ -1045,61 +1045,117 @@
     }
 
     .model-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      position: relative;
+      background: linear-gradient(135deg,
+        rgba(20, 20, 28, 0.80) 0%,
+        rgba(14, 14, 20, 0.60) 100%);
+      border: 1px solid var(--border-subtle);
       border-radius: var(--radius-xl);
-      padding: 1.5rem;
-      transition: border-color 0.2s ease, transform 0.2s ease;
+      padding: 1.65rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition:
+        border-color 0.35s var(--ease-premium),
+        transform 0.35s var(--ease-premium),
+        box-shadow 0.35s var(--ease-premium);
+      overflow: hidden;
+    }
+    .model-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 12%; right: 12%;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(124, 92, 255, 0.50),
+        transparent);
+      opacity: 0.5;
+      transition: opacity 0.35s var(--ease-premium), background 0.35s var(--ease-premium);
     }
     .model-card:hover {
-      border-color: var(--accent-line);
+      border-color: var(--border-accent);
       transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+    .model-card:hover::before { opacity: 1; }
+    /* Baseline drill-down cards swap the accent line + bar fill to lime */
+    .model-card--baseline::before {
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(198, 255, 61, 0.45),
+        transparent);
     }
 
     .card-header {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
+      gap: 0.7rem;
+      margin-bottom: 1.4rem;
       flex-wrap: wrap;
     }
-
-    .rank-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.2rem; height: 2.2rem;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 0.8rem;
-      font-weight: 600;
-      flex-shrink: 0;
-      border: 1px solid var(--accent-line);
-    }
+    .card-header .rank-pill { flex-shrink: 0; }
     .model-name {
+      flex: 1;
+      min-width: 0;
       font-size: 1rem;
       font-weight: 600;
       letter-spacing: -0.015em;
-      color: var(--text);
+      color: var(--text-primary);
     }
 
-    .card-score { text-align: center; margin-bottom: 1.25rem; }
-    .score-value {
-      font-size: 2.75rem;
+    /* Type badge — LLM / baseline marker beside the model name */
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.22rem 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
       font-weight: 500;
-      letter-spacing: -0.04em;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      flex-shrink: 0;
+    }
+    .type-llm {
+      background: rgba(124, 92, 255, 0.10);
+      color: var(--accent-primary-hi);
+      border: 1px solid var(--border-accent);
+    }
+    .type-baseline {
+      background: rgba(198, 255, 61, 0.08);
+      color: var(--accent-secondary);
+      border: 1px solid var(--accent-secondary-line);
+    }
+
+    .card-score { text-align: center; margin-bottom: 1.4rem; }
+    .score-value {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: clamp(2.4rem, 3.5vw, 2.85rem);
+      font-weight: 500;
+      letter-spacing: -0.045em;
       line-height: 1;
-      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      background: linear-gradient(135deg, #F4F4F7 0%, #C9BAFF 100%);
+      -webkit-background-clip: text;
+              background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+    .model-card--baseline .score-value {
+      background: linear-gradient(135deg, #F4F4F7 0%, var(--accent-secondary) 100%);
+      -webkit-background-clip: text;
+              background-clip: text;
     }
     .score-label {
       display: block;
-      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      margin-top: 0.4rem;
-      font-weight: 600;
+      letter-spacing: var(--tracking-wide);
+      color: var(--text-tertiary);
+      margin-top: 0.55rem;
+      font-weight: 500;
     }
 
     .card-dims {
@@ -1108,29 +1164,35 @@
       margin-bottom: 1rem;
     }
     .card-dims caption {
-      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 0.55rem;
+      letter-spacing: var(--tracking-wide);
+      color: var(--text-tertiary);
+      margin-bottom: 0.65rem;
       text-align: left;
-      font-weight: 600;
+      font-weight: 500;
     }
+    /* The caption + per-row dim names are enough; the synthetic header row is noise */
+    .card-dims thead { display: none; }
     .card-dims th, .card-dims td {
-      padding: 0.4rem 0;
+      padding: 0.42rem 0;
       border: none;
     }
     .card-dims th {
-      color: var(--muted);
+      color: var(--text-secondary);
       font-weight: 400;
       width: 50%;
       text-align: left;
+      font-size: 0.82rem;
+      letter-spacing: -0.005em;
+      text-transform: capitalize;
     }
 
     .bar-wrapper {
       position: relative;
-      height: 1.05rem;
-      background: var(--surface-2);
+      height: 1.1rem;
+      background: rgba(255, 255, 255, 0.04);
       border-radius: 999px;
       overflow: hidden;
     }
@@ -1138,31 +1200,47 @@
       position: absolute;
       top: 0; left: 0;
       height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      background: linear-gradient(90deg, var(--accent-primary-lo), var(--accent-primary-hi));
+      box-shadow: 0 0 10px -2px var(--accent-glow);
       border-radius: 999px;
-      transition: width 0.3s ease;
+      transition: width 1.2s var(--ease-premium);
+    }
+    .model-card--baseline .bar-fill {
+      background: linear-gradient(90deg, var(--accent-secondary-lo), var(--accent-secondary));
+      box-shadow: 0 0 10px -2px var(--accent-secondary-glow);
     }
     .bar-label {
       position: relative;
       display: block;
-      padding: 0 0.5rem;
-      font-size: 0.72rem;
-      font-weight: 500;
-      line-height: 1.05rem;
-      white-space: nowrap;
-      color: var(--text);
+      padding: 0 0.55rem;
       font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 400;
+      line-height: 1.1rem;
+      white-space: nowrap;
+      color: var(--text-primary);
     }
 
     .card-cost {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
+      align-items: center;
       padding-top: 1rem;
-      border-top: 1px solid var(--border-soft);
+      border-top: 1px solid var(--border-subtle);
     }
-    .cost-label { color: var(--muted); }
-    .cost-value { font-family: var(--font-mono); color: var(--text-soft); }
+    .cost-label {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--text-tertiary);
+    }
+    .cost-value {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
 
     /* ─────────────────────────────────────────────
        FOOTER
