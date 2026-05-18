@@ -1269,6 +1269,30 @@
       letter-spacing: 0.08em;
     }
     .footer-mark .accent-dot { color: var(--accent); }
+
+    /* ─────────────────────────────────────────────
+       SCROLL REVEAL — IntersectionObserver-driven
+       ───────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition:
+        opacity 0.4s var(--ease-premium),
+        transform 0.4s var(--ease-premium);
+      transition-delay: var(--reveal-delay, 0ms);
+      will-change: opacity, transform;
+    }
+    .reveal.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1304,7 +1328,7 @@
   </defs>
 </svg>
 
-<header class="hero">
+<header class="hero reveal">
   <div class="container hero-inner">
     <div class="hero-orb" aria-hidden="true"></div>
 
@@ -1341,7 +1365,7 @@
 
   <!-- ── Hero Stats ── -->
   <section class="stats-section">
-    <div class="stats-grid">
+    <div class="stats-grid reveal-stagger">
       <div class="stat">
         <svg class="stat-icon" aria-hidden="true"><use href="#i-boxes"/></svg>
         <div class="stat-value" id="stat-models">—</div>
@@ -1370,7 +1394,7 @@
   </section>
 
   <!-- ── Methodology ── -->
-  <section class="method-section">
+  <section class="method-section reveal">
     <h2 class="section-title">How this benchmark works<span class="accent-dot">.</span></h2>
     <p class="section-sub">Three reasons why evalsec scores differently from CVSS-only triage.</p>
 
@@ -1432,7 +1456,7 @@
   </section>
 
   <!-- ── Charts ── -->
-  <section class="charts-section">
+  <section class="charts-section reveal">
     <h2 class="section-title">The leaderboard at a glance<span class="accent-dot">.</span></h2>
     <p class="section-sub">Composite scores and per-dimension strengths across all evaluated LLMs.</p>
 
@@ -1461,7 +1485,7 @@
   </section>
 
   <!-- ── LLM Leaderboard ── -->
-  <section class="ranking-section">
+  <section class="ranking-section reveal">
     <aside class="disclaimer" id="prelimDisclaimer">
       <div class="disclaimer-icon" aria-hidden="true">!</div>
       <div class="disclaimer-body">
@@ -1534,7 +1558,7 @@
   <!-- ── Baseline Section ── -->
   {% set baselines = leaderboard | selectattr("model_type", "equalto", "baseline") | list %}
   {% if baselines %}
-  <section class="baseline-section">
+  <section class="baseline-section reveal">
     <div class="divider"><span>Baseline methods · no AI reasoning</span></div>
 
     <div class="charts-frame baseline-chart-frame">
@@ -1591,10 +1615,10 @@
   {% endif %}
 
   <!-- ── Model Cards ── -->
-  <section class="cards-section">
+  <section class="cards-section reveal">
     <h2 class="section-title">Drill-down per model<span class="accent-dot">.</span></h2>
     <p class="section-sub">Full per-dimension breakdown for every evaluated model.</p>
-    <div class="cards-grid">
+    <div class="cards-grid reveal-stagger">
       {% for entry in leaderboard %}
       {% include "card.html.j2" %}
       {% endfor %}
@@ -1620,6 +1644,28 @@
 try {
 (function() {
   // Dashboard is forced-dark (see :root color-scheme); no media-query branching.
+
+  // Honor system reduce-motion across reveals, count-ups, and bar animations.
+  const reduceMotion =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Smoothly count a numeric element from 0 → target with easeOutQuart.
+  function formatNum(v, decimals) {
+    if (decimals === 0) return Math.round(v).toLocaleString();
+    return v.toFixed(decimals);
+  }
+  function countUp(el, target, duration, decimals) {
+    if (!el || target == null) return;
+    if (reduceMotion) { el.textContent = formatNum(target, decimals); return; }
+    const start = performance.now();
+    const ease = (t) => 1 - Math.pow(1 - t, 4);
+    function frame(now) {
+      const t = Math.min(1, (now - start) / duration);
+      el.textContent = formatNum(target * ease(t), decimals);
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
 
   // ── Display name + dimension label maps ──
   const MODEL_DISPLAY = {
@@ -1795,8 +1841,8 @@ try {
   }));
   const caseCount = allCases.size || (leaderboard[0]?.details?.length || 0);
 
-  document.getElementById('stat-models').textContent = llmEntries.length;
-  document.getElementById('stat-cases').textContent  = caseCount;
+  countUp(document.getElementById('stat-models'), llmEntries.length, 900, 0);
+  countUp(document.getElementById('stat-cases'),  caseCount,          900, 0);
 
   const disclaimerCases = document.getElementById('disclaimer-cases');
   if (disclaimerCases) disclaimerCases.textContent = caseCount || 1;
@@ -1805,7 +1851,7 @@ try {
   const topSubEl = document.getElementById('stat-top-score-sub');
   if (llmEntries.length > 0) {
     const topEntry = llmEntries.reduce((acc, e) => e.avg_score > acc.avg_score ? e : acc);
-    topEl.textContent = topEntry.avg_score.toFixed(1);
+    countUp(topEl, topEntry.avg_score, 1100, 1);
     if (topSubEl) topSubEl.textContent = displayName(topEntry.model_id);
   } else {
     topEl.textContent = '—';
@@ -1824,11 +1870,8 @@ try {
       (e.avg_score / e.total_cost) > (acc.avg_score / acc.total_cost) ? e : acc
     );
     const ratio = best.avg_score / best.total_cost;
-    const ratioStr = ratio >= 100
-      ? Math.round(ratio).toLocaleString()
-      : ratio.toFixed(1);
-    bestValueEl.textContent = ratioStr;
     bestValueEl.classList.remove('small');
+    countUp(bestValueEl, ratio, 1100, ratio >= 100 ? 0 : 1);
     if (bestValueSub) bestValueSub.textContent = displayName(best.model_id);
   }
 
@@ -2070,6 +2113,50 @@ try {
         }
       },
       plugins: [limeGlow],
+    });
+  }
+
+  // ── Scroll reveal + bar fill animation (IntersectionObserver) ──
+  // Stagger groups: tag children with .reveal + an 80ms incremental delay so
+  // they cascade rather than enter together.
+  document.querySelectorAll('.reveal-stagger').forEach((parent) => {
+    Array.from(parent.children).forEach((child, i) => {
+      child.classList.add('reveal');
+      child.style.setProperty('--reveal-delay', `${i * 80}ms`);
+    });
+  });
+
+  // Snapshot then zero each card bar so we can animate width 0 → target when
+  // the parent card enters the viewport. Inline width was set server-side
+  // by Jinja for SSR; we just stage it for transition.
+  document.querySelectorAll('.bar-fill').forEach((bar) => {
+    const w = bar.style.width;
+    if (w && !reduceMotion) {
+      bar.dataset.targetWidth = w;
+      bar.style.width = '0%';
+    }
+  });
+
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        el.classList.add('is-revealed');
+        if (el.classList.contains('bar-fill') && el.dataset.targetWidth) {
+          const t = el.dataset.targetWidth;
+          requestAnimationFrame(() => { el.style.width = t; });
+        }
+        io.unobserve(el);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .bar-fill').forEach((el) => io.observe(el));
+  } else {
+    // Fallback / reduced-motion: reveal everything immediately, no animation.
+    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-revealed'));
+    document.querySelectorAll('.bar-fill').forEach((bar) => {
+      if (bar.dataset.targetWidth) bar.style.width = bar.dataset.targetWidth;
     });
   }
 })();
