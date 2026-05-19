@@ -1351,11 +1351,12 @@
       position: absolute;
       inset: -20%;
       background:
-        radial-gradient(circle at 65% 40%, #f97316 0%, transparent 25%),
-        radial-gradient(circle at 30% 70%, #ffffff 0%, transparent 20%),
-        radial-gradient(circle at 90% 90%, #06b6d4 0%, transparent 30%);
-      filter: blur(80px) saturate(130%);
-      opacity: 0.45;
+        radial-gradient(circle at 65% 40%, #f97316 0%, transparent 28%),
+        radial-gradient(circle at 30% 70%, #ffffff 0%, transparent 22%),
+        radial-gradient(circle at 90% 90%, #06b6d4 0%, transparent 32%),
+        radial-gradient(circle at 10% 20%, #22d3ee 0%, transparent 25%);
+      filter: blur(70px) saturate(150%);
+      opacity: 0.55;
       mix-blend-mode: screen;
       animation: meshDrift2 35s ease-in-out infinite reverse;
       will-change: transform;
@@ -1378,13 +1379,17 @@
       opacity: 0.05;
       mix-blend-mode: overlay;
     }
+    /* Dim overlay: lighter than before so the cyan↔orange mesh stays vibrant
+       (bg.md aesthetic), while a soft top-center radial vignette keeps section
+       titles legible. Per-card glass surfaces carry the bulk of contrast. */
     .shader-dim {
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse at center top, rgba(0,0,0,0.3), rgba(0,0,0,0.65) 70%),
-        rgba(0, 0, 0, 0.50);
-      backdrop-filter: blur(2px);
+        radial-gradient(ellipse at center top, rgba(0,0,0,0.18), rgba(0,0,0,0.42) 70%),
+        rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(1.5px);
+      -webkit-backdrop-filter: blur(1.5px);
     }
     @media (prefers-reduced-motion: reduce) {
       .shader-mesh, .shader-mesh-2 { animation: none; }
@@ -1968,8 +1973,8 @@ try {
     };
   }
   // Glow plugins for bars.
-  const cyanGlow   = glowPlugin('cyanGlow',   'rgba(6, 182, 212, 0.18)', 6);
-  const orangeGlow = glowPlugin('orangeGlow', 'rgba(249, 115, 22, 0.15)', 5);
+  const cyanGlow   = glowPlugin('cyanGlow',   'rgba(34, 211, 238, 0.42)', 16);
+  const orangeGlow = glowPlugin('orangeGlow', 'rgba(251, 146, 60, 0.36)', 14);
 
   // Cyan edge highlight — draws a 1px vertical line at the right edge of each bar.
   function cyanEdgePlugin() {
@@ -2130,14 +2135,17 @@ try {
         datasets: [{
           label: 'Composite Score',
           data: llmEntries.map(e => e.avg_score),
-          // Cyan gradient with fade-to-transparent at the right edge.
+          // Cyan → orange gradient across chart width. Short bars stay
+          // cyan-dominant; only the longest bars reach the warm orange
+          // end — visually rewards the top performer with the full theme
+          // transition (matches the bg.md cyan↔orange aesthetic).
           backgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, CYAN_LO, CYAN_HI, 'rgba(34, 211, 238, 0)');
+            return makeBarGradient(chart.ctx, chart.chartArea, CYAN, ORANGE);
           },
           hoverBackgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, CYAN, CYAN_HI, 'rgba(34, 211, 238, 0)');
+            return makeBarGradient(chart.ctx, chart.chartArea, CYAN_HI, ORANGE_HI);
           },
           borderRadius: 6,
           borderSkipped: false,
@@ -2209,8 +2217,8 @@ try {
         label: displayName(entry.model_id),
         data: dimNames.map(d => (entry.dimension_scores[d] || 0)),
         borderColor: stroke,
-        backgroundColor: hexToRgba(stroke, 0.15),
-        borderWidth: 2,
+        backgroundColor: hexToRgba(stroke, 0.22),
+        borderWidth: 2.25,
         pointRadius: 3,
         pointBackgroundColor: stroke,
         pointBorderColor: stroke,
