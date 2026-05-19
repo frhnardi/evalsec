@@ -26,55 +26,55 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ─────────────────────────────────────────────
-       DESIGN TOKENS — Slate Terrain (inspired by bg.md GLSL hills)
+       DESIGN TOKENS — Amber/Copper + Blue (redesign.md spec)
        ───────────────────────────────────────────── */
     :root {
       color-scheme: dark;
 
-      /* Background — deep warm charcoal (organic, like terrain shadows) */
-      --bg-base:        #070709;
-      --bg-elevated:    rgba(14, 14, 20, 0.65);
-      --bg-overlay:     rgba(20, 20, 28, 0.75);
-      --bg-glass:       rgba(14, 14, 20, 0.55);
+      /* Background — dark analytical security lab blue-black */
+      --bg-base:        #080A0F;
+      --bg-elevated:    rgba(255, 255, 255, 0.045);
+      --bg-overlay:     rgba(255, 255, 255, 0.07);
+      --bg-glass:       rgba(255, 255, 255, 0.035);
 
-      /* Primary accent — Cool slate/silver (from hills: vec3(0.6) → ~#9a) */
-      --accent-primary:      #9aa0a6;
-      --accent-primary-hi:   #c4c8cc;
-      --accent-primary-lo:   #6b7280;
-      --accent-primary-deep: #373a40;
-      --accent-glow:         rgba(154, 160, 166, 0.12);
+      /* Primary accent — Amber/copper for scores, highlights, CTAs */
+      --accent-primary:      #D8A16F;
+      --accent-primary-hi:   #E8C48A;
+      --accent-primary-lo:   #B07840;
+      --accent-primary-deep: #8A5E2E;
+      --accent-glow:         rgba(216, 161, 111, 0.14);
 
-      /* Secondary accent — Warm clay/terracotta (terrain earth tones) */
-      --accent-secondary:      #a88370;
-      --accent-secondary-hi:   #c4a28d;
-      --accent-secondary-lo:   #7c6453;
-      --accent-secondary-soft: rgba(168, 131, 112, 0.10);
-      --accent-secondary-line: rgba(168, 131, 112, 0.25);
-      --accent-secondary-glow: rgba(168, 131, 112, 0.12);
+      /* Secondary accent — Blue for metadata, info, secondary highlights */
+      --accent-secondary:      #60A5FA;
+      --accent-secondary-hi:   #93BBFD;
+      --accent-secondary-lo:   #2563EB;
+      --accent-secondary-soft: rgba(96, 165, 250, 0.10);
+      --accent-secondary-line: rgba(96, 165, 250, 0.25);
+      --accent-secondary-glow: rgba(96, 165, 250, 0.12);
 
-      /* Tertiary — White for highlights */
-      --accent-tertiary: #f5f5f5;
+      /* Tertiary — Light text tone */
+      --accent-tertiary: #F4F4F5;
 
       /* Semantic */
-      --success: #6b8f71;
-      --warning: #c49a6c;
-      --danger:  #c05c5c;
-      --info:    #9aa0a6;
+      --success: #22C55E;
+      --warning: #D8A16F;
+      --danger:  #EF4444;
+      --info:    #60A5FA;
 
       /* Neutral */
-      --neutral-600: #555a60;
+      --neutral-600: #71717A;
 
-      /* Text hierarchy — crisp white primary, warm-toned silvers for secondary */
-      --text-primary:   #ffffff;
-      --text-secondary: rgba(255, 255, 255, 0.72);
-      --text-tertiary:  rgba(255, 255, 255, 0.48);
+      /* Text hierarchy — warm-tone silvers for readability on blue-black */
+      --text-primary:   #F4F4F5;
+      --text-secondary: #A1A1AA;
+      --text-tertiary:  #71717A;
       --text-disabled:  rgba(255, 255, 255, 0.28);
 
-      /* Borders — subtle, warm-toned */
+      /* Borders — subtle, cool-toned */
       --border-subtle:   rgba(255, 255, 255, 0.05);
-      --border-default:  rgba(255, 255, 255, 0.09);
+      --border-default:  rgba(255, 255, 255, 0.08);
       --border-stronger: rgba(255, 255, 255, 0.16);
-      --border-accent:   rgba(154, 160, 166, 0.25);
+      --border-accent:   rgba(216, 161, 111, 0.25);
 
       /* Spacing — 8px grid */
       --space-1:  4px;
@@ -108,10 +108,10 @@
       --accent:       var(--accent-primary);
       --accent-2:     var(--accent-primary-hi);
       --accent-deep:  var(--accent-primary-lo);
-      --accent-soft:  rgba(154, 160, 166, 0.08);
+      --accent-soft:  rgba(216, 161, 111, 0.10);
       --accent-line:  var(--border-accent);
       --warn:         var(--warning);
-      --warn-soft:    rgba(196, 154, 108, 0.08);
+      --warn-soft:    rgba(216, 161, 111, 0.10);
       --border:       var(--border-default);
       --border-soft:  var(--border-subtle);
       --border-strong: var(--border-stronger);
@@ -126,8 +126,8 @@
       /* Shadows */
       --shadow-1:     0 1px 2px rgba(0,0,0,0.4);
       --shadow-2:     0 12px 32px -12px rgba(0,0,0,0.6);
-      --shadow-glow:  0 0 0 1px rgba(154,160,166,0.08),
-                       0 12px 28px -16px rgba(154,160,166,0.20),
+      --shadow-glow:  0 0 0 1px rgba(216,161,111,0.10),
+                       0 12px 28px -16px rgba(216,161,111,0.20),
                        inset 0 1px 0 rgba(255,255,255,0.04);
 
       /* Typography */
@@ -135,8 +135,8 @@
       --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
       /* Legacy grain */
-      --grain: radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.04) 50%, transparent 50%),
-               radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.04) 50%, transparent 50%);
+      --grain: radial-gradient(1px 1px at 25% 35%, rgba(216,161,111,0.04) 50%, transparent 50%),
+               radial-gradient(1px 1px at 75% 65%, rgba(96,165,250,0.04) 50%, transparent 50%);
     }
 
     html {
@@ -157,7 +157,10 @@
 
     body {
       position: relative;
-      background: #070709;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(216, 161, 111, 0.16), transparent 34%),
+        radial-gradient(circle at 80% 18%, rgba(96, 165, 250, 0.08), transparent 32%),
+        linear-gradient(180deg, #0B0D12 0%, #080A0F 45%, #06070B 100%);
       background-attachment: fixed;
       isolation: isolate;
     }
@@ -168,7 +171,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.022;
+      opacity: 0.035;
       mix-blend-mode: overlay;
       background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       z-index: 0;
@@ -188,34 +191,34 @@
       text-decoration: none;
       transition: color 0.18s ease;
     }
-    a:hover { color: var(--accent-primary); }
+    a:hover { color: var(--accent-primary-lo); }
 
     /* Selection highlight */
     ::selection {
-      background: rgba(154, 160, 166, 0.20);
+      background: rgba(216, 161, 111, 0.20);
       color: var(--text-primary);
     }
     ::-moz-selection {
-      background: rgba(154, 160, 166, 0.20);
+      background: rgba(216, 161, 111, 0.20);
       color: var(--text-primary);
     }
 
-    /* Custom scrollbar — thin, transparent track, slate thumb */
+    /* Custom scrollbar — thin, transparent track, amber thumb */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb {
-      background: rgba(154, 160, 166, 0.20);
+      background: rgba(216, 161, 111, 0.18);
       border-radius: 999px;
       border: 2px solid transparent;
       background-clip: padding-box;
     }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(154, 160, 166, 0.40); background-clip: padding-box; }
-    html { scrollbar-color: rgba(154, 160, 166, 0.20) transparent; scrollbar-width: thin; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(216, 161, 111, 0.35); background-clip: padding-box; }
+    html { scrollbar-color: rgba(216, 161, 111, 0.18) transparent; scrollbar-width: thin; }
 
-    /* Focus ring — slate, visible only for keyboard focus */
+    /* Focus ring — amber, visible only for keyboard focus */
     :focus { outline: none; }
     :focus-visible {
-      outline: 2px solid rgba(154, 160, 166, 0.50);
+      outline: 2px solid rgba(216, 161, 111, 0.60);
       outline-offset: 2px;
       border-radius: 4px;
     }
@@ -249,14 +252,14 @@
       transform: translateX(-50%);
       width: 1200px;
       height: 600px;
-      background: radial-gradient(closest-side, rgba(154, 160, 166, 0.12), transparent 70%);
+      background: radial-gradient(closest-side, rgba(216, 161, 111, 0.14), transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
 
     .hero-inner { position: relative; z-index: 1; }
 
-    /* Tight bokeh orb behind the logo */
+    /* Tight bokeh orb behind the logo — amber glow */
     .hero-orb {
       position: absolute;
       top: 48%;
@@ -265,8 +268,8 @@
       width: 480px;
       height: 480px;
       background: radial-gradient(closest-side,
-        rgba(154, 160, 166, 0.25) 0%,
-        rgba(154, 160, 166, 0.10) 35%,
+        rgba(216, 161, 111, 0.20) 0%,
+        rgba(216, 161, 111, 0.08) 35%,
         transparent 70%);
       filter: blur(40px);
       z-index: -1;
@@ -281,8 +284,8 @@
       gap: 0.55rem;
       padding: 0.42rem 0.95rem;
       background: linear-gradient(135deg,
-        rgba(154, 160, 166, 0.12) 0%,
-        rgba(154, 160, 166, 0.04) 100%);
+        rgba(216, 161, 111, 0.14) 0%,
+        rgba(216, 161, 111, 0.05) 100%);
       color: var(--accent-primary-hi);
       border: 1px solid var(--border-accent);
       border-radius: 999px;
@@ -309,7 +312,7 @@
       pointer-events: none;
       background: linear-gradient(90deg,
         transparent,
-        rgba(154, 160, 166, 0.50),
+        rgba(216, 161, 111, 0.55),
         transparent);
     }
 
@@ -321,9 +324,9 @@
       animation: pulse 2.4s var(--ease-premium) infinite;
     }
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(154, 160, 166, 0.45); }
-      70%  { box-shadow: 0 0 0 9px rgba(154, 160, 166, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(154, 160, 166, 0); }
+      0%   { box-shadow: 0 0 0 0 rgba(216, 161, 111, 0.50); }
+      70%  { box-shadow: 0 0 0 9px rgba(216, 161, 111, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(216, 161, 111, 0); }
     }
 
     .hero-title {
@@ -333,7 +336,7 @@
       letter-spacing: -0.055em;
       line-height: 0.95;
       margin-bottom: 1.1rem;
-      background: linear-gradient(135deg, #ffffff 0%, #9aa0a6 30%, #a88370 70%, #ffffff 100%);
+      background: linear-gradient(135deg, #F4F4F5 0%, #D8A16F 30%, #60A5FA 70%, #F4F4F5 100%);
       background-size: 200% auto;
       -webkit-background-clip: text;
               background-clip: text;
@@ -348,8 +351,8 @@
       100% { background-position: 0% 50%; }
     }
     .hero-title .accent-dot {
-      -webkit-text-fill-color: #a88370;
-      color: #a88370;
+      -webkit-text-fill-color: #D8A16F;
+      color: #D8A16F;
       background: none;
     }
 
@@ -462,7 +465,7 @@
       height: 1px;
       background: linear-gradient(90deg,
         transparent,
-        rgba(154, 160, 166, 0.45),
+        rgba(216, 161, 111, 0.45),
         transparent);
       opacity: 0.5;
       transition: opacity 0.35s var(--ease-premium);
@@ -498,7 +501,7 @@
       letter-spacing: -0.045em;
       line-height: 1;
       font-variant-numeric: tabular-nums;
-      background: linear-gradient(135deg, #ffffff 0%, #9aa0a6 100%);
+      background: linear-gradient(135deg, #F4F4F5 0%, #D8A16F 100%);
       -webkit-background-clip: text;
               background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -578,10 +581,10 @@
     }
     .method-tab:hover .method-tab-icon { color: var(--text-secondary); }
     .method-tab.selected {
-      color: var(--text-primary);
+      color: var(--accent-primary-hi);
       background: linear-gradient(135deg,
-        rgba(154, 160, 166, 0.12) 0%,
-        rgba(154, 160, 166, 0.04) 100%);
+        rgba(216, 161, 111, 0.14) 0%,
+        rgba(216, 161, 111, 0.05) 100%);
       border-color: var(--border-accent);
       box-shadow:
         0 0 22px -6px var(--accent-glow),
@@ -671,7 +674,7 @@
       height: 1px;
       background: linear-gradient(90deg,
         transparent,
-        rgba(154, 160, 166, 0.30),
+        rgba(216, 161, 111, 0.30),
         transparent);
     }
     .charts-inner {
@@ -687,7 +690,7 @@
     }
 
     .chart-card {
-      background: rgba(6, 7, 9, 0.45);
+      background: rgba(8, 10, 15, 0.50);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
       padding: 1.45rem 1.5rem 1.2rem;
@@ -735,9 +738,9 @@
       align-items: flex-start;
       gap: 1rem;
       background: linear-gradient(135deg,
-        rgba(196, 154, 108, 0.10) 0%,
-        rgba(196, 154, 108, 0.03) 100%);
-      border: 1px solid rgba(196, 154, 108, 0.30);
+        rgba(216, 161, 111, 0.12) 0%,
+        rgba(216, 161, 111, 0.04) 100%);
+      border: 1px solid rgba(216, 161, 111, 0.30);
       border-radius: var(--radius-lg);
       padding: 1.1rem 1.35rem;
       margin-bottom: 1.5rem;
@@ -747,9 +750,9 @@
     .disclaimer-icon {
       width: 30px; height: 30px;
       border-radius: 50%;
-      background: rgba(196, 154, 108, 0.16);
+      background: rgba(216, 161, 111, 0.16);
       color: var(--warning);
-      border: 1px solid rgba(196, 154, 108, 0.40);
+      border: 1px solid rgba(216, 161, 111, 0.40);
       font-family: var(--font-mono);
       font-size: 0.92rem;
       font-weight: 600;
@@ -796,7 +799,7 @@
       height: 1px;
       background: linear-gradient(90deg,
         transparent,
-        rgba(154, 160, 166, 0.30),
+        rgba(216, 161, 111, 0.30),
         transparent);
       z-index: 1;
     }
@@ -818,7 +821,7 @@
     .leaderboard.baseline-board::before {
       background: linear-gradient(90deg,
         transparent,
-        rgba(168, 131, 112, 0.35),
+        rgba(96, 165, 250, 0.35),
         transparent);
     }
     .leaderboard.baseline-board .lb-header h2 { color: var(--text-secondary); font-weight: 500; }
@@ -861,17 +864,17 @@
 
     tbody tr.top-row {
       background: linear-gradient(90deg,
-        rgba(154, 160, 166, 0.08) 0%,
-        rgba(154, 160, 166, 0.02) 35%,
+        rgba(216, 161, 111, 0.10) 0%,
+        rgba(216, 161, 111, 0.03) 35%,
         transparent 100%);
     }
     tbody tr.top-row td:first-child {
-      box-shadow: inset 2px 0 0 var(--accent-secondary);
+      box-shadow: inset 2px 0 0 var(--accent-primary);
     }
     tbody tr.top-row:hover {
       background: linear-gradient(90deg,
-        rgba(154, 160, 166, 0.12) 0%,
-        rgba(154, 160, 166, 0.03) 35%,
+        rgba(216, 161, 111, 0.14) 0%,
+        rgba(216, 161, 111, 0.04) 35%,
         transparent 100%);
     }
 
@@ -899,14 +902,12 @@
       font-variant-numeric: tabular-nums;
     }
     .rank-pill.rank-1 {
-      color: var(--accent-primary-hi);
-      border-color: var(--border-accent);
-      background: linear-gradient(135deg,
-        rgba(154, 160, 166, 0.18) 0%,
-        rgba(154, 160, 166, 0.05) 100%);
+      color: #080A0F;
+      border-color: rgba(216, 161, 111, 0.30);
+      background: linear-gradient(180deg, #E8C48A, #D8A16F);
       box-shadow:
-        0 0 14px -2px var(--accent-glow),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        0 0 16px -2px rgba(216, 161, 111, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
     .rank-pill.rank-2 {
       color: #ffffff;
@@ -916,11 +917,11 @@
         rgba(255, 255, 255, 0.02) 100%);
     }
     .rank-pill.rank-3 {
-      color: var(--warning);
-      border-color: rgba(196, 154, 108, 0.30);
+      color: var(--accent-primary-hi);
+      border-color: rgba(216, 161, 111, 0.30);
       background: linear-gradient(135deg,
-        rgba(196, 154, 108, 0.14) 0%,
-        rgba(196, 154, 108, 0.03) 100%);
+        rgba(216, 161, 111, 0.14) 0%,
+        rgba(216, 161, 111, 0.03) 100%);
     }
 
     .model-name-cell {
@@ -957,7 +958,7 @@
       max-width: 70px;
     }
     .baseline-board .score-bar {
-      background: linear-gradient(90deg, var(--accent-secondary-lo), var(--accent-secondary)) !important;
+      background: linear-gradient(90deg, var(--accent-secondary), var(--accent-secondary-hi)) !important;
       box-shadow: 0 0 12px -2px var(--accent-secondary-glow);
     }
 
@@ -972,8 +973,8 @@
       align-items: center;
       gap: 0.42rem;
       padding: 0.22rem 0.65rem 0.22rem 0.55rem;
-      background: rgba(196, 154, 108, 0.10);
-      color: var(--warning);
+      background: rgba(216, 161, 111, 0.10);
+      color: var(--accent-primary-hi);
       font-family: var(--font-mono);
       font-size: 0.64rem;
       font-weight: 500;
@@ -981,7 +982,7 @@
       text-transform: uppercase;
       border-radius: 999px;
       margin-left: 0.55rem;
-      border: 1px solid rgba(196, 154, 108, 0.30);
+      border: 1px solid rgba(216, 161, 111, 0.30);
       white-space: nowrap;
       vertical-align: middle;
     }
@@ -990,14 +991,14 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--warning);
-      box-shadow: 0 0 8px -1px var(--warning);
+      background: var(--accent-primary);
+      box-shadow: 0 0 8px -1px var(--accent-glow);
       flex-shrink: 0;
     }
     .trunc-note {
       font-family: var(--font-mono);
       font-size: 0.7rem;
-      color: var(--warning);
+      color: var(--accent-primary-hi);
       margin-top: 0.5rem;
       line-height: 1.5;
       max-width: 32ch;
@@ -1045,8 +1046,8 @@
       text-transform: uppercase;
       color: var(--accent-secondary);
       background: linear-gradient(135deg,
-        rgba(168, 131, 112, 0.10) 0%,
-        rgba(168, 131, 112, 0.04) 100%);
+        rgba(96, 165, 250, 0.10) 0%,
+        rgba(96, 165, 250, 0.04) 100%);
       border: 1px solid var(--accent-secondary-line);
       border-radius: 999px;
       box-shadow:
@@ -1057,7 +1058,7 @@
     .baseline-chart-frame::before {
       background: linear-gradient(90deg,
         transparent,
-        rgba(168, 131, 112, 0.40),
+        rgba(96, 165, 250, 0.40),
         transparent);
     }
 
@@ -1095,7 +1096,7 @@
       height: 1px;
       background: linear-gradient(90deg,
         transparent,
-        rgba(154, 160, 166, 0.30),
+        rgba(216, 161, 111, 0.30),
         transparent);
       opacity: 0.5;
       transition: opacity 0.35s var(--ease-premium), background 0.35s var(--ease-premium);
@@ -1106,11 +1107,11 @@
       box-shadow: var(--shadow-glow);
     }
     .model-card:hover::before { opacity: 1; }
-    /* Baseline drill-down cards swap the accent line + bar fill to clay */
+    /* Baseline drill-down cards swap the accent line + bar fill to blue */
     .model-card--baseline::before {
       background: linear-gradient(90deg,
         transparent,
-        rgba(168, 131, 112, 0.40),
+        rgba(96, 165, 250, 0.35),
         transparent);
     }
 
@@ -1145,12 +1146,12 @@
       flex-shrink: 0;
     }
     .type-llm {
-      background: rgba(154, 160, 166, 0.08);
+      background: rgba(216, 161, 111, 0.10);
       color: var(--accent-primary-hi);
       border: 1px solid var(--border-accent);
     }
     .type-baseline {
-      background: rgba(168, 131, 112, 0.08);
+      background: rgba(96, 165, 250, 0.10);
       color: var(--accent-secondary);
       border: 1px solid var(--accent-secondary-line);
     }
@@ -1164,7 +1165,7 @@
       letter-spacing: -0.045em;
       line-height: 1;
       font-variant-numeric: tabular-nums;
-      background: linear-gradient(135deg, #ffffff 0%, #9aa0a6 100%);
+      background: linear-gradient(135deg, #F4F4F5 0%, #D8A16F 100%);
       -webkit-background-clip: text;
               background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -1331,17 +1332,17 @@
       inset: 0;
       z-index: -1;
       overflow: hidden;
-      background: #070709;
+      background: #080A0F;
       pointer-events: none;
     }
     .shader-mesh {
       position: absolute;
       inset: -20%;
       background:
-        radial-gradient(circle at 20% 30%, #9aa0a6 0%, transparent 35%),
-        radial-gradient(circle at 80% 20%, #6b7280 0%, transparent 40%),
-        radial-gradient(circle at 50% 80%, #373a40 0%, transparent 45%),
-        radial-gradient(circle at 75% 65%, #a88370 0%, transparent 30%);
+        radial-gradient(circle at 20% 30%, #D8A16F 0%, transparent 35%),
+        radial-gradient(circle at 80% 20%, #B07840 0%, transparent 40%),
+        radial-gradient(circle at 50% 80%, #8A5E2E 0%, transparent 45%),
+        radial-gradient(circle at 75% 65%, #E8C48A 0%, transparent 30%);
       filter: blur(60px) saturate(140%);
       opacity: 0.75;
       animation: meshDrift1 25s ease-in-out infinite;
@@ -1351,10 +1352,10 @@
       position: absolute;
       inset: -20%;
       background:
-        radial-gradient(circle at 65% 40%, #a88370 0%, transparent 28%),
+        radial-gradient(circle at 65% 40%, #60A5FA 0%, transparent 28%),
         radial-gradient(circle at 30% 70%, #ffffff 0%, transparent 22%),
-        radial-gradient(circle at 90% 90%, #9aa0a6 0%, transparent 32%),
-        radial-gradient(circle at 10% 20%, #c4c8cc 0%, transparent 25%);
+        radial-gradient(circle at 90% 90%, #93BBFD 0%, transparent 32%),
+        radial-gradient(circle at 10% 20%, #2563EB 0%, transparent 25%);
       filter: blur(70px) saturate(150%);
       opacity: 0.50;
       mix-blend-mode: screen;
@@ -1449,10 +1450,10 @@
       </feMerge>
     </filter>
     <linearGradient id="hero-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="30%" stop-color="#9aa0a6" />
-      <stop offset="70%" stop-color="#a88370" />
-      <stop offset="100%" stop-color="#ffffff" />
+      <stop offset="0%" stop-color="#F4F4F5" />
+      <stop offset="30%" stop-color="#D8A16F" />
+      <stop offset="70%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#F4F4F5" />
     </linearGradient>
   </defs>
 </svg>
@@ -1790,7 +1791,7 @@
               </td>
               <td class="score-cell">
                 <div class="score-bar-wrap">
-                  <span class="score-bar" style="width: {{ entry.avg_score * 0.7 }}px; background: linear-gradient(90deg, var(--warn), #fbbf24);"></span>
+                  <span class="score-bar" style="width: {{ entry.avg_score * 0.7 }}px; background: linear-gradient(90deg, var(--accent-secondary-lo), var(--accent-secondary));"></span>
                   {{ "%.1f"|format(entry.avg_score) }}
                 </div>
               </td>
@@ -1922,21 +1923,21 @@ try {
     });
   }
 
-  // ── Palette — Slate + Clay (inspired by bg.md grayscale terrain hills) ──
-  const SLATE     = '#9aa0a6';
-  const SLATE_HI  = '#c4c8cc';
-  const SLATE_LO  = '#6b7280';
-  const CLAY      = '#a88370';
-  const CLAY_HI   = '#c4a28d';
-  const CLAY_LO   = '#7c6453';
-  const WHITE     = '#ffffff';
-  const INFO      = '#9aa0a6';
-  const SAGE      = '#6b8f71';
-  const TERRA     = '#c05c5c';
-  const NEUTRAL   = '#555a60';
+  // ── Palette — Amber/Copper + Blue (redesign.md spec) ──
+  const AMBER     = '#D8A16F';
+  const AMBER_HI  = '#E8C48A';
+  const AMBER_LO  = '#B07840';
+  const BLUE      = '#60A5FA';
+  const BLUE_HI   = '#93BBFD';
+  const BLUE_LO   = '#2563EB';
+  const WHITE     = '#F4F4F5';
+  const INFO      = '#60A5FA';
+  const GREEN     = '#22C55E';
+  const RED       = '#EF4444';
+  const NEUTRAL   = '#71717A';
 
   // Cycled palette for multi-series charts (radar).
-  const SERIES_PALETTE = [SLATE, CLAY, SLATE_HI, CLAY_HI, SAGE, WHITE];
+  const SERIES_PALETTE = [AMBER, BLUE, AMBER_HI, BLUE_HI, GREEN, WHITE];
   function paletteFor(n) {
     return Array.from({ length: n }, (_, i) => SERIES_PALETTE[i % SERIES_PALETTE.length]);
   }
@@ -1972,19 +1973,19 @@ try {
     };
   }
   // Glow plugins for bars.
-  const slateGlow   = glowPlugin('slateGlow',   'rgba(196, 200, 204, 0.35)', 16);
-  const clayGlow    = glowPlugin('clayGlow',    'rgba(196, 162, 141, 0.30)', 14);
+  const amberGlow   = glowPlugin('amberGlow',   'rgba(232, 196, 138, 0.35)', 16);
+  const blueGlow    = glowPlugin('blueGlow',    'rgba(96, 165, 250, 0.30)', 14);
 
-  // Slate edge highlight — draws a 1px vertical line at the right edge of each bar.
-  function slateEdgePlugin() {
+  // Amber edge highlight — draws a 1px vertical line at the right edge of each bar.
+  function amberEdgePlugin() {
     return {
-      id: 'slateEdge',
+      id: 'amberEdge',
       afterDatasetDraw(chart) {
         const ctx = chart.ctx;
         const meta = chart.getDatasetMeta(0);
         if (!meta || !meta.data) return;
         ctx.save();
-        ctx.strokeStyle = 'rgba(154, 160, 166, 0.45)';
+        ctx.strokeStyle = 'rgba(216, 161, 111, 0.45)';
         ctx.lineWidth = 1;
         ctx.beginPath();
         meta.data.forEach(bar => {
@@ -2134,16 +2135,16 @@ try {
         datasets: [{
           label: 'Composite Score',
           data: llmEntries.map(e => e.avg_score),
-          // Slate → clay gradient across chart width. Short bars stay
-          // slate-dominant; longer bars reach the warm clay end —
-          // visually rewards the top performer with the full terrain palette.
+          // Amber → blue gradient across chart width. Short bars stay
+          // amber-dominant; longer bars reach the blue end —
+          // visually rewards the top performer with the full accent palette.
           backgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, SLATE, CLAY);
+            return makeBarGradient(chart.ctx, chart.chartArea, AMBER, BLUE);
           },
           hoverBackgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, SLATE_HI, CLAY_HI);
+            return makeBarGradient(chart.ctx, chart.chartArea, AMBER_HI, BLUE_HI);
           },
           borderRadius: 6,
           borderSkipped: false,
@@ -2160,8 +2161,8 @@ try {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(7, 7, 9, 0.92)',
-            borderColor: 'rgba(154, 160, 166, 0.25)',
+            backgroundColor: 'rgba(8, 10, 15, 0.92)',
+            borderColor: 'rgba(216, 161, 111, 0.25)',
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: 'rgba(255,255,255,0.75)',
@@ -2192,19 +2193,19 @@ try {
           }
         }
       },
-      plugins: [slateGlow, slateEdgePlugin()],
+      plugins: [amberGlow, amberEdgePlugin()],
     });
   }
 
-  // Map known model IDs to per-model colors (terrain-inspired).
+  // Map known model IDs to per-model colors (amber/blue palette).
   function modelColor(modelId, index) {
     const map = {
-      "deepseek_v4_pro":  SLATE,
-      "claude_sonnet_46": CLAY,
-      "kimi_k2_thinking": SLATE_HI,
-      "qwen_3_5":         CLAY_HI,
+      "deepseek_v4_pro":  AMBER,
+      "claude_sonnet_46": BLUE,
+      "kimi_k2_thinking": AMBER_HI,
+      "qwen_3_5":         BLUE_HI,
     };
-    return map[modelId] || (index % 2 === 0 ? SLATE : CLAY);
+    return map[modelId] || (index % 2 === 0 ? AMBER : BLUE);
   }
 
   // ── Radar Chart (LLM only, readable dim labels) ──
@@ -2277,8 +2278,8 @@ try {
             },
           },
           tooltip: {
-            backgroundColor: 'rgba(7, 7, 9, 0.92)',
-            borderColor: 'rgba(154, 160, 166, 0.25)',
+            backgroundColor: 'rgba(8, 10, 15, 0.92)',
+            borderColor: 'rgba(216, 161, 111, 0.25)',
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: 'rgba(255,255,255,0.75)',
@@ -2304,11 +2305,11 @@ try {
           data: baselineEntries.map(e => e.avg_score),
           backgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, CLAY_LO, CLAY, 'rgba(168, 131, 112, 0.6)');
+            return makeBarGradient(chart.ctx, chart.chartArea, BLUE_LO, BLUE, 'rgba(96, 165, 250, 0.6)');
           },
           hoverBackgroundColor: (ctx) => {
             const { chart } = ctx;
-            return makeBarGradient(chart.ctx, chart.chartArea, CLAY, CLAY_HI, 'rgba(196, 162, 141, 0.6)');
+            return makeBarGradient(chart.ctx, chart.chartArea, BLUE, BLUE_HI, 'rgba(147, 187, 253, 0.6)');
           },
           borderRadius: 6,
           borderSkipped: false,
@@ -2325,8 +2326,8 @@ try {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(7, 7, 9, 0.92)',
-            borderColor: 'rgba(168, 131, 112, 0.25)',
+            backgroundColor: 'rgba(8, 10, 15, 0.92)',
+            borderColor: 'rgba(96, 165, 250, 0.25)',
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: 'rgba(255,255,255,0.75)',
@@ -2357,7 +2358,7 @@ try {
           }
         }
       },
-      plugins: [clayGlow],
+      plugins: [blueGlow],
     });
   }
 
