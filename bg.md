@@ -11,246 +11,248 @@ Determine the default path for components and styles.
 If default path for components is not /components/ui, provide instructions on why it's important to create this folder
 Copy-paste this component to /components/ui folder:
 ```tsx
-glsl-hills.tsx
-import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
+infinite-grid-integration.tsx
+import React, { useState, useRef, useEffect } from 'react';
+import { 
+  motion, 
+  useMotionValue, 
+  useMotionTemplate, 
+  useAnimationFrame 
+} from "framer-motion";
+import { MousePointerClick, Info, Sun, Moon, Settings2 } from 'lucide-react';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-const GLSLHills = ({ width = '100vw', height = '100vh', cameraZ = 125, planeSize = 256, speed = 0.5 }) => {
-  const canvasRef = useRef(null);
-  const containerRef = useRef(null);
+/**
+ * Standard Shadcn utility for merging Tailwind classes safely.
+ */
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
-  useEffect(() => {
-    // Plane class
-    class Plane {
-      constructor() {
-        this.uniforms = {
-          time: { type: 'f', value: 0 },
-        };
-        this.mesh = this.createMesh();
-        this.time = speed;
-      }
+/**
+ * Helper component for the SVG grid pattern.
+ */
+const GridPattern = ({ offsetX, offsetY, size }: { offsetX: any; offsetY: any; size: number }) => {
+  return (
+    <svg className="w-full h-full">
+      <defs>
+        <motion.pattern
+          id="grid-pattern"
+          width={size}
+          height={size}
+          patternUnits="userSpaceOnUse"
+          x={offsetX}
+          y={offsetY}
+        >
+          <path
+            d={`M ${size} 0 L 0 0 0 ${size}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            className="text-muted-foreground" 
+          />
+        </motion.pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+    </svg>
+  );
+};
 
-      createMesh() {
-        return new THREE.Mesh(
-          new THREE.PlaneGeometry(planeSize, planeSize, planeSize, planeSize),
-          new THREE.RawShaderMaterial({
-            uniforms: this.uniforms,
-            vertexShader: `
-              #define GLSLIFY 1
-              attribute vec3 position;
-              uniform mat4 projectionMatrix;
-              uniform mat4 modelViewMatrix;
-              uniform float time;
-              varying vec3 vPosition;
+/**
+ * The Infinite Grid Component
+ * Displays a scrolling background grid that reveals an active layer on mouse hover.
+ */
+const InfiniteGrid = () => {
+  const [count, setCount] = useState(0);
+  const [gridSize, setGridSize] = useState(40);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-              mat4 rotateMatrixX(float radian) {
-                return mat4(
-                  1.0, 0.0, 0.0, 0.0,
-                  0.0, cos(radian), -sin(radian), 0.0,
-                  0.0, sin(radian), cos(radian), 0.0,
-                  0.0, 0.0, 0.0, 1.0
-                );
-              }
+  // Track mouse position with Motion Values for performance (avoids React re-renders)
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-              vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-              vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-              vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
-              vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-              vec3 fade(vec3 t) { return t*t*t*(t*(t*6.0-15.0)+10.0); }
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top } = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - left);
+    mouseY.set(e.clientY - top);
+  };
 
-              float cnoise(vec3 P) {
-                vec3 Pi0 = floor(P);
-                vec3 Pi1 = Pi0 + vec3(1.0);
-                Pi0 = mod289(Pi0);
-                Pi1 = mod289(Pi1);
-                vec3 Pf0 = fract(P);
-                vec3 Pf1 = Pf0 - vec3(1.0);
-                vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
-                vec4 iy = vec4(Pi0.yy, Pi1.yy);
-                vec4 iz0 = Pi0.zzzz;
-                vec4 iz1 = Pi1.zzzz;
+  // Grid offsets for infinite scroll animation
+  const gridOffsetX = useMotionValue(0);
+  const gridOffsetY = useMotionValue(0);
 
-                vec4 ixy = permute(permute(ix) + iy);
-                vec4 ixy0 = permute(ixy + iz0);
-                vec4 ixy1 = permute(ixy + iz1);
+  const speedX = 0.5; 
+  const speedY = 0.5;
 
-                vec4 gx0 = ixy0 * (1.0 / 7.0);
-                vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;
-                gx0 = fract(gx0);
-                vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
-                vec4 sz0 = step(gz0, vec4(0.0));
-                gx0 -= sz0 * (step(0.0, gx0) - 0.5);
-                gy0 -= sz0 * (step(0.0, gy0) - 0.5);
+  useAnimationFrame(() => {
+    const currentX = gridOffsetX.get();
+    const currentY = gridOffsetY.get();
+    // Reset offset at pattern width to simulate infinity
+    gridOffsetX.set((currentX + speedX) % gridSize);
+    gridOffsetY.set((currentY + speedY) % gridSize);
+  });
 
-                vec4 gx1 = ixy1 * (1.0 / 7.0);
-                vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;
-                gx1 = fract(gx1);
-                vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
-                vec4 sz1 = step(gz1, vec4(0.0));
-                gx1 -= sz1 * (step(0.0, gx1) - 0.5);
-                gy1 -= sz1 * (step(0.0, gy1) - 0.5);
-
-                vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);
-                vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);
-                vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);
-                vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);
-                vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);
-                vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);
-                vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
-                vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
-
-                vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
-                g000 *= norm0.x;
-                g010 *= norm0.y;
-                g100 *= norm0.z;
-                g110 *= norm0.w;
-                vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
-                g001 *= norm1.x;
-                g011 *= norm1.y;
-                g101 *= norm1.z;
-                g111 *= norm1.w;
-
-                float n000 = dot(g000, Pf0);
-                float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
-                float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
-                float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
-                float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
-                float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
-                float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
-                float n111 = dot(g111, Pf1);
-
-                vec3 fade_xyz = fade(Pf0);
-                vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
-                vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
-                float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
-                return 2.2 * n_xyz;
-              }
-
-              void main(void) {
-                vec3 updatePosition = (rotateMatrixX(radians(90.0)) * vec4(position, 1.0)).xyz;
-                float sin1 = sin(radians(updatePosition.x / 128.0 * 90.0));
-                vec3 noisePosition = updatePosition + vec3(0.0, 0.0, time * -30.0);
-                float noise1 = cnoise(noisePosition * 0.08);
-                float noise2 = cnoise(noisePosition * 0.06);
-                float noise3 = cnoise(noisePosition * 0.4);
-                vec3 lastPosition = updatePosition + vec3(0.0,
-                  noise1 * sin1 * 8.0
-                  + noise2 * sin1 * 8.0
-                  + noise3 * (abs(sin1) * 2.0 + 0.5)
-                  + pow(sin1, 2.0) * 40.0, 0.0);
-
-                vPosition = lastPosition;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(lastPosition, 1.0);
-              }
-            `,
-            fragmentShader: `
-              precision highp float;
-              #define GLSLIFY 1
-              varying vec3 vPosition;
-
-              void main(void) {
-                float opacity = (96.0 - length(vPosition)) / 256.0 * 0.6;
-                vec3 color = vec3(0.6);
-                gl_FragColor = vec4(color, opacity);
-              }
-            `,
-            transparent: true
-          })
-        );
-      }
-
-      render(time) {
-        this.uniforms.time.value += time * this.time;
-      }
-    }
-
-    // Three.js setup
-    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: false });
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-    const clock = new THREE.Clock();
-    const plane = new Plane();
-
-    const resize = () => {
-      const canvas = canvasRef.current;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-
-    const render = () => {
-      plane.render(clock.getDelta());
-      renderer.render(scene, camera);
-    };
-
-    const renderLoop = () => {
-      render();
-      requestAnimationFrame(renderLoop);
-    };
-
-    const init = () => {
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(0x000000, 0);
-      camera.position.set(0, 16, cameraZ);
-      camera.lookAt(new THREE.Vector3(0, 28, 0));
-      scene.add(plane.mesh);
-      window.addEventListener('resize', resize);
-      resize();
-      renderLoop();
-    };
-
-    init();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-    };
-  }, [cameraZ, planeSize, speed]);
+  // Create a dynamic radial mask for the "flashlight" effect
+  const maskImage = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, black, transparent)`;
 
   return (
-    <div ref={containerRef} style={{ position: 'relative', width, height }}> 
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          zIndex: 1
-        }}
-      />
+    <div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className={cn(
+        "relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-background"
+      )}
+    >
+      {/* Layer 1: Subtle background grid (always visible) */}
+      <div className="absolute inset-0 z-0 opacity-[0.05]">
+        <GridPattern offsetX={gridOffsetX} offsetY={gridOffsetY} size={gridSize} />
+      </div>
+
+      {/* Layer 2: Highlighted grid (revealed by mouse mask) */}
+      <motion.div 
+        className="absolute inset-0 z-0 opacity-40"
+        style={{ maskImage, WebkitMaskImage: maskImage }}
+      >
+        <GridPattern offsetX={gridOffsetX} offsetY={gridOffsetY} size={gridSize} />
+      </motion.div>
+
+      {/* Decorative Blur Spheres */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute right-[-20%] top-[-20%] w-[40%] h-[40%] rounded-full bg-orange-500/40 dark:bg-orange-600/20 blur-[120px]" />
+        <div className="absolute right-[10%] top-[-10%] w-[20%] h-[20%] rounded-full bg-primary/30 blur-[100px]" />
+        <div className="absolute left-[-10%] bottom-[-20%] w-[40%] h-[40%] rounded-full bg-blue-500/40 dark:bg-blue-600/20 blur-[120px]" />
+      </div>
+
+      {/* Grid Density Control Panel */}
+      <div className="absolute bottom-10 right-10 z-30 pointer-events-auto">
+        <div className="bg-background/80 backdrop-blur-md border border-border p-4 rounded-xl shadow-2xl space-y-3 min-w-[200px]">
+          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Settings2 className="w-4 h-4" />
+            Grid Density
+          </div>
+          <input 
+            type="range" 
+            min="20" 
+            max="100" 
+            value={gridSize} 
+            onChange={(e) => setGridSize(Number(e.target.value))}
+            className="w-full h-1.5 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+          />
+          <div className="flex justify-between text-[10px] text-muted-foreground uppercase tracking-widest font-mono">
+            <span>Dense</span>
+            <span>Sparse ({gridSize}px)</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-3xl mx-auto space-y-6 pointer-events-none">
+         <div className="space-y-2">
+          <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-foreground drop-shadow-sm">
+            The Infinite Grid
+          </h1>
+          <p className="text-lg md:text-xl font-semibold text-muted-foreground">
+            Move your cursor to reveal the active grid layer. <br/>
+            The pattern scrolls infinitely in the background.
+          </p>
+        </div>
+        
+        <div className="flex gap-4 pointer-events-auto">
+          <motion.button 
+              onClick={() => setCount(count + 1)}
+              whileHover={{ 
+                scale: 1.05, 
+                y: -4,
+                backgroundColor: "#4338ca", // Indigo-700 (Deeper shift)
+                borderColor: "#6366f1",     // Indigo-500 border highlight
+                color: "#ffffff",
+                boxShadow: "0 25px 50px -12px rgba(67, 56, 202, 0.6)" // Pronounced shadow grow
+              }}
+              whileTap={{ scale: 0.98, y: 0 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-md shadow-md border-2 border-transparent transition-colors"
+          >
+              <MousePointerClick className="w-4 h-4" />
+              Interact ({count})
+          </motion.button>
+          
+          <motion.button 
+              whileHover={{ 
+                scale: 1.05, 
+                y: -4, 
+                backgroundColor: "#6d28d9", // Violet-700 (Deeper shift)
+                borderColor: "#8b5cf6",     // Violet-500 border highlight
+                color: "#ffffff",
+                boxShadow: "0 25px 50px -12px rgba(109, 40, 217, 0.6)" // Pronounced shadow grow
+              }}
+              whileTap={{ scale: 0.98, y: 0 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="flex items-center gap-2 px-8 py-3 bg-secondary text-secondary-foreground font-semibold rounded-md border-2 border-transparent transition-colors"
+          >
+              <Info className="w-4 h-4" />
+              Learn More
+          </motion.button>
+        </div>
+      </div>
     </div>
   );
 };
 
-export { GLSLHills } ;
+const App: React.FC = () => {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // Sync dark mode state with HTML class
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDark]);
+
+  return (
+    <div className="w-full relative min-h-screen">
+      {/* Sticky Theme Toggle */}
+      <button
+        onClick={() => setIsDark(!isDark)}
+        className="fixed top-4 right-4 z-50 p-3 rounded-full bg-background/50 backdrop-blur-sm border border-border shadow-lg hover:scale-110 active:scale-95 transition-all flex items-center justify-center group"
+        aria-label="Toggle Theme"
+      >
+        {isDark ? (
+          <Sun className="w-5 h-5 text-yellow-500 group-hover:rotate-45 transition-transform" />
+        ) : (
+          <Moon className="w-5 h-5 text-indigo-500 group-hover:-rotate-12 transition-transform" />
+        )}
+      </button>
+
+      {/* Main Content */}
+      <main>
+        <InfiniteGrid />
+      </main>
+
+      {/* Footer Branding */}
+      <footer className="fixed bottom-4 left-4 z-50 text-[10px] uppercase tracking-widest text-muted-foreground opacity-50 font-mono">
+        Shadcn Infinite Grid v1.1
+      </footer>
+    </div>
+  );
+};
+
+export default App;
 
 demo.tsx
-import { GLSLHills } from "@/components/ui/glsl-hills";
+import Component from "@/components/ui/infinite-grid-integration";
 
 export default function DemoOne() {
-  return (
-    <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden ">
-    <GLSLHills/>
-    <div className="space-y-6 pointer-events-none z-10 text-center absolute">
-    <h1 className="font-semibold text-7xl whitespace-pre-wrap">
-    <span className="italic text-6xl font-thin">Designs That Speak <br/> </span>
-      Louder Than Words
-        </h1>
-        <p className="text-sm text-primary/60">
-          We craft stunning visuals and user - friendly experiences that  <br/>  help your brand stand out and connect with your audience.
-      </p>
-           </div> 
-      </div>
-  )
+  return <Component />;
 }
+
 ```
 
 Install NPM dependencies:
 ```bash
-three
+clsx, lucide-react, framer-motion, tailwind-merge
 ```
 
 Implementation Guidelines
