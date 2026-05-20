@@ -31,6 +31,12 @@ class ModelConfig(BaseModel):
         description="Cost per 1M output tokens in USD",
         ge=Decimal("0"),
     )
+    max_context_length: int | None = Field(
+        default=None,
+        description="Max context window in tokens (input + output). "
+        "None = unknown, send with caution.",
+        ge=1,
+    )
 
 
 class LLMRequest(BaseModel):

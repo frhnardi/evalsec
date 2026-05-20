@@ -21,6 +21,7 @@ BENCHMARK_MODELS: dict[str, ModelConfig] = {
         base_url="https://openrouter.ai/api/v1",
         input_cost_per_1m=Decimal("3.00"),
         output_cost_per_1m=Decimal("15.00"),
+        max_context_length=200_000,
     ),
     "kimi_k2_thinking": ModelConfig(
         model_id="moonshotai/kimi-k2-thinking",
@@ -28,6 +29,7 @@ BENCHMARK_MODELS: dict[str, ModelConfig] = {
         base_url="https://openrouter.ai/api/v1",
         input_cost_per_1m=Decimal("1.50"),
         output_cost_per_1m=Decimal("7.50"),
+        max_context_length=262_144,
     ),
     "qwen_3_5": ModelConfig(
         model_id="qwen/qwen3.5-plus-20260420",
@@ -35,6 +37,7 @@ BENCHMARK_MODELS: dict[str, ModelConfig] = {
         base_url="https://openrouter.ai/api/v1",
         input_cost_per_1m=Decimal("0.40"),
         output_cost_per_1m=Decimal("2.40"),
+        max_context_length=131_072,
     ),
     "deepseek_v4_pro": ModelConfig(
         model_id="deepseek-chat",
@@ -42,6 +45,7 @@ BENCHMARK_MODELS: dict[str, ModelConfig] = {
         base_url="https://api.deepseek.com/v1",
         input_cost_per_1m=Decimal("0.50"),
         output_cost_per_1m=Decimal("2.00"),
+        max_context_length=64_000,
     ),
 }
 
@@ -52,6 +56,7 @@ JUDGE_MODELS: dict[str, ModelConfig] = {
         base_url="https://openrouter.ai/api/v1",
         input_cost_per_1m=Decimal("5.00"),
         output_cost_per_1m=Decimal("25.00"),
+        max_context_length=200_000,
     ),
     "deepseek_v4_pro": ModelConfig(
         model_id="deepseek-chat",
@@ -59,6 +64,7 @@ JUDGE_MODELS: dict[str, ModelConfig] = {
         base_url="https://api.deepseek.com/v1",
         input_cost_per_1m=Decimal("0.50"),
         output_cost_per_1m=Decimal("2.00"),
+        max_context_length=64_000,
     ),
 }
 

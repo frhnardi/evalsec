@@ -226,10 +226,15 @@ class Runner:
         cases: list[TaskCase],
         adapters: dict[str, OpenAICompatAdapter],
     ) -> list[dict[str, Any]]:
-        """Compute estimated cost for each model x case combination."""
+        """Compute estimated cost for each model x case combination.
+
+        Cases that exceed the model's max_context_length are reported as
+        $0 / skipped in the estimate (same as runtime behavior).
+        """
         rows: list[dict[str, Any]] = []
         for model_key, adapter in adapters.items():
             cfg = adapter.model_config
+            max_ctx = cfg.max_context_length
             total_cost = Decimal("0")
             total_in = 0
             total_out = 0
@@ -241,28 +246,51 @@ class Runner:
                 # Output: assume ~300 tokens per finding x ~5 findings
                 output_tokens = 300 * 5
 
-                cost = Decimal(str(input_tokens)) * cfg.input_cost_per_1m / Decimal(
-                    "1_000_000"
-                ) + Decimal(str(output_tokens)) * cfg.output_cost_per_1m / Decimal("1_000_000")
+                # Check context limit using same chars/2 conservative estimate
+                # as _run_cases() — mark as skipped if it would overflow.
+                total_chars = len(case.input + case.stack_context)
+                est_input_chars2 = total_chars // 2
+                context_overflow = (
+                    max_ctx is not None
+                    and est_input_chars2 + output_tokens > max_ctx
+                )
+
+                if context_overflow:
+                    cost = Decimal("0")
+                    est_in = est_input_chars2
+                    est_out = 0
+                    skipped = True
+                else:
+                    cost = Decimal(str(input_tokens)) * cfg.input_cost_per_1m / Decimal(
+                        "1_000_000"
+                    ) + Decimal(str(output_tokens)) * cfg.output_cost_per_1m / Decimal(
+                        "1_000_000"
+                    )
+                    est_in = input_tokens
+                    est_out = output_tokens
+                    skipped = False
 
                 total_cost += cost
-                total_in += input_tokens
-                total_out += output_tokens
+                total_in += est_in
+                total_out += est_out
 
                 case_estimates.append(
                     {
                         "case_id": case.id,
-                        "est_input_tokens": input_tokens,
-                        "est_output_tokens": output_tokens,
+                        "est_input_tokens": est_in,
+                        "est_output_tokens": est_out,
                         "est_cost_usd": str(cost.quantize(Decimal("0.0000001"))),
+                        "context_overflow": skipped,
                     }
                 )
 
+            skipped_count = sum(1 for ce in case_estimates if ce.get("context_overflow"))
             rows.append(
                 {
                     "model": model_key,
                     "model_id": cfg.model_id,
                     "cases": len(cases),
+                    "skipped": skipped_count,
                     "est_total_in": total_in,
                     "est_total_out": total_out,
                     "est_total_cost_usd": str(total_cost.quantize(Decimal("0.0001"))),
@@ -277,6 +305,7 @@ class Runner:
         table = Table(title="Cost Estimate")
         table.add_column("Model", style="cyan")
         table.add_column("Cases")
+        table.add_column("Skipped", justify="right", style="yellow")
         table.add_column("Est. Input Tokens", justify="right")
         table.add_column("Est. Output Tokens", justify="right")
         table.add_column("Est. Cost (USD)", justify="right")
@@ -285,9 +314,12 @@ class Runner:
         for row in estimate:
             cost = Decimal(row["est_total_cost_usd"])
             grand_total += cost
+            skipped = row.get("skipped", 0)
+            skipped_str = f"{skipped}" if skipped else "—"
             table.add_row(
                 row["model"],
                 str(row["cases"]),
+                skipped_str,
                 f"{row['est_total_in']:,}",
                 f"{row['est_total_out']:,}",
                 f"${cost}",
@@ -322,6 +354,9 @@ class Runner:
             console.print(f"[bold]Running model:[/bold] {model_key}")
             model_responses: list[dict[str, Any]] = []
 
+            # Resolve context limit for this model
+            max_ctx = adapter.model_config.max_context_length
+
             # Build all requests for this model first
             tasks = []
             for case in cases:
@@ -331,13 +366,65 @@ class Runner:
                     case.stack_context,
                     ground_truth=case.ground_truth,
                 )
+                request_max_tokens = 8192
                 request = LLMRequest(
                     model_id=adapter.model_config.model_id,
                     system_prompt=system_prompt,
                     user_prompt=user_prompt,
-                    max_tokens=8192,
+                    max_tokens=request_max_tokens,
                     temperature=0.2,
                 )
+
+                # NEW: Pre-flight context window check.
+                # Use a conservative chars/2 estimate (actual tokens can be ~2.4x
+                # the naive chars/4 heuristic for dense data like npm audit output).
+                if max_ctx is not None:
+                    total_chars = len(system_prompt) + len(user_prompt)
+                    # chars/2 = ~2x safety over the standard chars/4 heuristic
+                    est_input_tokens = total_chars // 2
+                    if est_input_tokens + request_max_tokens > max_ctx:
+                        logger.warning(
+                            "context_overflow_skipped",
+                            case_id=case.id,
+                            model_id=model_key,
+                            est_input_tokens=est_input_tokens,
+                            max_context_length=max_ctx,
+                        )
+                        console.print(
+                            f"  [yellow]⚠ {case.id} est. {est_input_tokens:,} in + "
+                            f"{request_max_tokens:,} out exceeds {model_key} context "
+                            f"limit ({max_ctx:,}) — skipping[/yellow]"
+                        )
+                        model_responses.append(
+                            {
+                                "case_id": case.id,
+                                "model_id": model_key,
+                                "prompt_version": get_prompt_version(self.task_name),
+                                "request": {
+                                    "system_prompt": system_prompt,
+                                    "user_prompt": (
+                                        user_prompt[:500] + "..." if len(user_prompt) > 500 else user_prompt
+                                    ),
+                                    "max_tokens": request_max_tokens,
+                                    "temperature": 0.2,
+                                },
+                                "response": {
+                                    "text": "",
+                                    "tokens_in": 0,
+                                    "tokens_out": 0,
+                                    "cost_usd": "0",
+                                    "latency_ms": 0,
+                                    "finish_reason": "context_overflow",
+                                    "error": (
+                                        f"Estimated {est_input_tokens}+{request_max_tokens} tokens "
+                                        f"exceeds {model_key} context limit ({max_ctx:,})"
+                                    ),
+                                },
+                                "wall_clock_s": 0.0,
+                            }
+                        )
+                        continue
+
                 tasks.append((case.id, request))
 
             # Execute with concurrency limit
