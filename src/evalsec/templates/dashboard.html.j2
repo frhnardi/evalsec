@@ -69,6 +69,16 @@
       --danger:  #EF4444;
       --info:    #6B7280;
 
+      /* Brand colors — constant across light/dark, never change on theme toggle */
+      --brand-deepseek:      #4D6BFE;
+      --brand-claude:        #D97757;
+      --brand-kimi:          #10B981;
+      --brand-qwen:          #EC4899;
+      --brand-deepseek-soft: rgba(77, 107, 254, 0.10);
+      --brand-claude-soft:   rgba(217, 119, 87, 0.10);
+      --brand-kimi-soft:     rgba(16, 185, 129, 0.10);
+      --brand-qwen-soft:     rgba(236, 72, 153, 0.10);
+
       --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
@@ -992,6 +1002,77 @@
       color: var(--muted-foreground);
     }
 
+    /* ─────────────────────────────────────────────
+       BRAND COLOR ACCENTS — Patch v5
+       Colors are constant across light/dark themes.
+       Applied ONLY to LLM rows (not baselines).
+       ───────────────────────────────────────────── */
+
+    /* Row left border identity stripe */
+    .leaderboard tbody tr {
+      border-left: 3px solid transparent;
+      transition: border-left-color 200ms ease, background 200ms ease;
+    }
+
+    .leaderboard tbody tr[data-model="deepseek"] { border-left-color: var(--brand-deepseek); }
+    .leaderboard tbody tr[data-model="claude"]   { border-left-color: var(--brand-claude); }
+    .leaderboard tbody tr[data-model="kimi"]     { border-left-color: var(--brand-kimi); }
+    .leaderboard tbody tr[data-model="qwen"]     { border-left-color: var(--brand-qwen); }
+
+    /* Hover: brand-tinted background */
+    .leaderboard tbody tr[data-model="deepseek"]:hover { background: var(--brand-deepseek-soft); }
+    .leaderboard tbody tr[data-model="claude"]:hover   { background: var(--brand-claude-soft); }
+    .leaderboard tbody tr[data-model="kimi"]:hover     { background: var(--brand-kimi-soft); }
+    .leaderboard tbody tr[data-model="qwen"]:hover     { background: var(--brand-qwen-soft); }
+
+    /* Rank pill — brand colored (overrides rank-1/2/3 monochrome) */
+    tr[data-model="deepseek"] .rank-pill {
+      background: var(--brand-deepseek);
+      border-color: var(--brand-deepseek);
+      color: #ffffff;
+      box-shadow: 0 0 14px -2px rgba(77, 107, 254, 0.45);
+    }
+    tr[data-model="claude"] .rank-pill {
+      background: var(--brand-claude);
+      border-color: var(--brand-claude);
+      color: #ffffff;
+      box-shadow: 0 0 14px -2px rgba(217, 119, 87, 0.45);
+    }
+    tr[data-model="kimi"] .rank-pill {
+      background: var(--brand-kimi);
+      border-color: var(--brand-kimi);
+      color: #ffffff;
+      box-shadow: 0 0 14px -2px rgba(16, 185, 129, 0.45);
+    }
+    tr[data-model="qwen"] .rank-pill {
+      background: var(--brand-qwen);
+      border-color: var(--brand-qwen);
+      color: #ffffff;
+      box-shadow: 0 0 14px -2px rgba(236, 72, 153, 0.45);
+    }
+
+    /* Score bar — brand gradient */
+    tr[data-model="deepseek"] .score-bar { background: linear-gradient(90deg, rgba(77,107,254,0.6), var(--brand-deepseek)); }
+    tr[data-model="claude"]   .score-bar { background: linear-gradient(90deg, rgba(217,119,87,0.6), var(--brand-claude)); }
+    tr[data-model="kimi"]     .score-bar { background: linear-gradient(90deg, rgba(16,185,129,0.6), var(--brand-kimi)); }
+    tr[data-model="qwen"]     .score-bar { background: linear-gradient(90deg, rgba(236,72,153,0.6), var(--brand-qwen)); }
+
+    /* Brand dot — mini-lb and other inline accents */
+    .brand-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    [data-model="deepseek"] .brand-dot { background: var(--brand-deepseek); box-shadow: 0 0 6px rgba(77,107,254,0.5); }
+    [data-model="claude"]   .brand-dot { background: var(--brand-claude);   box-shadow: 0 0 6px rgba(217,119,87,0.5); }
+    [data-model="kimi"]     .brand-dot { background: var(--brand-kimi);     box-shadow: 0 0 6px rgba(16,185,129,0.5); }
+    [data-model="qwen"]     .brand-dot { background: var(--brand-qwen);     box-shadow: 0 0 6px rgba(236,72,153,0.5); }
+
     .trunc-badge {
       display: inline-flex;
       align-items: center;
@@ -1781,8 +1862,9 @@
         <p class="section-sub">Top 3 performing models so far.</p>
         <div class="card card-strong mini-lb">
           {% for entry in top3 %}
-          <div class="mini-lb-item">
+          <div class="mini-lb-item" data-model="{{ entry.model_id.split('_')[0] }}">
             <span class="mini-lb-rank">#{{ loop.index }}</span>
+            <span class="brand-dot"></span>
             <span class="mini-lb-name">{{ entry.model_id }}</span>
             <span class="mini-lb-score">{{ "%.1f"|format(entry.avg_score) }}</span>
           </div>
@@ -1870,7 +1952,7 @@
                 {% set prio  = entry.dimension_scores.get("prioritization", 0) %}
                 {% set act   = entry.dimension_scores.get("actionability", 0) %}
                 {% set conc  = entry.dimension_scores.get("conciseness", 0) %}
-                <tr data-model-id="{{ entry.model_id }}">
+                <tr data-model-id="{{ entry.model_id }}" data-model="{{ entry.model_id.split('_')[0] }}">
                   <td class="rank-cell">
                     <span class="rank-pill rank-{{ loop.index if loop.index <= 3 else 'n' }}">{{ loop.index }}</span>
                   </td>
@@ -2631,33 +2713,40 @@
       chartInstances.push(compositeChart);
     }
 
-    // ── Model color map ──
-    function modelColor(modelId, index) {
-      const map = {
-        "deepseek_v4_pro":  getInk(),
-        "claude_sonnet_46": getAsh(),
-        "kimi_k2_thinking": getInkDim(),
-        "qwen_3_5":         getAshLo(),
-      };
-      return map[modelId] || (index % 2 === 0 ? getInk() : getAsh());
+    // ── Brand color map — constant, never change on theme toggle ──
+    const BRAND_COLORS = {
+      deepseek_v4_pro:  { stroke: '#4D6BFE', fill: 'rgba(77, 107, 254, 0.15)' },
+      claude_sonnet_46: { stroke: '#D97757', fill: 'rgba(217, 119, 87, 0.15)' },
+      kimi_k2_thinking: { stroke: '#10B981', fill: 'rgba(16, 185, 129, 0.15)' },
+      qwen_3_5:         { stroke: '#EC4899', fill: 'rgba(236, 72, 153, 0.15)' },
+    };
+
+    function modelBrand(modelId, index) {
+      const fallbacks = [
+        { stroke: '#4D6BFE', fill: 'rgba(77, 107, 254, 0.15)' },
+        { stroke: '#D97757', fill: 'rgba(217, 119, 87, 0.15)' },
+        { stroke: '#10B981', fill: 'rgba(16, 185, 129, 0.15)' },
+        { stroke: '#EC4899', fill: 'rgba(236, 72, 153, 0.15)' },
+      ];
+      return BRAND_COLORS[modelId] || fallbacks[index % fallbacks.length];
     }
 
     // ── Radar Chart ──
     if (chartLoaded && llmEntries.length > 0) {
       const c = getThemeColors();
       const radarDatasets = llmEntries.map((entry, i) => {
-        const stroke = modelColor(entry.model_id, i);
+        const brand = modelBrand(entry.model_id, i);
         return {
           label: displayName(entry.model_id),
           data: dimNames.map(d => (entry.dimension_scores[d] || 0)),
-          borderColor: stroke,
-          backgroundColor: hexToRgba(stroke, 0.22),
+          borderColor: brand.stroke,
+          backgroundColor: brand.fill,
           borderWidth: 2.25,
           pointRadius: 3,
-          pointBackgroundColor: stroke,
-          pointBorderColor: stroke,
+          pointBackgroundColor: brand.stroke,
+          pointBorderColor: brand.stroke,
           pointHoverRadius: 5,
-          pointHoverBackgroundColor: stroke,
+          pointHoverBackgroundColor: brand.stroke,
           pointHoverBorderColor: '#ffffff',
           pointHoverBorderWidth: 2,
         };
@@ -2807,16 +2896,12 @@
       applyChartDefaults();
       const c = getThemeColors();
       chartInstances.forEach(chart => {
-        // Update datasets
+        // Update datasets — radar keeps brand colors constant, only bar gets theme update
         chart.data.datasets.forEach((ds, idx) => {
           if (chart.config.type === 'bar') {
             ds.backgroundColor = idx === 0 ? c.barPrimary : c.barMuted;
-          } else if (chart.config.type === 'radar') {
-            const colors = [c.barPrimary, c.barMuted, c.textSubtle, 'rgba(156, 163, 175, 0.6)'];
-            ds.borderColor = colors[idx] || c.textSubtle;
-            ds.backgroundColor = hexToRgba(colors[idx] || c.textSubtle, 0.22);
-            ds.pointBackgroundColor = colors[idx] || c.textSubtle;
           }
+          // radar: brand colors are constant — do NOT overwrite on theme toggle
         });
 
         // Update scales
