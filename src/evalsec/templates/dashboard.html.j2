@@ -147,24 +147,24 @@
     a:hover { color: var(--primary-hover); }
 
     ::selection {
-      background: rgba(148, 137, 121, 0.30);
+      background: rgba(128, 128, 128, 0.30);
       color: var(--foreground);
     }
     ::-moz-selection {
-      background: rgba(148, 137, 121, 0.30);
+      background: rgba(128, 128, 128, 0.30);
       color: var(--foreground);
     }
 
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb {
-      background: rgba(148, 137, 121, 0.35);
+      background: rgba(128, 128, 128, 0.35);
       border-radius: 999px;
       border: 2px solid transparent;
       background-clip: padding-box;
     }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 137, 121, 0.55); background-clip: padding-box; }
-    html { scrollbar-color: rgba(148, 137, 121, 0.35) transparent; scrollbar-width: thin; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(128, 128, 128, 0.55); background-clip: padding-box; }
+    html { scrollbar-color: rgba(128, 128, 128, 0.35) transparent; scrollbar-width: thin; }
 
     :focus { outline: none; }
     :focus-visible {
@@ -570,9 +570,9 @@
     }
 
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(148, 137, 121, 0.50); }
-      70%  { box-shadow: 0 0 0 9px rgba(148, 137, 121, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(148, 137, 121, 0); }
+      0%   { box-shadow: 0 0 0 0 rgba(128, 128, 128, 0.50); }
+      70%  { box-shadow: 0 0 0 9px rgba(128, 128, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(128, 128, 128, 0); }
     }
 
     .hero-actions {
@@ -750,7 +750,7 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    tbody tr:hover { background: rgba(148, 137, 121, 0.04); }
+    tbody tr:hover { background: rgba(128, 128, 128, 0.04); }
 
     .rank-cell { width: 4rem; }
 
@@ -774,19 +774,19 @@
       color: #ffffff;
       background: var(--primary);
       border-color: var(--primary-border-hover);
-      box-shadow: 0 0 16px -2px rgba(148, 137, 121, 0.35);
+      box-shadow: 0 0 16px -2px rgba(128, 128, 128, 0.35);
     }
 
     .rank-pill.rank-2 {
       color: var(--foreground);
-      border-color: rgba(176, 165, 149, 0.30);
-      background: linear-gradient(135deg, rgba(176, 165, 149, 0.12) 0%, rgba(176, 165, 149, 0.03) 100%);
+      border-color: rgba(160, 160, 160, 0.30);
+      background: linear-gradient(135deg, rgba(160, 160, 160, 0.12) 0%, rgba(160, 160, 160, 0.03) 100%);
     }
 
     .rank-pill.rank-3 {
       color: var(--primary);
-      border-color: rgba(176, 165, 149, 0.30);
-      background: linear-gradient(135deg, rgba(176, 165, 149, 0.10) 0%, rgba(176, 165, 149, 0.03) 100%);
+      border-color: rgba(160, 160, 160, 0.30);
+      background: linear-gradient(135deg, rgba(160, 160, 160, 0.10) 0%, rgba(160, 160, 160, 0.03) 100%);
     }
 
     .model-name-cell {
@@ -835,7 +835,7 @@
       align-items: center;
       gap: 0.42rem;
       padding: 0.22rem 0.65rem 0.22rem 0.55rem;
-      background: rgba(148, 137, 121, 0.10);
+      background: rgba(128, 128, 128, 0.10);
       color: var(--primary);
       font-family: var(--font-mono);
       font-size: 0.64rem;
@@ -844,7 +844,7 @@
       text-transform: uppercase;
       border-radius: 999px;
       margin-left: 0.55rem;
-      border: 1px solid rgba(148, 137, 121, 0.30);
+      border: 1px solid rgba(128, 128, 128, 0.30);
       white-space: nowrap;
       vertical-align: middle;
     }
@@ -979,8 +979,8 @@
       display: flex;
       align-items: flex-start;
       gap: 1rem;
-      background: rgba(148, 137, 121, 0.08);
-      border: 1px solid rgba(148, 137, 121, 0.25);
+      background: rgba(128, 128, 128, 0.08);
+      border: 1px solid rgba(128, 128, 128, 0.25);
       border-radius: var(--radius-lg);
       padding: 1.1rem 1.35rem;
       margin-bottom: 1.5rem;
@@ -991,9 +991,9 @@
     .disclaimer-icon {
       width: 30px; height: 30px;
       border-radius: 50%;
-      background: rgba(148, 137, 121, 0.16);
+      background: rgba(128, 128, 128, 0.16);
       color: var(--primary);
-      border: 1px solid rgba(148, 137, 121, 0.35);
+      border: 1px solid rgba(128, 128, 128, 0.35);
       font-family: var(--font-mono);
       font-size: 0.92rem;
       font-weight: 600;
@@ -1093,11 +1093,11 @@
     }
 
     .model-card--baseline {
-      border-color: rgba(148, 137, 121, 0.25);
+      border-color: rgba(128, 128, 128, 0.25);
     }
 
     .model-card--baseline:hover {
-      border-color: rgba(148, 137, 121, 0.50);
+      border-color: rgba(128, 128, 128, 0.50);
     }
 
     .card-header {
@@ -1133,15 +1133,15 @@
     }
 
     .type-llm {
-      background: rgba(148, 137, 121, 0.10);
+      background: rgba(128, 128, 128, 0.10);
       color: var(--primary);
-      border: 1px solid rgba(148, 137, 121, 0.30);
+      border: 1px solid rgba(128, 128, 128, 0.30);
     }
 
     .type-baseline {
-      background: rgba(176, 137, 104, 0.12);
-      color: #B08968;
-      border: 1px solid rgba(176, 137, 104, 0.32);
+      background: rgba(128, 128, 128, 0.12);
+      color: var(--muted-foreground);
+      border: 1px solid rgba(128, 128, 128, 0.34);
     }
 
     .card-score { text-align: center; margin-bottom: 1.4rem; }
@@ -1888,7 +1888,7 @@
     function updateThemeMeta() {
       const meta = document.querySelector('meta[name="theme-color"]');
       const isDark = document.documentElement.classList.contains('dark');
-      meta?.setAttribute('content', isDark ? '#222831' : '#ffffff');
+      meta?.setAttribute('content', isDark ? '#000000' : '#ffffff');
     }
 
     updateThemeMeta();
@@ -2080,8 +2080,8 @@
 
     let chartLoaded = false;
     try {
-      Chart.defaults.color       = 'rgba(34, 40, 49, 0.75)';
-      Chart.defaults.borderColor = 'rgba(34, 40, 49, 0.06)';
+      Chart.defaults.color       = 'rgba(0, 0, 0, 0.75)';
+      Chart.defaults.borderColor = 'rgba(0, 0, 0, 0.06)';
       Chart.defaults.font.family = FONT_SANS;
       Chart.defaults.font.size   = 12;
       chartLoaded = true;
@@ -2097,26 +2097,25 @@
     function updateChartTheme() {
       if (!chartLoaded) return;
       const isDark = document.documentElement.classList.contains('dark');
-      Chart.defaults.color       = isDark ? 'rgba(223, 208, 184, 0.75)' : 'rgba(34, 40, 49, 0.75)';
-      Chart.defaults.borderColor = isDark ? 'rgba(223, 208, 184, 0.06)' : 'rgba(34, 40, 49, 0.06)';
+      Chart.defaults.color       = isDark ? 'rgba(255, 255, 255, 0.75)' : 'rgba(0, 0, 0, 0.75)';
+      Chart.defaults.borderColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)';
     }
     updateChartTheme();
 
-    // ── Palette — Stone / Taupe earth tones ──
-    const TAUPE      = '#948979';   // primary brand taupe
-    const TAUPE_HI   = '#B0A595';   // light taupe
-    const TAUPE_LO   = '#7A7065';   // deep taupe
-    const CLAY       = '#B08968';   // warm terracotta earth — series accent
-    const CLAY_LO    = '#946D52';   // deep clay
-    const SAGE       = '#8A9A7B';   // muted earthy green — series accent
-    const STONE      = '#5A6169';   // cool stone — series accent
-    const CREAM      = '#DFD0B8';   // champagne highlight
-    const WHITE_L    = '#ffffff';
-    const WHITE_D    = '#DFD0B8';
+    // ── Palette — grayscale (pure black & white theme) ──
+    // Charts build once at load; the ramp is picked from the initial theme
+    // so each series reads against the active background — dark inks on a
+    // white page, light inks on a black page.
+    const isDarkInit = document.documentElement.classList.contains('dark');
+    const INK     = isDarkInit ? '#FFFFFF' : '#0A0A0A';  // foreground extreme
+    const INK_HI  = isDarkInit ? '#E2E2E2' : '#2A2A2A';
+    const INK_DIM = isDarkInit ? '#B4B4B4' : '#4C4C4C';
+    const ASH     = isDarkInit ? '#8C8C8C' : '#7C7C7C';  // mid — reads on both
+    const ASH_LO  = isDarkInit ? '#666666' : '#9E9E9E';
+    const FOG     = isDarkInit ? '#A6A6A6' : '#5E5E5E';
 
-    // Cycled palette for multi-series charts — earth tones spaced for
-    // contrast on both the cream (light) and slate (dark) backgrounds.
-    const SERIES_PALETTE = [TAUPE, CLAY, SAGE, TAUPE_HI, STONE, CREAM];
+    // Cycled palette for multi-series charts — spaced grayscale steps.
+    const SERIES_PALETTE = [INK, ASH, INK_DIM, ASH_LO, FOG, INK_HI];
 
     function paletteFor(n) {
       return Array.from({ length: n }, (_, i) => SERIES_PALETTE[i % SERIES_PALETTE.length]);
@@ -2152,8 +2151,8 @@
       };
     }
 
-    const taupeGlow = glowPlugin('taupeGlow', 'rgba(148, 137, 121, 0.34)', 16);
-    const clayGlow  = glowPlugin('clayGlow',  'rgba(176, 137, 104, 0.30)', 14);
+    const inkGlow = glowPlugin('inkGlow', isDarkInit ? 'rgba(255, 255, 255, 0.30)' : 'rgba(10, 10, 10, 0.26)', 16);
+    const ashGlow = glowPlugin('ashGlow', isDarkInit ? 'rgba(200, 200, 200, 0.26)' : 'rgba(90, 90, 90, 0.22)', 14);
 
     // Taupe edge highlight plugin
     function edgePlugin() {
@@ -2164,7 +2163,7 @@
           const meta = chart.getDatasetMeta(0);
           if (!meta || !meta.data) return;
           ctx.save();
-          ctx.strokeStyle = 'rgba(148, 137, 121, 0.45)';
+          ctx.strokeStyle = isDarkInit ? 'rgba(255, 255, 255, 0.42)' : 'rgba(10, 10, 10, 0.40)';
           ctx.lineWidth = 1;
           ctx.beginPath();
           meta.data.forEach(bar => {
@@ -2339,11 +2338,11 @@
             data: llmEntries.map(e => e.avg_score),
             backgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, TAUPE_LO, TAUPE_HI);
+              return makeBarGradient(chart.ctx, chart.chartArea, ASH, INK);
             },
             hoverBackgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, TAUPE, CLAY);
+              return makeBarGradient(chart.ctx, chart.chartArea, INK_DIM, INK);
             },
             borderRadius: 6,
             borderSkipped: false,
@@ -2361,10 +2360,10 @@
             legend: { display: false },
             tooltip: {
               backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderColor: 'rgba(148, 137, 121, 0.25)',
+              borderColor: 'rgba(128, 128, 128, 0.25)',
               borderWidth: 1,
-              titleColor: '#222831',
-              bodyColor: '#6B6357',
+              titleColor: '#0A0A0A',
+              bodyColor: '#525252',
               padding: 10,
               cornerRadius: 8,
               titleFont: { family: FONT_SANS, weight: '500' },
@@ -2375,36 +2374,36 @@
             x: {
               min: 0, max: 100,
               grid: {
-                color: 'rgba(34, 40, 49, 0.06)',
+                color: 'rgba(0, 0, 0, 0.06)',
                 borderDash: [4, 4],
                 drawTicks: false,
               },
-              ticks: { color: 'rgba(34, 40, 49, 0.40)', font: { family: FONT_MONO, size: 10 } },
+              ticks: { color: 'rgba(0, 0, 0, 0.40)', font: { family: FONT_MONO, size: 10 } },
               border: { display: false },
             },
             y: {
               grid: { display: false },
               ticks: {
-                color: 'rgba(34, 40, 49, 0.85)',
+                color: 'rgba(0, 0, 0, 0.85)',
                 font: { family: FONT_SANS, weight: '500', size: 12 },
               },
               border: { display: false },
             }
           }
         },
-        plugins: [taupeGlow, edgePlugin()],
+        plugins: [inkGlow, edgePlugin()],
       });
     }
 
     // ── Model color map ──
     function modelColor(modelId, index) {
       const map = {
-        "deepseek_v4_pro":  TAUPE,
-        "claude_sonnet_46": CLAY,
-        "kimi_k2_thinking": SAGE,
-        "qwen_3_5":         TAUPE_HI,
+        "deepseek_v4_pro":  INK,
+        "claude_sonnet_46": ASH,
+        "kimi_k2_thinking": INK_DIM,
+        "qwen_3_5":         ASH_LO,
       };
-      return map[modelId] || (index % 2 === 0 ? TAUPE : CLAY);
+      return map[modelId] || (index % 2 === 0 ? INK : ASH);
     }
 
     // ── Radar Chart ──
@@ -2443,22 +2442,22 @@
               ticks: {
                 stepSize: 25,
                 backdropColor: 'transparent',
-                color: 'rgba(34, 40, 49, 0.30)',
+                color: 'rgba(0, 0, 0, 0.30)',
                 font: { family: FONT_MONO, size: 9 },
               },
               grid: {
-                color: 'rgba(34, 40, 49, 0.06)',
+                color: 'rgba(0, 0, 0, 0.06)',
                 circular: true,
                 lineWidth: 1,
                 borderDash: [2, 4],
               },
               angleLines: {
-                color: 'rgba(34, 40, 49, 0.08)',
+                color: 'rgba(0, 0, 0, 0.08)',
                 lineWidth: 1,
                 borderDash: [2, 4],
               },
               pointLabels: {
-                color: 'rgba(34, 40, 49, 0.50)',
+                color: 'rgba(0, 0, 0, 0.50)',
                 font: { family: FONT_MONO, size: 10, weight: '500' },
               },
             }
@@ -2470,7 +2469,7 @@
                 boxWidth: 10,
                 boxHeight: 10,
                 padding: 14,
-                color: 'rgba(34, 40, 49, 0.75)',
+                color: 'rgba(0, 0, 0, 0.75)',
                 font: { family: FONT_SANS, size: 11, weight: '500' },
                 usePointStyle: true,
                 pointStyle: 'circle',
@@ -2478,10 +2477,10 @@
             },
             tooltip: {
               backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderColor: 'rgba(148, 137, 121, 0.25)',
+              borderColor: 'rgba(128, 128, 128, 0.25)',
               borderWidth: 1,
-              titleColor: '#222831',
-              bodyColor: '#6B6357',
+              titleColor: '#0A0A0A',
+              bodyColor: '#525252',
               padding: 10,
               cornerRadius: 8,
               titleFont: { family: FONT_SANS, weight: '500' },
@@ -2504,11 +2503,11 @@
             data: baselineEntries.map(e => e.avg_score),
             backgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, CLAY_LO, CLAY, 'rgba(176, 137, 104, 0.6)');
+              return makeBarGradient(chart.ctx, chart.chartArea, FOG, ASH, hexToRgba(ASH, 0.5));
             },
             hoverBackgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, CLAY, '#C6A07E', 'rgba(198, 160, 126, 0.6)');
+              return makeBarGradient(chart.ctx, chart.chartArea, ASH, INK_DIM, hexToRgba(INK_DIM, 0.5));
             },
             borderRadius: 6,
             borderSkipped: false,
@@ -2526,10 +2525,10 @@
             legend: { display: false },
             tooltip: {
               backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderColor: 'rgba(148, 137, 121, 0.25)',
+              borderColor: 'rgba(128, 128, 128, 0.25)',
               borderWidth: 1,
-              titleColor: '#222831',
-              bodyColor: '#6B6357',
+              titleColor: '#0A0A0A',
+              bodyColor: '#525252',
               padding: 10,
               cornerRadius: 8,
               titleFont: { family: FONT_SANS, weight: '500' },
@@ -2540,24 +2539,24 @@
             x: {
               min: 0, max: 100,
               grid: {
-                color: 'rgba(34, 40, 49, 0.06)',
+                color: 'rgba(0, 0, 0, 0.06)',
                 borderDash: [4, 4],
                 drawTicks: false,
               },
-              ticks: { color: 'rgba(34, 40, 49, 0.40)', font: { family: FONT_MONO, size: 10 } },
+              ticks: { color: 'rgba(0, 0, 0, 0.40)', font: { family: FONT_MONO, size: 10 } },
               border: { display: false },
             },
             y: {
               grid: { display: false },
               ticks: {
-                color: 'rgba(34, 40, 49, 0.85)',
+                color: 'rgba(0, 0, 0, 0.85)',
                 font: { family: FONT_SANS, weight: '500', size: 12 },
               },
               border: { display: false },
             }
           }
         },
-        plugins: [clayGlow],
+        plugins: [ashGlow],
       });
     }
 
