@@ -2002,29 +2002,35 @@
           <div class="method-panel active" data-panel="what">
             <h3>What We Test</h3>
             <p>
-              Each test case contains a real Trivy vulnerability scan output from a popular
-              container image (nginx, redis, postgres, etc.) plus a realistic Kubernetes/EKS
-              deployment context. Models must triage the findings by determining real
-              <strong>exploitability</strong> — not just CVSS score.
+              20 test cases, each built around a real Trivy scan from a container image you'd
+              actually run in prod — nginx, redis, postgres, vault, and others. Every case
+              comes with a Kubernetes/EKS deployment context: network exposure, whether the
+              service is internet-facing, runtime reachability, any compensating controls in place.
+            </p>
+            <p>
+              Models must produce a <strong>VEX-format triage report</strong> — call each CVE
+              exploitable or not, back it up, assign a P0–P3 priority, and give concrete
+              remediation steps. The bar isn't knowing the CVSS score. It's making the call a
+              real engineer would make.
             </p>
           </div>
 
           <div class="method-panel" data-panel="how">
             <h3>How We Score</h3>
-            <p>Each response goes through two passes:</p>
+            <p>Every response runs through two passes:</p>
             <ul>
               <li>
-                <strong>Pass 1 — deterministic (20%)</strong> · regex matches, JSON validity,
-                CVE coverage, format compliance.
+                <strong>Pass 1 — deterministic (20%)</strong> · Is the JSON valid? Does it cover
+                all CVEs from the scan? Do the fields and format match the expected schema?
               </li>
               <li>
-                <strong>Pass 2 — LLM judge (80%)</strong> · Claude Opus 4.7 scores responses
-                on four rubric dimensions:
+                <strong>Pass 2 — LLM judge (80%)</strong> · Claude Opus 4.7 evaluates the
+                reasoning across four dimensions:
                 <ul>
-                  <li><strong>Reachability</strong> — does the model use deployment context?</li>
-                  <li><strong>Prioritization</strong> — correct urgency ranking?</li>
-                  <li><strong>Actionability</strong> — specific, executable recommendations?</li>
-                  <li><strong>Conciseness</strong> — focused output without padding?</li>
+                  <li><strong>Reachability</strong> — did the model use the deployment context, or just echo CVSS?</li>
+                  <li><strong>Prioritization</strong> — are findings ranked in the right urgency order?</li>
+                  <li><strong>Actionability</strong> — are recommendations specific enough to actually execute?</li>
+                  <li><strong>Conciseness</strong> — is the response tight, or padded with caveats?</li>
                 </ul>
               </li>
             </ul>
@@ -2033,9 +2039,13 @@
           <div class="method-panel" data-panel="why">
             <h3>Why It Matters</h3>
             <p>
-              Most CVE triage benchmarks score against CVSS alone. <strong>evalsec</strong>
-              measures whether LLMs can reason about exploitability in realistic production
-              deployments — the actual skill DevSecOps engineers need.
+              CVSS scores are public. Any script can sort by severity. The hard part is knowing
+              whether a CRITICAL CVE actually matters for <em>your</em> specific service — given
+              your network topology, what's exposed, and what an attacker could realistically reach.
+            </p>
+            <p>
+              That's the gap <strong>evalsec</strong> measures. Not vulnerability knowledge,
+              but the contextual reasoning DevSecOps engineers do every day.
             </p>
           </div>
         </div>
