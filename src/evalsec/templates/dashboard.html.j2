@@ -34,8 +34,10 @@
 
       /* Surface — pure white */
       --background: #FFFFFF;
-      --foreground: #000000;
-      --muted-foreground: #6B7280;
+      --foreground: #171717;
+      --muted-foreground: rgba(23, 23, 23, 0.65);
+      --subtle-foreground: rgba(23, 23, 23, 0.45);
+      --disabled-foreground: rgba(23, 23, 23, 0.30);
       --border: rgba(0, 0, 0, 0.10);
 
       /* Primary — pure black */
@@ -84,8 +86,10 @@
 
       /* Surface — pure black */
       --background: #000000;
-      --foreground: #FFFFFF;
-      --muted-foreground: #A1A1AA;
+      --foreground: #EDEDED;
+      --muted-foreground: rgba(237, 237, 237, 0.65);
+      --subtle-foreground: rgba(237, 237, 237, 0.45);
+      --disabled-foreground: rgba(237, 237, 237, 0.30);
       --border: rgba(255, 255, 255, 0.12);
 
       /* Primary — pure white */
@@ -241,71 +245,9 @@
       opacity: 0.40;
     }
 
-    /* ─────────────────────────────────────────────
-       THEME TOGGLE
-       ───────────────────────────────────────────── */
-    .theme-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 50;
-      width: 48px;
-      height: 48px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: color-mix(in srgb, var(--background) 50%, transparent);
-      color: var(--foreground);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
-      backdrop-filter: blur(12px);
-      cursor: pointer;
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-    }
-
-    .theme-toggle:hover {
-      transform: scale(1.10);
-    }
-
-    .theme-toggle:active {
-      transform: scale(0.95);
-    }
-
-    .theme-icon {
-      position: absolute;
-      font-size: 1.25rem;
-      line-height: 1;
-      transition: opacity 180ms ease, transform 180ms ease;
-    }
-
-    .moon-icon {
-      color: var(--foreground);
-      opacity: 1;
-    }
-
-    .sun-icon {
-      color: #eab308;
-      opacity: 0;
-      transform: rotate(-45deg);
-    }
-
-    html.dark .moon-icon {
-      opacity: 0;
-      transform: rotate(12deg);
-    }
-
-    html.dark .sun-icon {
-      opacity: 1;
-      transform: rotate(0deg);
-    }
-
-    html.dark .theme-toggle:hover .sun-icon {
-      transform: rotate(45deg);
-    }
 
     /* ─────────────────────────────────────────────
-       NAVBAR
+       NAVBAR — Glow Menu (adapted from nav.md concept)
        ───────────────────────────────────────────── */
     .navbar {
       position: sticky;
@@ -316,17 +258,55 @@
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: 1rem;
-      padding: 0.65rem 0.75rem;
+      gap: 0.75rem;
+      padding: 0.5rem 0.6rem 0.5rem 0.9rem;
       border: 1px solid var(--border);
-      border-radius: 999px;
+      border-radius: 16px;
       background: color-mix(in srgb, var(--background) 64%, transparent);
       backdrop-filter: blur(16px);
       box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+
+    /* Nav-wide glow — radial gradient overlay on hover */
+    .navbar::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      background: radial-gradient(
+        circle at 50% 50%,
+        rgba(59, 130, 246, 0.06) 0%,
+        rgba(168, 85, 247, 0.04) 30%,
+        rgba(239, 68, 68, 0.03) 60%,
+        transparent 80%
+      );
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      border-radius: 28px;
+      z-index: 0;
+    }
+
+    html.dark .navbar::before {
+      background: radial-gradient(
+        circle at 50% 50%,
+        rgba(96, 165, 250, 0.10) 0%,
+        rgba(192, 132, 252, 0.07) 30%,
+        rgba(252, 129, 129, 0.05) 60%,
+        transparent 80%
+      );
+    }
+
+    .navbar:hover::before {
+      opacity: 1;
     }
 
     .brand {
-      padding-left: 0.75rem;
+      position: relative;
+      z-index: 1;
+      padding-left: 0.5rem;
       color: var(--foreground);
       font-size: 1rem;
       font-weight: 700;
@@ -335,25 +315,71 @@
     }
 
     .nav-tabs {
+      position: relative;
+      z-index: 1;
       display: flex;
       justify-content: center;
-      gap: 0.25rem;
+      gap: 0.2rem;
     }
 
     .nav-tab {
+      position: relative;
       border: 1px solid transparent;
-      border-radius: 999px;
-      padding: 0.55rem 0.9rem;
+      border-radius: 12px;
+      padding: 0.5rem 0.85rem;
       background: transparent;
       color: var(--muted-foreground);
       font: 600 0.875rem/1 var(--font-sans);
       cursor: pointer;
-      transition: color 160ms ease, background 160ms ease, border-color 160ms ease, transform 160ms ease;
+      transition: color 200ms ease, background 200ms ease, border-color 200ms ease, transform 200ms ease;
+      overflow: hidden;
+    }
+
+    /* Colored glow per tab — blue, green, orange, red */
+    .nav-tab:nth-child(1)::before {
+      background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+    }
+    .nav-tab:nth-child(2)::before {
+      background: radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 70%);
+    }
+    .nav-tab:nth-child(3)::before {
+      background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+    }
+    .nav-tab:nth-child(4)::before {
+      background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%);
+    }
+
+    html.dark .nav-tab:nth-child(1)::before {
+      background: radial-gradient(circle, rgba(96,165,250,0.20) 0%, transparent 70%);
+    }
+    html.dark .nav-tab:nth-child(2)::before {
+      background: radial-gradient(circle, rgba(74,222,128,0.20) 0%, transparent 70%);
+    }
+    html.dark .nav-tab:nth-child(3)::before {
+      background: radial-gradient(circle, rgba(251,146,60,0.20) 0%, transparent 70%);
+    }
+    html.dark .nav-tab:nth-child(4)::before {
+      background: radial-gradient(circle, rgba(252,129,129,0.20) 0%, transparent 70%);
+    }
+
+    .nav-tab::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s ease;
+      transform: scale(0.85);
+      pointer-events: none;
+    }
+
+    .nav-tab:hover::before {
+      opacity: 1;
+      transform: scale(1);
     }
 
     .nav-tab:hover {
       color: var(--foreground);
-      background: var(--secondary);
       transform: translateY(-1px);
     }
 
@@ -364,22 +390,97 @@
       box-shadow: 0 16px 36px -18px var(--shadow-primary);
     }
 
+    .nav-tab.is-active::before {
+      display: none;
+    }
+
+    /* ── Theme toggle inside navbar ── */
+    .nav-theme-toggle {
+      position: relative;
+      z-index: 1;
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      transition: color 200ms ease, background 200ms ease, border-color 200ms ease, transform 200ms ease;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .nav-theme-toggle:hover {
+      color: var(--foreground);
+      background: var(--secondary);
+      border-color: var(--primary-border-hover);
+      transform: translateY(-1px);
+    }
+
+    .nav-theme-toggle:active {
+      transform: scale(0.92);
+    }
+
+    .nav-theme-toggle .theme-icon {
+      position: absolute;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .nav-theme-toggle .moon-icon {
+      opacity: 1;
+    }
+
+    .nav-theme-toggle .sun-icon {
+      color: #eab308;
+      opacity: 0;
+      transform: rotate(-45deg);
+    }
+
+    html.dark .nav-theme-toggle .moon-icon {
+      opacity: 0;
+      transform: rotate(12deg);
+    }
+
+    html.dark .nav-theme-toggle .sun-icon {
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+
     @media (max-width: 720px) {
       .navbar {
         top: 0.75rem;
         grid-template-columns: 1fr auto;
-        border-radius: 24px;
+        border-radius: 16px;
+        padding: 0.5rem 0.6rem;
       }
 
       .nav-tabs {
         grid-column: 1 / -1;
         justify-content: flex-start;
         overflow-x: auto;
-        padding: 0.25rem;
+        padding: 0.15rem 0;
+        gap: 0.15rem;
+        -webkit-overflow-scrolling: touch;
       }
 
       .nav-tab {
         white-space: nowrap;
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
+      }
+
+      .brand {
+        font-size: 0.9rem;
+        padding-left: 0.25rem;
+      }
+
+      .nav-theme-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
       }
     }
 
@@ -516,8 +617,36 @@
       color: var(--muted-foreground);
     }
 
+    /* Text hierarchy tiers */
+    .text-primary    { color: var(--foreground); }
+    .text-muted      { color: var(--muted-foreground); }
+    .text-subtle     { color: var(--subtle-foreground); }
+    .text-disabled   { color: var(--disabled-foreground); }
+
     .mono {
       font-family: var(--font-mono);
+    }
+
+    /* Monospace IDs (deepseek_v4_pro, baseline_cvss, dll) — subtle tier */
+    .model-id-mono,
+    code,
+    .model-id,
+    [class*="font-mono"] {
+      color: var(--subtle-foreground);
+      font-family: var(--font-mono);
+    }
+
+    /* Section descriptions / captions — muted tier */
+    .section-subtitle,
+    .card-subtitle,
+    .caption {
+      color: var(--muted-foreground);
+    }
+
+    /* Table headers (uppercase RANK, MODEL, SCORE) — muted tier */
+    th,
+    .table-header {
+      color: var(--muted-foreground);
     }
 
     /* ─────────────────────────────────────────────
@@ -836,38 +965,50 @@
     .trunc-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.42rem;
-      padding: 0.22rem 0.65rem 0.22rem 0.55rem;
-      background: rgba(128, 128, 128, 0.10);
-      color: var(--primary);
-      font-family: var(--font-mono);
-      font-size: 0.64rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      gap: 6px;
+      padding: 3px 10px;
       border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
       margin-left: 0.55rem;
-      border: 1px solid rgba(128, 128, 128, 0.30);
       white-space: nowrap;
       vertical-align: middle;
+
+      /* Amber soft — warm warning, not harsh */
+      background: rgba(251, 191, 36, 0.10);
+      border: 1px solid rgba(251, 191, 36, 0.30);
+      color: #D97706;
+    }
+
+    html.dark .trunc-badge {
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      color: #FBBF24;
     }
 
     .trunc-badge::before {
-      content: "";
-      width: 6px;
-      height: 6px;
+      content: '';
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
-      background: var(--primary);
-      flex-shrink: 0;
+      background: currentColor;
+      display: inline-block;
     }
 
     .trunc-note {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--primary);
+      font-size: 11px;
+      line-height: 1.4;
+      color: rgba(217, 119, 6, 0.85);
       margin-top: 0.5rem;
       max-width: 32ch;
-      opacity: 0.85;
+    }
+
+    html.dark .trunc-note {
+      color: rgba(251, 191, 36, 0.75);
     }
 
     th.has-tooltip {
@@ -1501,13 +1642,7 @@
 
   </div>
 
-  <!-- ── Theme Toggle ── -->
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-    <span class="theme-icon moon-icon">☾</span>
-    <span class="theme-icon sun-icon">☀</span>
-  </button>
-
-  <!-- ── Navbar ── -->
+  <!-- ── Navbar (Glow Menu) ── -->
   <header class="navbar">
     <a class="brand" href="#">evalsec.</a>
 
@@ -1518,9 +1653,10 @@
       <button class="nav-tab" data-tab="methodology">Methodology</button>
     </nav>
 
-    <!-- Spacer to push theme toggle to right edge of navbar on desktop;
-         on mobile the theme-toggle is fixed position so this doesn't matter -->
-    <div></div>
+    <button class="nav-theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span class="theme-icon moon-icon">☾</span>
+      <span class="theme-icon sun-icon">☀</span>
+    </button>
   </header>
 
   <!-- ── Main Content ── -->
@@ -2097,12 +2233,41 @@
     const FONT_SANS = 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
     const FONT_MONO = '"JetBrains Mono", "SFMono-Regular", Consolas, monospace';
 
+    // ============================================
+    // CHART.JS THEMING — sync dengan CSS variables
+    // ============================================
+    function getThemeColors() {
+      const isDark = document.documentElement.classList.contains('dark');
+      return {
+        text:       isDark ? '#EDEDED' : '#171717',
+        textMuted:  isDark ? 'rgba(237, 237, 237, 0.65)' : 'rgba(23, 23, 23, 0.65)',
+        textSubtle: isDark ? 'rgba(237, 237, 237, 0.45)' : 'rgba(23, 23, 23, 0.45)',
+        grid:       isDark ? 'rgba(237, 237, 237, 0.08)' : 'rgba(23, 23, 23, 0.08)',
+        axis:       isDark ? 'rgba(237, 237, 237, 0.20)' : 'rgba(23, 23, 23, 0.15)',
+        barPrimary: isDark ? '#EDEDED' : '#171717',
+        barMuted:   isDark ? 'rgba(237, 237, 237, 0.65)' : 'rgba(23, 23, 23, 0.65)',
+      };
+    }
+
+    function isDarkMode() {
+      return document.documentElement.classList.contains('dark');
+    }
+
+    function applyChartDefaults() {
+      const c = getThemeColors();
+      Chart.defaults.color = c.textMuted;
+      Chart.defaults.borderColor = c.grid;
+      Chart.defaults.font.family = FONT_SANS;
+      Chart.defaults.font.size = 11;
+      Chart.defaults.plugins.legend.labels.color = c.text;
+      Chart.defaults.plugins.tooltip.backgroundColor = c.barPrimary;
+      Chart.defaults.plugins.tooltip.titleColor = isDarkMode() ? '#0A0A0A' : '#FAFAFA';
+      Chart.defaults.plugins.tooltip.bodyColor = isDarkMode() ? '#0A0A0A' : '#FAFAFA';
+    }
+
     let chartLoaded = false;
     try {
-      Chart.defaults.color       = 'rgba(0, 0, 0, 0.75)';
-      Chart.defaults.borderColor = 'rgba(0, 0, 0, 0.06)';
-      Chart.defaults.font.family = FONT_SANS;
-      Chart.defaults.font.size   = 12;
+      applyChartDefaults();
       chartLoaded = true;
     } catch (_) {
       console.warn('Chart.js failed to load — chart canvas elements will show fallback message.');
@@ -2112,33 +2277,29 @@
       });
     }
 
-    // Dark mode chart defaults override
-    function updateChartTheme() {
-      if (!chartLoaded) return;
-      const isDark = document.documentElement.classList.contains('dark');
-      Chart.defaults.color       = isDark ? 'rgba(255, 255, 255, 0.75)' : 'rgba(0, 0, 0, 0.75)';
-      Chart.defaults.borderColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)';
+    // ── Chart Instances registry — for re-render on theme toggle ──
+    const chartInstances = [];
+
+    // ── Dynamic palette — computed from current theme ──
+    function getInk()      { return isDarkMode() ? '#EDEDED' : '#171717'; }
+    function getInkHi()    { return isDarkMode() ? '#E2E2E2' : '#2A2A2A'; }
+    function getInkDim()   { return isDarkMode() ? '#B4B4B4' : '#4C4C4C'; }
+    function getAsh()      { return isDarkMode() ? '#8C8C8C' : '#7C7C7C'; }
+    function getAshLo()    { return isDarkMode() ? '#666666' : '#9E9E9E'; }
+    function getFog()      { return isDarkMode() ? '#A6A6A6' : '#5E5E5E'; }
+
+    function getSeriesPalette() {
+      return [getInk(), getAsh(), getInkDim(), getAshLo(), getFog(), getInkHi()];
     }
-    updateChartTheme();
-
-    // ── Palette — grayscale (pure black & white theme) ──
-    // Charts build once at load; the ramp is picked from the initial theme
-    // so each series reads against the active background — dark inks on a
-    // white page, light inks on a black page.
-    const isDarkInit = document.documentElement.classList.contains('dark');
-    const INK     = isDarkInit ? '#FFFFFF' : '#0A0A0A';  // foreground extreme
-    const INK_HI  = isDarkInit ? '#E2E2E2' : '#2A2A2A';
-    const INK_DIM = isDarkInit ? '#B4B4B4' : '#4C4C4C';
-    const ASH     = isDarkInit ? '#8C8C8C' : '#7C7C7C';  // mid — reads on both
-    const ASH_LO  = isDarkInit ? '#666666' : '#9E9E9E';
-    const FOG     = isDarkInit ? '#A6A6A6' : '#5E5E5E';
-
-    // Cycled palette for multi-series charts — spaced grayscale steps.
-    const SERIES_PALETTE = [INK, ASH, INK_DIM, ASH_LO, FOG, INK_HI];
 
     function paletteFor(n) {
-      return Array.from({ length: n }, (_, i) => SERIES_PALETTE[i % SERIES_PALETTE.length]);
+      const pal = getSeriesPalette();
+      return Array.from({ length: n }, (_, i) => pal[i % pal.length]);
     }
+
+    function getInkGlowColor()  { return isDarkMode() ? 'rgba(255, 255, 255, 0.30)' : 'rgba(10, 10, 10, 0.26)'; }
+    function getAshGlowColor()  { return isDarkMode() ? 'rgba(200, 200, 200, 0.26)' : 'rgba(90, 90, 90, 0.22)'; }
+    function getEdgeColor()     { return isDarkMode() ? 'rgba(255, 255, 255, 0.42)' : 'rgba(10, 10, 10, 0.40)'; }
 
     // Build linear gradient helper
     function makeBarGradient(ctx, area, from, mid, fadeEnd) {
@@ -2170,9 +2331,6 @@
       };
     }
 
-    const inkGlow = glowPlugin('inkGlow', isDarkInit ? 'rgba(255, 255, 255, 0.30)' : 'rgba(10, 10, 10, 0.26)', 16);
-    const ashGlow = glowPlugin('ashGlow', isDarkInit ? 'rgba(200, 200, 200, 0.26)' : 'rgba(90, 90, 90, 0.22)', 14);
-
     // Taupe edge highlight plugin
     function edgePlugin() {
       return {
@@ -2182,7 +2340,7 @@
           const meta = chart.getDatasetMeta(0);
           if (!meta || !meta.data) return;
           ctx.save();
-          ctx.strokeStyle = isDarkInit ? 'rgba(255, 255, 255, 0.42)' : 'rgba(10, 10, 10, 0.40)';
+          ctx.strokeStyle = getEdgeColor();
           ctx.lineWidth = 1;
           ctx.beginPath();
           meta.data.forEach(bar => {
@@ -2348,7 +2506,8 @@
 
     // ── Bar Chart (LLM composite scores) ──
     if (chartLoaded && llmEntries.length > 0) {
-      new Chart(document.getElementById('barChart'), {
+      const c = getThemeColors();
+      const compositeChart = new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
           labels: llmEntries.map(e => displayName(e.model_id)),
@@ -2357,11 +2516,11 @@
             data: llmEntries.map(e => e.avg_score),
             backgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, ASH, INK);
+              return makeBarGradient(chart.ctx, chart.chartArea, getAsh(), getInk());
             },
             hoverBackgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, INK_DIM, INK);
+              return makeBarGradient(chart.ctx, chart.chartArea, getInkDim(), getInk());
             },
             borderRadius: 6,
             borderSkipped: false,
@@ -2393,40 +2552,42 @@
             x: {
               min: 0, max: 100,
               grid: {
-                color: 'rgba(0, 0, 0, 0.06)',
+                color: c.grid,
                 borderDash: [4, 4],
                 drawTicks: false,
               },
-              ticks: { color: 'rgba(0, 0, 0, 0.40)', font: { family: FONT_MONO, size: 10 } },
+              ticks: { color: c.textMuted, font: { family: FONT_MONO, size: 10 } },
               border: { display: false },
             },
             y: {
               grid: { display: false },
               ticks: {
-                color: 'rgba(0, 0, 0, 0.85)',
+                color: c.text,
                 font: { family: FONT_SANS, weight: '500', size: 12 },
               },
               border: { display: false },
             }
           }
         },
-        plugins: [inkGlow, edgePlugin()],
+        plugins: [glowPlugin('inkGlow', getInkGlowColor(), 16), edgePlugin()],
       });
+      chartInstances.push(compositeChart);
     }
 
     // ── Model color map ──
     function modelColor(modelId, index) {
       const map = {
-        "deepseek_v4_pro":  INK,
-        "claude_sonnet_46": ASH,
-        "kimi_k2_thinking": INK_DIM,
-        "qwen_3_5":         ASH_LO,
+        "deepseek_v4_pro":  getInk(),
+        "claude_sonnet_46": getAsh(),
+        "kimi_k2_thinking": getInkDim(),
+        "qwen_3_5":         getAshLo(),
       };
-      return map[modelId] || (index % 2 === 0 ? INK : ASH);
+      return map[modelId] || (index % 2 === 0 ? getInk() : getAsh());
     }
 
     // ── Radar Chart ──
     if (chartLoaded && llmEntries.length > 0) {
+      const c = getThemeColors();
       const radarDatasets = llmEntries.map((entry, i) => {
         const stroke = modelColor(entry.model_id, i);
         return {
@@ -2445,7 +2606,7 @@
         };
       });
 
-      new Chart(document.getElementById('radarChart'), {
+      const radarChart = new Chart(document.getElementById('radarChart'), {
         type: 'radar',
         data: {
           labels: dimNames.map(d => dimLabel(d).toUpperCase()),
@@ -2461,22 +2622,22 @@
               ticks: {
                 stepSize: 25,
                 backdropColor: 'transparent',
-                color: 'rgba(0, 0, 0, 0.30)',
+                color: c.textSubtle,
                 font: { family: FONT_MONO, size: 9 },
               },
               grid: {
-                color: 'rgba(0, 0, 0, 0.06)',
+                color: c.grid,
                 circular: true,
                 lineWidth: 1,
                 borderDash: [2, 4],
               },
               angleLines: {
-                color: 'rgba(0, 0, 0, 0.08)',
+                color: c.grid,
                 lineWidth: 1,
                 borderDash: [2, 4],
               },
               pointLabels: {
-                color: 'rgba(0, 0, 0, 0.50)',
+                color: c.textMuted,
                 font: { family: FONT_MONO, size: 10, weight: '500' },
               },
             }
@@ -2488,7 +2649,7 @@
                 boxWidth: 10,
                 boxHeight: 10,
                 padding: 14,
-                color: 'rgba(0, 0, 0, 0.75)',
+                color: c.text,
                 font: { family: FONT_SANS, size: 11, weight: '500' },
                 usePointStyle: true,
                 pointStyle: 'circle',
@@ -2508,12 +2669,14 @@
           }
         }
       });
+      chartInstances.push(radarChart);
     }
 
     // ── Baseline Bar Chart ──
     const baselineCanvas = document.getElementById('baselineBarChart');
     if (chartLoaded && baselineCanvas && baselineEntries.length > 0) {
-      new Chart(baselineCanvas, {
+      const c = getThemeColors();
+      const baselineChart = new Chart(baselineCanvas, {
         type: 'bar',
         data: {
           labels: baselineEntries.map(e => displayName(e.model_id)),
@@ -2522,11 +2685,11 @@
             data: baselineEntries.map(e => e.avg_score),
             backgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, FOG, ASH, hexToRgba(ASH, 0.5));
+              return makeBarGradient(chart.ctx, chart.chartArea, getFog(), getAsh(), hexToRgba(getAsh(), 0.5));
             },
             hoverBackgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, ASH, INK_DIM, hexToRgba(INK_DIM, 0.5));
+              return makeBarGradient(chart.ctx, chart.chartArea, getAsh(), getInkDim(), hexToRgba(getInkDim(), 0.5));
             },
             borderRadius: 6,
             borderSkipped: false,
@@ -2558,31 +2721,68 @@
             x: {
               min: 0, max: 100,
               grid: {
-                color: 'rgba(0, 0, 0, 0.06)',
+                color: c.grid,
                 borderDash: [4, 4],
                 drawTicks: false,
               },
-              ticks: { color: 'rgba(0, 0, 0, 0.40)', font: { family: FONT_MONO, size: 10 } },
+              ticks: { color: c.textMuted, font: { family: FONT_MONO, size: 10 } },
               border: { display: false },
             },
             y: {
               grid: { display: false },
               ticks: {
-                color: 'rgba(0, 0, 0, 0.85)',
+                color: c.text,
                 font: { family: FONT_SANS, weight: '500', size: 12 },
               },
               border: { display: false },
             }
           }
         },
-        plugins: [ashGlow],
+        plugins: [glowPlugin('ashGlow', getAshGlowColor(), 14)],
+      });
+      chartInstances.push(baselineChart);
+    }
+
+    // ── Chart theme update on toggle — re-render all chart instances ──
+    function updateAllCharts() {
+      if (!chartLoaded) return;
+      applyChartDefaults();
+      const c = getThemeColors();
+      chartInstances.forEach(chart => {
+        // Update datasets
+        chart.data.datasets.forEach((ds, idx) => {
+          if (chart.config.type === 'bar') {
+            ds.backgroundColor = idx === 0 ? c.barPrimary : c.barMuted;
+          } else if (chart.config.type === 'radar') {
+            const colors = [c.barPrimary, c.barMuted, c.textSubtle, 'rgba(156, 163, 175, 0.6)'];
+            ds.borderColor = colors[idx] || c.textSubtle;
+            ds.backgroundColor = hexToRgba(colors[idx] || c.textSubtle, 0.22);
+            ds.pointBackgroundColor = colors[idx] || c.textSubtle;
+          }
+        });
+
+        // Update scales
+        if (chart.options.scales) {
+          Object.values(chart.options.scales).forEach(scale => {
+            if (scale.grid)       scale.grid.color = c.grid;
+            if (scale.ticks)      scale.ticks.color = scale === chart.options.scales.y ? c.text : c.textMuted;
+            if (scale.border)     scale.border.color = c.axis;
+            if (scale.angleLines) scale.angleLines.color = c.grid;
+            if (scale.pointLabels) scale.pointLabels.color = c.textMuted;
+          });
+        }
+
+        // Update legend
+        if (chart.options.plugins?.legend?.labels) {
+          chart.options.plugins.legend.labels.color = c.text;
+        }
+
+        chart.update('none');
       });
     }
 
-    // ── Chart theme update on toggle ──
     themeToggle?.addEventListener('click', () => {
-      // Re-render charts with new theme colors after a small delay for transition
-      setTimeout(updateChartTheme, 200);
+      setTimeout(updateAllCharts, 200);
     });
 
     // ── Scroll reveal ──
