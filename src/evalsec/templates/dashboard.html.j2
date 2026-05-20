@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
+  <meta name="description" content="A personal benchmark testing how well LLMs triage real vulnerability findings in Kubernetes/EKS environments.">
   <meta name="theme-color" content="#ffffff">
 
   <meta property="og:title" content="evalsec — DevSecOps LLM Benchmark">
-  <meta property="og:description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
+  <meta property="og:description" content="A personal benchmark testing how well LLMs triage real vulnerability findings in Kubernetes/EKS environments.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://evalsec.farhan.ngenz.org">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="evalsec — DevSecOps LLM Benchmark">
-  <meta name="twitter:description" content="Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.">
+  <meta name="twitter:description" content="A personal benchmark testing how well LLMs triage real vulnerability findings in Kubernetes/EKS environments.">
 
   <title>evalsec — DevSecOps LLM Benchmark</title>
 
@@ -1673,32 +1673,14 @@
       background: linear-gradient(90deg, transparent, var(--border), transparent);
     }
 
-    .footer-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 1.6rem;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .footer-cell { white-space: nowrap; }
-
-    .footer-cell a { color: var(--muted-foreground); }
-    .footer-cell a:hover { color: var(--primary); }
-
-    .footer-value {
-      color: var(--foreground);
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-    }
-
     .footer-mark {
-      margin-top: 1.6rem;
       font-size: 0.68rem;
       color: var(--muted-foreground);
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
+
+    .footer-mark a:hover { color: var(--primary); }
 
     /* ─────────────────────────────────────────────
        SCROLL REVEAL
@@ -1803,7 +1785,7 @@
         <h1 class="hero-title">evalsec.</h1>
         <p class="hero-subtitle">DevSecOps LLM Benchmark</p>
         <p class="hero-desc">
-          Open-source benchmark measuring how well LLMs triage real-world vulnerability findings in Kubernetes/EKS environments.
+          A personal benchmark testing how well LLMs triage real vulnerability findings in Kubernetes/EKS environments.
         </p>
 
         <div class="hero-actions">
@@ -2139,14 +2121,7 @@
   <!-- ── Footer ── -->
   <footer>
     <div class="app-shell" style="padding-top: 0; padding-bottom: 0;">
-      <div class="footer-row">
-        <span class="footer-cell">Last updated: <span class="footer-value">{{ graded_at }}</span></span>
-        <span class="footer-cell">Source: <a href="https://github.com/frhnardi/evalsec">github.com/frhnardi/evalsec</a></span>
-        <span class="footer-cell"><a href="https://github.com/frhnardi/evalsec/blob/main/docs/methodology.md">Methodology</a></span>
-        <span class="footer-cell"><a href="https://github.com/frhnardi/evalsec/blob/main/CONTRIBUTING.md">Contribute</a></span>
-        <span class="footer-cell">License: <span class="footer-value">MIT</span></span>
-      </div>
-      <div class="footer-mark">evalsec. built by Farhan Ardi · for the DevSecOps community.</div>
+      <div class="footer-mark">evalsec · <a href="https://github.com/frhnardi" style="color:inherit;text-decoration:none;">@frhnardi</a></div>
     </div>
   </footer>
 
