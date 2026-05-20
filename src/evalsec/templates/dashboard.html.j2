@@ -134,7 +134,10 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--background);
+      /* Background is delegated to html and .site-bg so the grid pattern
+         (positioned behind body via z-index: -1) remains visible through
+         the transparent body. */
+      background: transparent;
       /* overflow-clip is cheaper than hidden — no scroll container created */
       overflow-x: clip;
     }
