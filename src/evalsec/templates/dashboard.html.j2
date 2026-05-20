@@ -326,63 +326,85 @@
       position: relative;
       border: 1px solid transparent;
       border-radius: 12px;
-      padding: 0.5rem 0.85rem;
+      padding: 0;
       background: transparent;
-      color: var(--muted-foreground);
-      font: 600 0.875rem/1 var(--font-sans);
       cursor: pointer;
-      transition: color 200ms ease, background 200ms ease, border-color 200ms ease, transform 200ms ease;
-      overflow: hidden;
+      overflow: visible;
+      perspective: 600px;
+      -webkit-perspective: 600px;
     }
 
-    /* Colored glow per tab — blue, green, orange, red */
-    .nav-tab:nth-child(1)::before {
-      background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
-    }
-    .nav-tab:nth-child(2)::before {
-      background: radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 70%);
-    }
-    .nav-tab:nth-child(3)::before {
-      background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
-    }
-    .nav-tab:nth-child(4)::before {
-      background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%);
-    }
-
-    html.dark .nav-tab:nth-child(1)::before {
-      background: radial-gradient(circle, rgba(96,165,250,0.20) 0%, transparent 70%);
-    }
-    html.dark .nav-tab:nth-child(2)::before {
-      background: radial-gradient(circle, rgba(74,222,128,0.20) 0%, transparent 70%);
-    }
-    html.dark .nav-tab:nth-child(3)::before {
-      background: radial-gradient(circle, rgba(251,146,60,0.20) 0%, transparent 70%);
-    }
-    html.dark .nav-tab:nth-child(4)::before {
-      background: radial-gradient(circle, rgba(252,129,129,0.20) 0%, transparent 70%);
+    /* ── Glow layer — scales 2× on hover (nav.md glowVariants) ── */
+    .nav-tab-glow {
+      position: absolute;
+      inset: -4px;
+      border-radius: 16px;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .nav-tab::before {
-      content: '';
+    .nav-tab:hover .nav-tab-glow {
+      opacity: 1;
+      transform: scale(2);
+    }
+
+    /* Per-tab glow colours — blue, green, orange, red (nav.md menuItems.gradient) */
+    .nav-tab:nth-child(1) .nav-tab-glow { background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%); }
+    .nav-tab:nth-child(2) .nav-tab-glow { background: radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 70%); }
+    .nav-tab:nth-child(3) .nav-tab-glow { background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%); }
+    .nav-tab:nth-child(4) .nav-tab-glow { background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%); }
+
+    html.dark .nav-tab:nth-child(1) .nav-tab-glow { background: radial-gradient(circle, rgba(96,165,250,0.22) 0%, transparent 70%); }
+    html.dark .nav-tab:nth-child(2) .nav-tab-glow { background: radial-gradient(circle, rgba(74,222,128,0.22) 0%, transparent 70%); }
+    html.dark .nav-tab:nth-child(3) .nav-tab-glow { background: radial-gradient(circle, rgba(251,146,60,0.22) 0%, transparent 70%); }
+    html.dark .nav-tab:nth-child(4) .nav-tab-glow { background: radial-gradient(circle, rgba(252,129,129,0.22) 0%, transparent 70%); }
+
+    /* ── 3D flip faces (nav.md itemVariants / backVariants) ── */
+    .nav-tab-face {
+      display: block;
+      padding: 0.5rem 0.85rem;
+      border-radius: 12px;
+      font: 600 0.875rem/1 var(--font-sans);
+      color: var(--muted-foreground);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  color 0.2s ease;
+    }
+
+    .nav-tab-front {
+      transform: rotateX(0deg);
+      transform-origin: center bottom;
+    }
+
+    .nav-tab-back {
       position: absolute;
       inset: 0;
-      border-radius: inherit;
-      opacity: 0;
-      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s ease;
-      transform: scale(0.85);
-      pointer-events: none;
+      padding: 0.5rem 0.85rem;
+      transform: rotateX(90deg);
+      transform-origin: center top;
+      color: var(--foreground);
     }
 
-    .nav-tab:hover::before {
-      opacity: 1;
-      transform: scale(1);
+    .nav-tab:hover .nav-tab-front {
+      transform: rotateX(-90deg);
+    }
+
+    .nav-tab:hover .nav-tab-back {
+      transform: rotateX(0deg);
     }
 
     .nav-tab:hover {
       color: var(--foreground);
-      transform: translateY(-1px);
     }
 
+    /* ── Active (selected) tab — solid bg, no glow, no flip ── */
     .nav-tab.is-active {
       color: var(--primary-foreground);
       background: var(--primary);
@@ -390,7 +412,15 @@
       box-shadow: 0 16px 36px -18px var(--shadow-primary);
     }
 
-    .nav-tab.is-active::before {
+    .nav-tab.is-active .nav-tab-glow {
+      display: none;
+    }
+
+    .nav-tab.is-active .nav-tab-face {
+      color: var(--primary-foreground);
+    }
+
+    .nav-tab.is-active .nav-tab-back {
       display: none;
     }
 
@@ -1642,15 +1672,31 @@
 
   </div>
 
-  <!-- ── Navbar (Glow Menu) ── -->
+  <!-- ── Navbar (Glow Menu — adapted from nav.md) ── -->
   <header class="navbar">
     <a class="brand" href="#">evalsec.</a>
 
     <nav class="nav-tabs" aria-label="Primary navigation">
-      <button class="nav-tab is-active" data-tab="overview">Overview</button>
-      <button class="nav-tab" data-tab="leaderboard">Leaderboard</button>
-      <button class="nav-tab" data-tab="models">Models</button>
-      <button class="nav-tab" data-tab="methodology">Methodology</button>
+      <button class="nav-tab is-active" data-tab="overview">
+        <span class="nav-tab-glow"></span>
+        <span class="nav-tab-face nav-tab-front">Overview</span>
+        <span class="nav-tab-face nav-tab-back">Overview</span>
+      </button>
+      <button class="nav-tab" data-tab="leaderboard">
+        <span class="nav-tab-glow"></span>
+        <span class="nav-tab-face nav-tab-front">Leaderboard</span>
+        <span class="nav-tab-face nav-tab-back">Leaderboard</span>
+      </button>
+      <button class="nav-tab" data-tab="models">
+        <span class="nav-tab-glow"></span>
+        <span class="nav-tab-face nav-tab-front">Models</span>
+        <span class="nav-tab-face nav-tab-back">Models</span>
+      </button>
+      <button class="nav-tab" data-tab="methodology">
+        <span class="nav-tab-glow"></span>
+        <span class="nav-tab-face nav-tab-front">Methodology</span>
+        <span class="nav-tab-face nav-tab-back">Methodology</span>
+      </button>
     </nav>
 
     <button class="nav-theme-toggle" id="themeToggle" aria-label="Toggle theme">
