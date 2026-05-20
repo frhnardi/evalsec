@@ -844,7 +844,10 @@ class Grader:
         for idx, resp in enumerate(responses_raw, start=1):
             case_id = resp.get("case_id", "?")
             model_id = resp.get("model_id", "?")
-            response_text = resp.get("response", {}).get("text", "")
+            response_data = resp.get("response", {})
+            response_text = response_data.get("text", "")
+            finish_reason = response_data.get("finish_reason", "")
+            response_error = response_data.get("error") or ""
 
             case = cases_map.get(case_id)
             if case is None:
@@ -931,6 +934,8 @@ class Grader:
                             "verdict_mismatches": validation.verdict_mismatches,
                             "priority_mismatches": validation.priority_mismatches,
                             "parse_error": validation.parse_error,
+                            "finish_reason": finish_reason,
+                            "error": response_error,
                         },
                         # Legacy fields
                         "rubric_scores": rubric_scores,

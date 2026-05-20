@@ -1122,6 +1122,102 @@
       color: rgba(251, 191, 36, 0.75);
     }
 
+    /* ── Error badge (API errors — red) ── */
+    .err-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      margin-left: 0.55rem;
+      white-space: nowrap;
+      vertical-align: middle;
+      background: rgba(239, 68, 68, 0.10);
+      border: 1px solid rgba(239, 68, 68, 0.30);
+      color: #DC2626;
+    }
+
+    html.dark .err-badge {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #FCA5A5;
+    }
+
+    .err-badge::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+    }
+
+    .err-note {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.4;
+      color: rgba(220, 38, 38, 0.85);
+      margin-top: 0.5rem;
+      max-width: 40ch;
+    }
+
+    html.dark .err-note {
+      color: rgba(252, 165, 165, 0.75);
+    }
+
+    /* ── Skip badge (context overflow — gray) ── */
+    .skip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      margin-left: 0.55rem;
+      white-space: nowrap;
+      vertical-align: middle;
+      background: rgba(156, 163, 175, 0.10);
+      border: 1px solid rgba(156, 163, 175, 0.30);
+      color: #6B7280;
+    }
+
+    html.dark .skip-badge {
+      background: rgba(156, 163, 175, 0.08);
+      border: 1px solid rgba(156, 163, 175, 0.25);
+      color: #D1D5DB;
+    }
+
+    .skip-badge::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+    }
+
+    .skip-note {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.4;
+      color: rgba(107, 114, 128, 0.85);
+      margin-top: 0.5rem;
+      max-width: 40ch;
+    }
+
+    html.dark .skip-note {
+      color: rgba(209, 213, 219, 0.75);
+    }
+
     th.has-tooltip {
       cursor: help;
       text-decoration: underline dotted;
@@ -1923,13 +2019,24 @@
               </thead>
               <tbody>
                 {% for entry in llm_entries %}
-                {% set ns = namespace(truncated=false) %}
+                {# Detect response issues per-model using finish_reason (or parse_error fallback) #}
+                {% set ns = namespace(truncated=false, api_error=false, skipped=false) %}
                 {% for d in (entry.details or []) %}
-                  {% if d.score is mapping and d.score.get('validation', {}).get('parse_error') %}
-                    {% set ns.truncated = true %}
+                  {% if d.score is mapping %}
+                    {% set val = d.score.get('validation', {}) %}
+                    {% set fr = val.get('finish_reason', '') %}
+                    {% if fr == 'length' or (not fr and val.get('parse_error')) %}
+                      {% set ns.truncated = true %}
+                    {% elif fr == 'error' %}
+                      {% set ns.api_error = true %}
+                    {% elif fr == 'context_overflow' %}
+                      {% set ns.skipped = true %}
+                    {% endif %}
                   {% endif %}
                 {% endfor %}
                 {% set is_truncated = ns.truncated %}
+                {% set has_api_errors = ns.api_error %}
+                {% set has_skipped = ns.skipped %}
                 {% set reach = entry.dimension_scores.get("reachability_reasoning", 0) %}
                 {% set prio  = entry.dimension_scores.get("prioritization", 0) %}
                 {% set act   = entry.dimension_scores.get("actionability", 0) %}
@@ -1941,9 +2048,17 @@
                   <td class="model-name-cell">
                     <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
                     {% if is_truncated %}<span class="trunc-badge" title="Response exceeded max_tokens — JSON truncated. Score reflects partial output only.">Truncated</span>{% endif %}
+                    {% if has_api_errors %}<span class="err-badge" title="API error — response could not be retrieved.">Error</span>{% endif %}
+                    {% if has_skipped %}<span class="skip-badge" title="Context window overflow — case skipped.">Skipped</span>{% endif %}
                     <span class="model-id-mono">{{ entry.model_id }}</span>
                     {% if is_truncated %}
                     <div class="trunc-note">Response exceeded max_tokens — JSON truncated. Score reflects partial output only.</div>
+                    {% endif %}
+                    {% if has_api_errors %}
+                    <div class="err-note">API error — response could not be retrieved. Score is 0.</div>
+                    {% endif %}
+                    {% if has_skipped %}
+                    <div class="skip-note">Context window overflow — case was skipped. Score is 0.</div>
                     {% endif %}
                   </td>
                   <td class="score-cell">
@@ -2507,21 +2622,64 @@
       const nameEl = card.querySelector('.model-name');
       if (nameEl) nameEl.textContent = displayName(entry.model_id);
 
-      const truncated = (entry.details || []).some(d =>
-        d && d.score && d.score.validation && d.score.validation.parse_error
-      );
-      if (truncated && nameEl) {
-        const badge = document.createElement('span');
-        badge.className = 'trunc-badge';
-        badge.textContent = 'Truncated';
-        badge.title = 'Response exceeded max_tokens — JSON truncated.';
-        nameEl.appendChild(badge);
+      // Categorise per-detail status using finish_reason (or parse_error fallback)
+      const statusByDetail = (entry.details || []).map(d => {
+        if (!d || !d.score || !d.score.validation) return null;
+        const v = d.score.validation;
+        const fr = v.finish_reason || '';
+        if (fr === 'length' || (!fr && v.parse_error)) return 'truncated';
+        if (fr === 'error') return 'error';
+        if (fr === 'context_overflow') return 'skipped';
+        return null;
+      });
+      const hasTruncated = statusByDetail.includes('truncated');
+      const hasError = statusByDetail.includes('error');
+      const hasSkipped = statusByDetail.includes('skipped');
 
-        const note = document.createElement('div');
-        note.className = 'trunc-note';
-        note.textContent = 'Response exceeded max_tokens — JSON truncated. Score reflects partial output only.';
-        const scoreEl = card.querySelector('.card-score');
-        if (scoreEl) scoreEl.appendChild(note);
+      if (nameEl) {
+        if (hasTruncated) {
+          const badge = document.createElement('span');
+          badge.className = 'trunc-badge';
+          badge.textContent = 'Truncated';
+          badge.title = 'Response exceeded max_tokens — JSON truncated.';
+          nameEl.appendChild(badge);
+        }
+        if (hasError) {
+          const badge = document.createElement('span');
+          badge.className = 'err-badge';
+          badge.textContent = 'Error';
+          badge.title = 'API error — response could not be retrieved.';
+          nameEl.appendChild(badge);
+        }
+        if (hasSkipped) {
+          const badge = document.createElement('span');
+          badge.className = 'skip-badge';
+          badge.textContent = 'Skipped';
+          badge.title = 'Context window overflow — case skipped.';
+          nameEl.appendChild(badge);
+        }
+      }
+
+      const scoreEl = card.querySelector('.card-score');
+      if (scoreEl) {
+        if (hasTruncated) {
+          const note = document.createElement('div');
+          note.className = 'trunc-note';
+          note.textContent = 'Response exceeded max_tokens — JSON truncated. Score reflects partial output only.';
+          scoreEl.appendChild(note);
+        }
+        if (hasError) {
+          const note = document.createElement('div');
+          note.className = 'err-note';
+          note.textContent = 'API error — response could not be retrieved. Score is 0.';
+          scoreEl.appendChild(note);
+        }
+        if (hasSkipped) {
+          const note = document.createElement('div');
+          note.className = 'skip-note';
+          note.textContent = 'Context window overflow — case was skipped. Score is 0.';
+          scoreEl.appendChild(note);
+        }
       }
 
       card.querySelectorAll('.card-dims tbody tr').forEach(tr => {
