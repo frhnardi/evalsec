@@ -32,36 +32,45 @@
     :root {
       color-scheme: light;
 
-      --background: #ffffff;
-      --foreground: #0f172a;
-      --muted-foreground: #64748b;
-      --border: rgba(15, 23, 42, 0.12);
+      /* Surface — warm cream */
+      --background: #DFD0B8;
+      --foreground: #222831;
+      --muted-foreground: #6B6357;
+      --border: rgba(34, 40, 49, 0.10);
 
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --primary-border-hover: #6366f1;
-      --primary-foreground: #ffffff;
+      /* Primary — warm taupe (same accent in both modes) */
+      --primary: #948979;
+      --primary-hover: #7A7065;
+      --primary-border-hover: #B0A595;
+      --primary-foreground: #FFFFFF;
 
-      --secondary: #f1f5f9;
-      --secondary-hover: #6d28d9;
-      --secondary-border-hover: #8b5cf6;
-      --secondary-foreground: #0f172a;
+      /* Secondary — neutral surface */
+      --secondary: rgba(34, 40, 49, 0.06);
+      --secondary-hover: #393E46;
+      --secondary-border-hover: #948979;
+      --secondary-foreground: #222831;
 
-      --card: rgba(255, 255, 255, 0.72);
-      --card-strong: rgba(255, 255, 255, 0.88);
-      --grid: rgba(100, 116, 139, 0.75);
+      /* Cards — warm cream, lighter than bg */
+      --card: rgba(255, 251, 244, 0.82);
+      --card-strong: rgba(255, 251, 244, 0.95);
 
-      --orb-orange: rgba(249, 115, 22, 0.40);
-      --orb-primary: rgba(79, 70, 229, 0.30);
-      --orb-blue: rgba(59, 130, 246, 0.40);
+      /* Grid */
+      --grid: rgba(57, 62, 70, 0.55);
 
-      --shadow-primary: rgba(67, 56, 202, 0.60);
-      --shadow-secondary: rgba(109, 40, 217, 0.60);
+      /* Orbs — warm/neutral tones, no blue/pink */
+      --orb-orange: rgba(148, 137, 121, 0.35);
+      --orb-primary: rgba(57, 62, 70, 0.18);
+      --orb-blue: rgba(223, 208, 184, 0.55);
 
+      /* Shadows — neutral */
+      --shadow-primary: rgba(34, 40, 49, 0.35);
+      --shadow-secondary: rgba(57, 62, 70, 0.30);
+
+      /* Semantic status colors — preserved (used by charts/badges) */
       --success: #22C55E;
       --warning: #f59e0b;
       --danger:  #EF4444;
-      --info:    #3b82f6;
+      --info:    #948979;
 
       --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
@@ -78,31 +87,39 @@
     html.dark {
       color-scheme: dark;
 
-      --background: #020617;
-      --foreground: #f8fafc;
-      --muted-foreground: #94a3b8;
-      --border: rgba(248, 250, 252, 0.12);
+      /* Surface — dark slate */
+      --background: #222831;
+      --foreground: #DFD0B8;
+      --muted-foreground: #948979;
+      --border: rgba(223, 208, 184, 0.12);
 
-      --primary: #6366f1;
-      --primary-hover: #4338ca;
-      --primary-border-hover: #6366f1;
-      --primary-foreground: #ffffff;
+      /* Primary — same taupe */
+      --primary: #948979;
+      --primary-hover: #B0A595;
+      --primary-border-hover: #DFD0B8;
+      --primary-foreground: #222831;
 
-      --secondary: rgba(148, 163, 184, 0.12);
-      --secondary-hover: #6d28d9;
-      --secondary-border-hover: #8b5cf6;
-      --secondary-foreground: #f8fafc;
+      /* Secondary */
+      --secondary: rgba(223, 208, 184, 0.08);
+      --secondary-hover: #393E46;
+      --secondary-border-hover: #948979;
+      --secondary-foreground: #DFD0B8;
 
-      --card: rgba(15, 23, 42, 0.68);
-      --card-strong: rgba(15, 23, 42, 0.86);
-      --grid: rgba(148, 163, 184, 0.70);
+      /* Cards */
+      --card: rgba(57, 62, 70, 0.65);
+      --card-strong: rgba(57, 62, 70, 0.88);
 
-      --orb-orange: rgba(234, 88, 12, 0.20);
-      --orb-primary: rgba(99, 102, 241, 0.24);
-      --orb-blue: rgba(37, 99, 235, 0.20);
+      /* Grid */
+      --grid: rgba(223, 208, 184, 0.65);
 
-      --shadow-primary: rgba(67, 56, 202, 0.60);
-      --shadow-secondary: rgba(109, 40, 217, 0.60);
+      /* Orbs — warm tones */
+      --orb-orange: rgba(148, 137, 121, 0.22);
+      --orb-primary: rgba(223, 208, 184, 0.10);
+      --orb-blue: rgba(57, 62, 70, 0.40);
+
+      /* Shadows */
+      --shadow-primary: rgba(0, 0, 0, 0.6);
+      --shadow-secondary: rgba(0, 0, 0, 0.5);
     }
 
     /* ─────────────────────────────────────────────
@@ -110,6 +127,7 @@
        ───────────────────────────────────────────── */
     html {
       background: var(--background);
+      scroll-behavior: smooth;
     }
 
     html, body {
@@ -118,6 +136,7 @@
       font-feature-settings: "ss01", "cv11";
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
       min-height: 100%;
     }
@@ -126,7 +145,8 @@
       margin: 0;
       min-height: 100vh;
       background: var(--background);
-      overflow-x: hidden;
+      /* overflow-clip is cheaper than hidden — no scroll container created */
+      overflow-x: clip;
     }
 
     a {
@@ -137,24 +157,24 @@
     a:hover { color: var(--primary-hover); }
 
     ::selection {
-      background: rgba(79, 70, 229, 0.20);
+      background: rgba(148, 137, 121, 0.30);
       color: var(--foreground);
     }
     ::-moz-selection {
-      background: rgba(79, 70, 229, 0.20);
+      background: rgba(148, 137, 121, 0.30);
       color: var(--foreground);
     }
 
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb {
-      background: rgba(79, 70, 229, 0.18);
+      background: rgba(148, 137, 121, 0.35);
       border-radius: 999px;
       border: 2px solid transparent;
       background-clip: padding-box;
     }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(79, 70, 229, 0.35); background-clip: padding-box; }
-    html { scrollbar-color: rgba(79, 70, 229, 0.18) transparent; scrollbar-width: thin; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 137, 121, 0.55); background-clip: padding-box; }
+    html { scrollbar-color: rgba(148, 137, 121, 0.35) transparent; scrollbar-width: thin; }
 
     :focus { outline: none; }
     :focus-visible {
@@ -177,61 +197,83 @@
        ───────────────────────────────────────────── */
     .site-bg {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       z-index: -1;
       overflow: hidden;
       background: var(--background);
+      pointer-events: none;
+      /* Force a GPU layer so background never repaints during scroll */
+      transform: translateZ(0);
+      will-change: transform;
     }
 
     .grid {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       color: var(--grid);
       pointer-events: none;
+      display: block;
     }
 
     .grid-base {
-      opacity: 0.05;
+      opacity: 0.06;
     }
 
     .grid-spotlight {
-      opacity: 0.40;
-      mask-image: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black, transparent);
-      -webkit-mask-image: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black, transparent);
+      opacity: 0.45;
+      mask-image: radial-gradient(
+        300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        black,
+        transparent 80%
+      );
+      -webkit-mask-image: radial-gradient(
+        300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        black,
+        transparent 80%
+      );
+      will-change: mask-image;
     }
 
     .orb {
       position: absolute;
       border-radius: 999px;
       pointer-events: none;
-      filter: blur(120px);
+      /* Hardware accelerate; don't recompose every frame */
+      will-change: transform;
+      transform: translateZ(0);
     }
 
     .orb-orange {
-      right: -20%;
-      top: -20%;
-      width: 40vw;
-      height: 40vw;
+      right: -15%;
+      top: -25%;
+      width: min(60vw, 900px);
+      height: min(60vw, 900px);
       background: var(--orb-orange);
+      filter: blur(140px);
     }
 
     .orb-primary {
-      right: 10%;
-      top: -10%;
-      width: 20vw;
-      height: 20vw;
+      right: 5%;
+      top: -15%;
+      width: min(30vw, 500px);
+      height: min(30vw, 500px);
       background: var(--orb-primary);
-      filter: blur(100px);
+      filter: blur(110px);
     }
 
     .orb-blue {
-      left: -10%;
-      bottom: -20%;
-      width: 40vw;
-      height: 40vw;
+      left: -15%;
+      bottom: -25%;
+      width: min(60vw, 900px);
+      height: min(60vw, 900px);
       background: var(--orb-blue);
+      filter: blur(140px);
     }
 
     /* ─────────────────────────────────────────────
@@ -273,7 +315,7 @@
     }
 
     .moon-icon {
-      color: #4f46e5;
+      color: #948979;
       opacity: 1;
     }
 
@@ -381,17 +423,20 @@
        ───────────────────────────────────────────── */
     .tab-panel {
       display: none;
-      animation: panelIn 220ms ease both;
+      opacity: 0;
     }
 
+    /* Animation lives on .is-active so it actually replays on each
+       tab switch instead of running once against a display:none node. */
     .tab-panel.is-active {
       display: block;
+      animation: panelIn 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @keyframes panelIn {
       from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(12px);
       }
       to {
         opacity: 1;
@@ -555,9 +600,9 @@
     }
 
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.50); }
-      70%  { box-shadow: 0 0 0 9px rgba(79, 70, 229, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+      0%   { box-shadow: 0 0 0 0 rgba(148, 137, 121, 0.50); }
+      70%  { box-shadow: 0 0 0 9px rgba(148, 137, 121, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(148, 137, 121, 0); }
     }
 
     .hero-actions {
@@ -729,7 +774,7 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    tbody tr:hover { background: rgba(79, 70, 229, 0.04); }
+    tbody tr:hover { background: rgba(148, 137, 121, 0.04); }
 
     .rank-cell { width: 4rem; }
 
@@ -753,19 +798,19 @@
       color: #ffffff;
       background: var(--primary);
       border-color: var(--primary-border-hover);
-      box-shadow: 0 0 16px -2px rgba(79, 70, 229, 0.35);
+      box-shadow: 0 0 16px -2px rgba(148, 137, 121, 0.35);
     }
 
     .rank-pill.rank-2 {
       color: var(--foreground);
-      border-color: rgba(99, 102, 241, 0.30);
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(99, 102, 241, 0.03) 100%);
+      border-color: rgba(176, 165, 149, 0.30);
+      background: linear-gradient(135deg, rgba(176, 165, 149, 0.12) 0%, rgba(176, 165, 149, 0.03) 100%);
     }
 
     .rank-pill.rank-3 {
       color: var(--primary);
-      border-color: rgba(99, 102, 241, 0.30);
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.10) 0%, rgba(99, 102, 241, 0.03) 100%);
+      border-color: rgba(176, 165, 149, 0.30);
+      background: linear-gradient(135deg, rgba(176, 165, 149, 0.10) 0%, rgba(176, 165, 149, 0.03) 100%);
     }
 
     .model-name-cell {
@@ -814,7 +859,7 @@
       align-items: center;
       gap: 0.42rem;
       padding: 0.22rem 0.65rem 0.22rem 0.55rem;
-      background: rgba(79, 70, 229, 0.10);
+      background: rgba(148, 137, 121, 0.10);
       color: var(--primary);
       font-family: var(--font-mono);
       font-size: 0.64rem;
@@ -823,7 +868,7 @@
       text-transform: uppercase;
       border-radius: 999px;
       margin-left: 0.55rem;
-      border: 1px solid rgba(79, 70, 229, 0.30);
+      border: 1px solid rgba(148, 137, 121, 0.30);
       white-space: nowrap;
       vertical-align: middle;
     }
@@ -958,8 +1003,8 @@
       display: flex;
       align-items: flex-start;
       gap: 1rem;
-      background: rgba(79, 70, 229, 0.08);
-      border: 1px solid rgba(79, 70, 229, 0.25);
+      background: rgba(148, 137, 121, 0.08);
+      border: 1px solid rgba(148, 137, 121, 0.25);
       border-radius: var(--radius-lg);
       padding: 1.1rem 1.35rem;
       margin-bottom: 1.5rem;
@@ -970,9 +1015,9 @@
     .disclaimer-icon {
       width: 30px; height: 30px;
       border-radius: 50%;
-      background: rgba(79, 70, 229, 0.16);
+      background: rgba(148, 137, 121, 0.16);
       color: var(--primary);
-      border: 1px solid rgba(79, 70, 229, 0.35);
+      border: 1px solid rgba(148, 137, 121, 0.35);
       font-family: var(--font-mono);
       font-size: 0.92rem;
       font-weight: 600;
@@ -1072,11 +1117,11 @@
     }
 
     .model-card--baseline {
-      border-color: rgba(59, 130, 246, 0.25);
+      border-color: rgba(148, 137, 121, 0.25);
     }
 
     .model-card--baseline:hover {
-      border-color: rgba(59, 130, 246, 0.50);
+      border-color: rgba(148, 137, 121, 0.50);
     }
 
     .card-header {
@@ -1112,15 +1157,15 @@
     }
 
     .type-llm {
-      background: rgba(79, 70, 229, 0.10);
+      background: rgba(148, 137, 121, 0.10);
       color: var(--primary);
-      border: 1px solid rgba(79, 70, 229, 0.30);
+      border: 1px solid rgba(148, 137, 121, 0.30);
     }
 
     .type-baseline {
-      background: rgba(59, 130, 246, 0.10);
-      color: #3b82f6;
-      border: 1px solid rgba(59, 130, 246, 0.30);
+      background: rgba(176, 137, 104, 0.12);
+      color: #B08968;
+      border: 1px solid rgba(176, 137, 104, 0.32);
     }
 
     .card-score { text-align: center; margin-bottom: 1.4rem; }
@@ -1455,7 +1500,8 @@
 
   <!-- ── Site Background: Infinite SVG Grid + Spotlight + Orbs ── -->
   <div class="site-bg" aria-hidden="true">
-    <svg class="grid grid-base" aria-hidden="true">
+    <svg class="grid grid-base" aria-hidden="true"
+         width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
       <defs>
         <pattern id="gridPatternBase" width="40" height="40" patternUnits="userSpaceOnUse" x="0" y="0">
           <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1"></path>
@@ -1464,7 +1510,8 @@
       <rect width="100%" height="100%" fill="url(#gridPatternBase)"></rect>
     </svg>
 
-    <svg class="grid grid-spotlight" aria-hidden="true">
+    <svg class="grid grid-spotlight" aria-hidden="true"
+         width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
       <defs>
         <pattern id="gridPatternSpotlight" width="40" height="40" patternUnits="userSpaceOnUse" x="0" y="0">
           <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1"></path>
@@ -1868,7 +1915,7 @@
     function updateThemeMeta() {
       const meta = document.querySelector('meta[name="theme-color"]');
       const isDark = document.documentElement.classList.contains('dark');
-      meta?.setAttribute('content', isDark ? '#020617' : '#ffffff');
+      meta?.setAttribute('content', isDark ? '#222831' : '#ffffff');
     }
 
     updateThemeMeta();
@@ -1884,16 +1931,26 @@
     const panels = document.querySelectorAll('.tab-panel');
 
     function activateTab(tabName) {
-      navTabs.forEach((tab) => {
-        tab.classList.toggle('is-active', tab.dataset.tab === tabName);
-      });
+      // Batch the DOM read first…
+      const targetPanel = document.getElementById(tabName);
+      if (!targetPanel) return;
 
-      panels.forEach((panel) => {
-        panel.classList.toggle('is-active', panel.id === tabName);
-      });
+      // …then batch all writes inside one rAF to avoid layout thrashing.
+      requestAnimationFrame(() => {
+        navTabs.forEach((tab) => {
+          tab.classList.toggle('is-active', tab.dataset.tab === tabName);
+        });
+        panels.forEach((panel) => {
+          panel.classList.toggle('is-active', panel.id === tabName);
+        });
 
-      history.replaceState(null, '', '#' + tabName);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        history.replaceState(null, '', '#' + tabName);
+
+        // Only scroll if the user isn't already near the top.
+        if (window.scrollY > 50) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
     }
 
     navTabs.forEach((tab) => {
@@ -1933,39 +1990,71 @@
     });
 
     // ── Infinite Grid Animation ──
+    const root = document.documentElement;
     const basePattern = document.getElementById('gridPatternBase');
     const spotlightPattern = document.getElementById('gridPatternSpotlight');
 
     let gridSize = 40;
     let offsetX = 0;
     let offsetY = 0;
-    const speedX = 0.5;
-    const speedY = 0.5;
+    const speedX = 0.4;  // slightly slower — reads as elegant, not busy
+    const speedY = 0.4;
+    let rafId = null;
+    let isVisible = true;
 
     function animateGrid() {
+      // Keep the loop alive but skip work while the tab is backgrounded.
+      if (!isVisible) {
+        rafId = requestAnimationFrame(animateGrid);
+        return;
+      }
+
       offsetX = (offsetX + speedX) % gridSize;
       offsetY = (offsetY + speedY) % gridSize;
 
       if (basePattern) {
-        basePattern.setAttribute('x', String(offsetX));
-        basePattern.setAttribute('y', String(offsetY));
+        basePattern.setAttribute('x', offsetX.toFixed(2));
+        basePattern.setAttribute('y', offsetY.toFixed(2));
       }
       if (spotlightPattern) {
-        spotlightPattern.setAttribute('x', String(offsetX));
-        spotlightPattern.setAttribute('y', String(offsetY));
+        spotlightPattern.setAttribute('x', offsetX.toFixed(2));
+        spotlightPattern.setAttribute('y', offsetY.toFixed(2));
       }
 
-      requestAnimationFrame(animateGrid);
+      rafId = requestAnimationFrame(animateGrid);
     }
 
-    animateGrid();
-
-    // ── Mouse Spotlight ──
-    const root = document.documentElement;
-    window.addEventListener('pointermove', (event) => {
-      root.style.setProperty('--mouse-x', event.clientX + 'px');
-      root.style.setProperty('--mouse-y', event.clientY + 'px');
+    // Pause grid work when the tab is hidden — cuts idle CPU to ~0.
+    document.addEventListener('visibilitychange', () => {
+      isVisible = !document.hidden;
     });
+
+    // Respect prefers-reduced-motion — no grid drift at all.
+    const gridReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!gridReducedMotion.matches) {
+      animateGrid();
+    }
+
+    // ── Mouse Spotlight — rAF-throttled ──
+    // pointermove fires 100+×/s; without throttling each fire triggers a
+    // CSS recalc on the spotlight mask → main-thread jank during scroll.
+    let mouseMoveScheduled = false;
+    let pendingMouseX = 0;
+    let pendingMouseY = 0;
+
+    window.addEventListener('pointermove', (event) => {
+      pendingMouseX = event.clientX;
+      pendingMouseY = event.clientY;
+
+      if (!mouseMoveScheduled) {
+        mouseMoveScheduled = true;
+        requestAnimationFrame(() => {
+          root.style.setProperty('--mouse-x', pendingMouseX + 'px');
+          root.style.setProperty('--mouse-y', pendingMouseY + 'px');
+          mouseMoveScheduled = false;
+        });
+      }
+    }, { passive: true });
 
     // ── Display Name Maps ──
     const MODEL_DISPLAY = {
@@ -2018,8 +2107,8 @@
 
     let chartLoaded = false;
     try {
-      Chart.defaults.color       = 'rgba(15, 23, 42, 0.75)';
-      Chart.defaults.borderColor = 'rgba(15, 23, 42, 0.06)';
+      Chart.defaults.color       = 'rgba(34, 40, 49, 0.75)';
+      Chart.defaults.borderColor = 'rgba(34, 40, 49, 0.06)';
       Chart.defaults.font.family = FONT_SANS;
       Chart.defaults.font.size   = 12;
       chartLoaded = true;
@@ -2035,24 +2124,26 @@
     function updateChartTheme() {
       if (!chartLoaded) return;
       const isDark = document.documentElement.classList.contains('dark');
-      Chart.defaults.color       = isDark ? 'rgba(248, 250, 252, 0.75)' : 'rgba(15, 23, 42, 0.75)';
-      Chart.defaults.borderColor = isDark ? 'rgba(248, 250, 252, 0.06)' : 'rgba(15, 23, 42, 0.06)';
+      Chart.defaults.color       = isDark ? 'rgba(223, 208, 184, 0.75)' : 'rgba(34, 40, 49, 0.75)';
+      Chart.defaults.borderColor = isDark ? 'rgba(223, 208, 184, 0.06)' : 'rgba(34, 40, 49, 0.06)';
     }
     updateChartTheme();
 
-    // ── Palette — Indigo / Violet / Blue ──
-    const INDIGO     = '#4f46e5';
-    const INDIGO_HI  = '#6366f1';
-    const INDIGO_LO  = '#4338ca';
-    const VIOLET     = '#8b5cf6';
-    const VIOLET_HI  = '#a78bfa';
-    const BLUE       = '#3b82f6';
-    const BLUE_HI    = '#60a5fa';
+    // ── Palette — Stone / Taupe earth tones ──
+    const TAUPE      = '#948979';   // primary brand taupe
+    const TAUPE_HI   = '#B0A595';   // light taupe
+    const TAUPE_LO   = '#7A7065';   // deep taupe
+    const CLAY       = '#B08968';   // warm terracotta earth — series accent
+    const CLAY_LO    = '#946D52';   // deep clay
+    const SAGE       = '#8A9A7B';   // muted earthy green — series accent
+    const STONE      = '#5A6169';   // cool stone — series accent
+    const CREAM      = '#DFD0B8';   // champagne highlight
     const WHITE_L    = '#ffffff';
-    const WHITE_D    = '#f8fafc';
+    const WHITE_D    = '#DFD0B8';
 
-    // Cycled palette for multi-series charts
-    const SERIES_PALETTE = [INDIGO, VIOLET, BLUE, INDIGO_HI, VIOLET_HI, BLUE_HI];
+    // Cycled palette for multi-series charts — earth tones spaced for
+    // contrast on both the cream (light) and slate (dark) backgrounds.
+    const SERIES_PALETTE = [TAUPE, CLAY, SAGE, TAUPE_HI, STONE, CREAM];
 
     function paletteFor(n) {
       return Array.from({ length: n }, (_, i) => SERIES_PALETTE[i % SERIES_PALETTE.length]);
@@ -2088,19 +2179,19 @@
       };
     }
 
-    const indigoGlow = glowPlugin('indigoGlow', 'rgba(79, 70, 229, 0.30)', 16);
-    const blueGlow   = glowPlugin('blueGlow',   'rgba(59, 130, 246, 0.25)', 14);
+    const taupeGlow = glowPlugin('taupeGlow', 'rgba(148, 137, 121, 0.34)', 16);
+    const clayGlow  = glowPlugin('clayGlow',  'rgba(176, 137, 104, 0.30)', 14);
 
-    // Indigo edge highlight plugin
-    function indigoEdgePlugin() {
+    // Taupe edge highlight plugin
+    function edgePlugin() {
       return {
-        id: 'indigoEdge',
+        id: 'taupeEdge',
         afterDatasetDraw(chart) {
           const ctx = chart.ctx;
           const meta = chart.getDatasetMeta(0);
           if (!meta || !meta.data) return;
           ctx.save();
-          ctx.strokeStyle = 'rgba(79, 70, 229, 0.40)';
+          ctx.strokeStyle = 'rgba(148, 137, 121, 0.45)';
           ctx.lineWidth = 1;
           ctx.beginPath();
           meta.data.forEach(bar => {
@@ -2275,11 +2366,11 @@
             data: llmEntries.map(e => e.avg_score),
             backgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, INDIGO, INDIGO_HI);
+              return makeBarGradient(chart.ctx, chart.chartArea, TAUPE_LO, TAUPE_HI);
             },
             hoverBackgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, INDIGO_HI, VIOLET);
+              return makeBarGradient(chart.ctx, chart.chartArea, TAUPE, CLAY);
             },
             borderRadius: 6,
             borderSkipped: false,
@@ -2297,10 +2388,10 @@
             legend: { display: false },
             tooltip: {
               backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderColor: 'rgba(79, 70, 229, 0.25)',
+              borderColor: 'rgba(148, 137, 121, 0.25)',
               borderWidth: 1,
-              titleColor: '#0f172a',
-              bodyColor: '#64748b',
+              titleColor: '#222831',
+              bodyColor: '#6B6357',
               padding: 10,
               cornerRadius: 8,
               titleFont: { family: FONT_SANS, weight: '500' },
@@ -2311,36 +2402,36 @@
             x: {
               min: 0, max: 100,
               grid: {
-                color: 'rgba(15, 23, 42, 0.06)',
+                color: 'rgba(34, 40, 49, 0.06)',
                 borderDash: [4, 4],
                 drawTicks: false,
               },
-              ticks: { color: 'rgba(15, 23, 42, 0.40)', font: { family: FONT_MONO, size: 10 } },
+              ticks: { color: 'rgba(34, 40, 49, 0.40)', font: { family: FONT_MONO, size: 10 } },
               border: { display: false },
             },
             y: {
               grid: { display: false },
               ticks: {
-                color: 'rgba(15, 23, 42, 0.85)',
+                color: 'rgba(34, 40, 49, 0.85)',
                 font: { family: FONT_SANS, weight: '500', size: 12 },
               },
               border: { display: false },
             }
           }
         },
-        plugins: [indigoGlow, indigoEdgePlugin()],
+        plugins: [taupeGlow, edgePlugin()],
       });
     }
 
     // ── Model color map ──
     function modelColor(modelId, index) {
       const map = {
-        "deepseek_v4_pro":  INDIGO,
-        "claude_sonnet_46": BLUE,
-        "kimi_k2_thinking": VIOLET,
-        "qwen_3_5":         INDIGO_HI,
+        "deepseek_v4_pro":  TAUPE,
+        "claude_sonnet_46": CLAY,
+        "kimi_k2_thinking": SAGE,
+        "qwen_3_5":         TAUPE_HI,
       };
-      return map[modelId] || (index % 2 === 0 ? INDIGO : VIOLET);
+      return map[modelId] || (index % 2 === 0 ? TAUPE : CLAY);
     }
 
     // ── Radar Chart ──
@@ -2379,22 +2470,22 @@
               ticks: {
                 stepSize: 25,
                 backdropColor: 'transparent',
-                color: 'rgba(15, 23, 42, 0.30)',
+                color: 'rgba(34, 40, 49, 0.30)',
                 font: { family: FONT_MONO, size: 9 },
               },
               grid: {
-                color: 'rgba(15, 23, 42, 0.06)',
+                color: 'rgba(34, 40, 49, 0.06)',
                 circular: true,
                 lineWidth: 1,
                 borderDash: [2, 4],
               },
               angleLines: {
-                color: 'rgba(15, 23, 42, 0.08)',
+                color: 'rgba(34, 40, 49, 0.08)',
                 lineWidth: 1,
                 borderDash: [2, 4],
               },
               pointLabels: {
-                color: 'rgba(15, 23, 42, 0.50)',
+                color: 'rgba(34, 40, 49, 0.50)',
                 font: { family: FONT_MONO, size: 10, weight: '500' },
               },
             }
@@ -2406,7 +2497,7 @@
                 boxWidth: 10,
                 boxHeight: 10,
                 padding: 14,
-                color: 'rgba(15, 23, 42, 0.75)',
+                color: 'rgba(34, 40, 49, 0.75)',
                 font: { family: FONT_SANS, size: 11, weight: '500' },
                 usePointStyle: true,
                 pointStyle: 'circle',
@@ -2414,10 +2505,10 @@
             },
             tooltip: {
               backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderColor: 'rgba(79, 70, 229, 0.25)',
+              borderColor: 'rgba(148, 137, 121, 0.25)',
               borderWidth: 1,
-              titleColor: '#0f172a',
-              bodyColor: '#64748b',
+              titleColor: '#222831',
+              bodyColor: '#6B6357',
               padding: 10,
               cornerRadius: 8,
               titleFont: { family: FONT_SANS, weight: '500' },
@@ -2440,11 +2531,11 @@
             data: baselineEntries.map(e => e.avg_score),
             backgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, INDIGO_LO, INDIGO, 'rgba(79, 70, 229, 0.6)');
+              return makeBarGradient(chart.ctx, chart.chartArea, CLAY_LO, CLAY, 'rgba(176, 137, 104, 0.6)');
             },
             hoverBackgroundColor: (ctx) => {
               const { chart } = ctx;
-              return makeBarGradient(chart.ctx, chart.chartArea, INDIGO, INDIGO_HI, 'rgba(99, 102, 241, 0.6)');
+              return makeBarGradient(chart.ctx, chart.chartArea, CLAY, '#C6A07E', 'rgba(198, 160, 126, 0.6)');
             },
             borderRadius: 6,
             borderSkipped: false,
@@ -2462,10 +2553,10 @@
             legend: { display: false },
             tooltip: {
               backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderColor: 'rgba(79, 70, 229, 0.25)',
+              borderColor: 'rgba(148, 137, 121, 0.25)',
               borderWidth: 1,
-              titleColor: '#0f172a',
-              bodyColor: '#64748b',
+              titleColor: '#222831',
+              bodyColor: '#6B6357',
               padding: 10,
               cornerRadius: 8,
               titleFont: { family: FONT_SANS, weight: '500' },
@@ -2476,24 +2567,24 @@
             x: {
               min: 0, max: 100,
               grid: {
-                color: 'rgba(15, 23, 42, 0.06)',
+                color: 'rgba(34, 40, 49, 0.06)',
                 borderDash: [4, 4],
                 drawTicks: false,
               },
-              ticks: { color: 'rgba(15, 23, 42, 0.40)', font: { family: FONT_MONO, size: 10 } },
+              ticks: { color: 'rgba(34, 40, 49, 0.40)', font: { family: FONT_MONO, size: 10 } },
               border: { display: false },
             },
             y: {
               grid: { display: false },
               ticks: {
-                color: 'rgba(15, 23, 42, 0.85)',
+                color: 'rgba(34, 40, 49, 0.85)',
                 font: { family: FONT_SANS, weight: '500', size: 12 },
               },
               border: { display: false },
             }
           }
         },
-        plugins: [blueGlow],
+        plugins: [clayGlow],
       });
     }
 
