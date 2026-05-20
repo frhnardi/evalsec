@@ -1477,7 +1477,7 @@
   <!-- ── Site Background: Infinite SVG Grid + Spotlight + Orbs ── -->
   <div class="site-bg" aria-hidden="true">
     <svg class="grid grid-base" aria-hidden="true"
-         width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+         width="100%" height="100%">
       <defs>
         <pattern id="gridPatternBase" width="40" height="40" patternUnits="userSpaceOnUse" x="0" y="0">
           <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1"></path>
@@ -1487,7 +1487,7 @@
     </svg>
 
     <svg class="grid grid-spotlight" aria-hidden="true"
-         width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+         width="100%" height="100%">
       <defs>
         <pattern id="gridPatternSpotlight" width="40" height="40" patternUnits="userSpaceOnUse" x="0" y="0">
           <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1"></path>
@@ -1964,8 +1964,24 @@
 
     // ── Infinite Grid Animation ──
     const root = document.documentElement;
+    const baseSvg = document.querySelector('.grid-base');
+    const spotlightSvg = document.querySelector('.grid-spotlight');
     const basePattern = document.getElementById('gridPatternBase');
     const spotlightPattern = document.getElementById('gridPatternSpotlight');
+
+    // Set explicit viewBox on both SVGs so the 40×40 pattern tiles correctly
+    // across the full viewport instead of being stretched from the implicit
+    // 100×100 coordinate system (which caused the grid to only appear in the
+    // top-right corner).
+    function syncViewBox() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const vb = '0 0 ' + w + ' ' + h;
+      if (baseSvg) baseSvg.setAttribute('viewBox', vb);
+      if (spotlightSvg) spotlightSvg.setAttribute('viewBox', vb);
+    }
+    syncViewBox();
+    window.addEventListener('resize', syncViewBox);
 
     let gridSize = 40;
     let offsetX = 0;
