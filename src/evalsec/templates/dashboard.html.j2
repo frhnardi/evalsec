@@ -32,45 +32,40 @@
     :root {
       color-scheme: light;
 
-      /* Surface — warm cream */
-      --background: #DFD0B8;
-      --foreground: #222831;
-      --muted-foreground: #6B6357;
-      --border: rgba(34, 40, 49, 0.10);
+      /* Surface — pure white */
+      --background: #FFFFFF;
+      --foreground: #000000;
+      --muted-foreground: #6B7280;
+      --border: rgba(0, 0, 0, 0.10);
 
-      /* Primary — warm taupe (same accent in both modes) */
-      --primary: #948979;
-      --primary-hover: #7A7065;
-      --primary-border-hover: #B0A595;
+      /* Primary — pure black */
+      --primary: #000000;
+      --primary-hover: #1F1F1F;
+      --primary-border-hover: #000000;
       --primary-foreground: #FFFFFF;
 
       /* Secondary — neutral surface */
-      --secondary: rgba(34, 40, 49, 0.06);
-      --secondary-hover: #393E46;
-      --secondary-border-hover: #948979;
-      --secondary-foreground: #222831;
+      --secondary: rgba(0, 0, 0, 0.04);
+      --secondary-hover: #F5F5F5;
+      --secondary-border-hover: #000000;
+      --secondary-foreground: #000000;
 
-      /* Cards — warm cream, lighter than bg */
-      --card: rgba(255, 251, 244, 0.82);
-      --card-strong: rgba(255, 251, 244, 0.95);
+      /* Cards */
+      --card: rgba(255, 255, 255, 0.70);
+      --card-strong: rgba(255, 255, 255, 0.92);
 
       /* Grid */
-      --grid: rgba(57, 62, 70, 0.55);
-
-      /* Orbs — warm/neutral tones, no blue/pink */
-      --orb-orange: rgba(148, 137, 121, 0.35);
-      --orb-primary: rgba(57, 62, 70, 0.18);
-      --orb-blue: rgba(223, 208, 184, 0.55);
+      --grid: rgba(0, 0, 0, 0.85);
 
       /* Shadows — neutral */
-      --shadow-primary: rgba(34, 40, 49, 0.35);
-      --shadow-secondary: rgba(57, 62, 70, 0.30);
+      --shadow-primary: rgba(0, 0, 0, 0.25);
+      --shadow-secondary: rgba(0, 0, 0, 0.15);
 
       /* Semantic status colors — preserved (used by charts/badges) */
       --success: #22C55E;
       --warning: #f59e0b;
       --danger:  #EF4444;
-      --info:    #948979;
+      --info:    #6B7280;
 
       --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
@@ -87,39 +82,34 @@
     html.dark {
       color-scheme: dark;
 
-      /* Surface — dark slate */
-      --background: #222831;
-      --foreground: #DFD0B8;
-      --muted-foreground: #948979;
-      --border: rgba(223, 208, 184, 0.12);
+      /* Surface — pure black */
+      --background: #000000;
+      --foreground: #FFFFFF;
+      --muted-foreground: #A1A1AA;
+      --border: rgba(255, 255, 255, 0.12);
 
-      /* Primary — same taupe */
-      --primary: #948979;
-      --primary-hover: #B0A595;
-      --primary-border-hover: #DFD0B8;
-      --primary-foreground: #222831;
+      /* Primary — pure white */
+      --primary: #FFFFFF;
+      --primary-hover: #E5E5E5;
+      --primary-border-hover: #FFFFFF;
+      --primary-foreground: #000000;
 
       /* Secondary */
-      --secondary: rgba(223, 208, 184, 0.08);
-      --secondary-hover: #393E46;
-      --secondary-border-hover: #948979;
-      --secondary-foreground: #DFD0B8;
+      --secondary: rgba(255, 255, 255, 0.06);
+      --secondary-hover: #1A1A1A;
+      --secondary-border-hover: #FFFFFF;
+      --secondary-foreground: #FFFFFF;
 
       /* Cards */
-      --card: rgba(57, 62, 70, 0.65);
-      --card-strong: rgba(57, 62, 70, 0.88);
+      --card: rgba(20, 20, 20, 0.70);
+      --card-strong: rgba(20, 20, 20, 0.92);
 
       /* Grid */
-      --grid: rgba(223, 208, 184, 0.65);
-
-      /* Orbs — warm tones */
-      --orb-orange: rgba(148, 137, 121, 0.22);
-      --orb-primary: rgba(223, 208, 184, 0.10);
-      --orb-blue: rgba(57, 62, 70, 0.40);
+      --grid: rgba(255, 255, 255, 0.85);
 
       /* Shadows */
-      --shadow-primary: rgba(0, 0, 0, 0.6);
-      --shadow-secondary: rgba(0, 0, 0, 0.5);
+      --shadow-primary: rgba(255, 255, 255, 0.15);
+      --shadow-secondary: rgba(255, 255, 255, 0.08);
     }
 
     /* ─────────────────────────────────────────────
@@ -222,58 +212,30 @@
     }
 
     .grid-base {
-      opacity: 0.06;
+      opacity: 0.08;
     }
 
     .grid-spotlight {
-      opacity: 0.45;
+      opacity: 0.35;
       mask-image: radial-gradient(
-        300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        black,
+        320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        black 0%,
         transparent 80%
       );
       -webkit-mask-image: radial-gradient(
-        300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        black,
+        320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        black 0%,
         transparent 80%
       );
       will-change: mask-image;
     }
 
-    .orb {
-      position: absolute;
-      border-radius: 999px;
-      pointer-events: none;
-      /* Hardware accelerate; don't recompose every frame */
-      will-change: transform;
-      transform: translateZ(0);
+    html.dark .grid-base {
+      opacity: 0.10;
     }
 
-    .orb-orange {
-      right: -15%;
-      top: -25%;
-      width: min(60vw, 900px);
-      height: min(60vw, 900px);
-      background: var(--orb-orange);
-      filter: blur(140px);
-    }
-
-    .orb-primary {
-      right: 5%;
-      top: -15%;
-      width: min(30vw, 500px);
-      height: min(30vw, 500px);
-      background: var(--orb-primary);
-      filter: blur(110px);
-    }
-
-    .orb-blue {
-      left: -15%;
-      bottom: -25%;
-      width: min(60vw, 900px);
-      height: min(60vw, 900px);
-      background: var(--orb-blue);
-      filter: blur(140px);
+    html.dark .grid-spotlight {
+      opacity: 0.40;
     }
 
     /* ─────────────────────────────────────────────
@@ -315,7 +277,7 @@
     }
 
     .moon-icon {
-      color: #948979;
+      color: var(--foreground);
       opacity: 1;
     }
 
@@ -478,25 +440,33 @@
     .btn-primary {
       background: var(--primary);
       color: var(--primary-foreground);
-      box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+      border: 1px solid var(--primary);
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-weight: 600;
+      transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-primary:hover {
       background: var(--primary-hover);
-      border-color: var(--primary-border-hover);
-      box-shadow: 0 25px 50px -12px var(--shadow-primary);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 30px -10px var(--shadow-primary);
     }
 
     .btn-secondary {
-      background: var(--secondary);
-      color: var(--secondary-foreground);
+      background: transparent;
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-weight: 600;
+      transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-secondary:hover {
-      background: var(--secondary-hover);
-      border-color: var(--secondary-border-hover);
-      color: #ffffff;
-      box-shadow: 0 25px 50px -12px var(--shadow-secondary);
+      border-color: var(--foreground);
+      background: var(--secondary);
+      transform: translateY(-1px);
     }
 
     /* ─────────────────────────────────────────────
@@ -650,11 +620,17 @@
        CARD
        ───────────────────────────────────────────── */
     .card {
-      border: 1px solid var(--border);
-      border-radius: 1.25rem;
       background: var(--card);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 24px 70px rgba(0,0,0,0.14);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      transition: border-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card:hover {
+      border-color: var(--foreground);
+      transform: translateY(-1px);
     }
 
     .card-strong {
@@ -1520,9 +1496,6 @@
       <rect width="100%" height="100%" fill="url(#gridPatternSpotlight)"></rect>
     </svg>
 
-    <div class="orb orb-orange" aria-hidden="true"></div>
-    <div class="orb orb-primary" aria-hidden="true"></div>
-    <div class="orb orb-blue" aria-hidden="true"></div>
   </div>
 
   <!-- ── Theme Toggle ── -->
