@@ -1892,7 +1892,7 @@
         <div class="meta-pills">
           <span class="meta-pill">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            {{ graded_at }}
+            <time id="graded-at-display" datetime="{{ graded_at }}">{{ graded_at }}</time>
           </span>
           <span class="meta-pill">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
@@ -1925,8 +1925,8 @@
             <span class="metric-label">Top score</span>
           </div>
           <div class="stat card metric-card">
-            <div class="metric-value" id="stat-best-value">—</div>
-            <span class="metric-label">Best value</span>
+            <div class="metric-value" id="stat-best-value" style="font-size:clamp(0.85rem,2vw,1.1rem);letter-spacing:-0.01em;">—</div>
+            <span class="metric-label" id="stat-best-value-label">Best value</span>
           </div>
         </div>
       </section>
@@ -1991,7 +1991,7 @@
           <div class="disclaimer-icon" aria-hidden="true">!</div>
           <div class="disclaimer-body">
             <strong>Preliminary results</strong> — based on
-            <strong><span id="disclaimer-cases">1</span> of 17</strong>
+            <strong><span id="disclaimer-cases">1</span> of 20</strong>
             test cases. Final rankings may shift significantly with the full benchmark.
             Full results coming soon.
           </div>
@@ -2595,6 +2595,18 @@
     const llmEntries      = leaderboard.filter(e => e.model_type === "llm");
     const baselineEntries = leaderboard.filter(e => e.model_type === "baseline");
 
+    // ── Format graded_at date — ISO → "Month DD, YYYY" ──
+    (function() {
+      const el = document.getElementById('graded-at-display');
+      if (!el) return;
+      try {
+        const d = new Date(el.getAttribute('datetime'));
+        if (!isNaN(d)) {
+          el.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+      } catch (_) {}
+    })();
+
     // ── Display-name replacement throughout the DOM ──
     document.querySelectorAll('.model-display-name').forEach(el => {
       const id = el.dataset.id;
@@ -2737,8 +2749,16 @@
 
     const llmWithCost = llmEntries.filter(e => (e.total_cost || 0) > 0);
     const bestValueEl = document.getElementById('stat-best-value');
+    const bestValueLabelEl = document.getElementById('stat-best-value-label');
     if (llmWithCost.length === 0) {
-      bestValueEl.textContent = 'N/A';
+      // No cost data — show top model name instead
+      if (llmEntries.length > 0) {
+        const top = llmEntries.reduce((acc, e) => e.avg_score > acc.avg_score ? e : acc);
+        bestValueEl.textContent = displayName(top.model_id);
+        if (bestValueLabelEl) bestValueLabelEl.textContent = 'Top model';
+      } else {
+        bestValueEl.textContent = '—';
+      }
     } else {
       const best = llmWithCost.reduce((acc, e) =>
         (e.avg_score / e.total_cost) > (acc.avg_score / acc.total_cost) ? e : acc
