@@ -251,8 +251,7 @@ class Runner:
                 total_chars = len(case.input + case.stack_context)
                 est_input_chars2 = total_chars // 2
                 context_overflow = (
-                    max_ctx is not None
-                    and est_input_chars2 + output_tokens > max_ctx
+                    max_ctx is not None and est_input_chars2 + output_tokens > max_ctx
                 )
 
                 if context_overflow:
@@ -263,9 +262,7 @@ class Runner:
                 else:
                     cost = Decimal(str(input_tokens)) * cfg.input_cost_per_1m / Decimal(
                         "1_000_000"
-                    ) + Decimal(str(output_tokens)) * cfg.output_cost_per_1m / Decimal(
-                        "1_000_000"
-                    )
+                    ) + Decimal(str(output_tokens)) * cfg.output_cost_per_1m / Decimal("1_000_000")
                     est_in = input_tokens
                     est_out = output_tokens
                     skipped = False
@@ -403,7 +400,9 @@ class Runner:
                                 "request": {
                                     "system_prompt": system_prompt,
                                     "user_prompt": (
-                                        user_prompt[:500] + "..." if len(user_prompt) > 500 else user_prompt
+                                        user_prompt[:500] + "..."
+                                        if len(user_prompt) > 500
+                                        else user_prompt
                                     ),
                                     "max_tokens": request_max_tokens,
                                     "temperature": 0.2,
