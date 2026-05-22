@@ -94,6 +94,9 @@ class BuildDashboard:
         # 3. Build leaderboard from grades
         leaderboard = _build_leaderboard(grades, cost_map)
 
+        # 3b. Build the judge cost card (omitted when no judge usage was recorded)
+        judge_entry = _build_judge_entry(meta)
+
         # 4. Collect unique dimension names across all entries
         dim_names: list[str] = []
         seen_dims: set[str] = set()
@@ -116,6 +119,7 @@ class BuildDashboard:
             leaderboard=leaderboard,
             dim_names=dim_names,
             model_display=MODEL_DISPLAY,
+            judge_entry=judge_entry,
         )
 
         # 6. Write to dist/
@@ -166,6 +170,33 @@ def _load_costs(responses_path: str) -> dict[str, float]:
         cost_map[mid] = cost_map.get(mid, 0.0) + cost
 
     return cost_map
+
+
+def _build_judge_entry(meta: dict[str, Any]) -> dict[str, Any] | None:
+    """Build a synthetic judge-cost card entry from recorded judge usage.
+
+    The judge (e.g. Claude Opus 4.7) never performs the triage task, so it
+    has no score and is not part of the leaderboard ranking — this entry
+    exists only to surface grading-infrastructure cost on the Models tab.
+
+    Returns ``None`` when no judge usage was recorded (mock data, or a run
+    that never invoked the judge), so the dashboard simply omits the card.
+    """
+    judge_cost = meta.get("judge_cost") or {}
+    calls = judge_cost.get("call_count", 0)
+    if calls <= 0:
+        return None
+
+    total = float(judge_cost.get("total_cost", 0.0))
+    return {
+        "model_id": judge_cost.get("model_id") or meta.get("judge_model", "claude_opus_47"),
+        "model_type": "judge",
+        "total_cost": total,
+        "judge_calls": calls,
+        "judge_tokens_in": judge_cost.get("tokens_in", 0),
+        "judge_tokens_out": judge_cost.get("tokens_out", 0),
+        "avg_cost_per_call": total / calls if calls else 0.0,
+    }
 
 
 def _build_leaderboard(

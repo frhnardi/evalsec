@@ -1,3 +1,49 @@
+{% if entry.model_type == "judge" %}
+<article class="model-card model-card--baseline" data-rank="0">
+  <div class="card-header">
+    <h3 class="model-name">{{ model_display.get(entry.model_id, entry.model_id) }}</h3>
+    <span class="type-badge type-baseline">judge</span>
+  </div>
+
+  <div class="card-score">
+    <span class="score-value">${{ "%.4f"|format(entry.total_cost) }}</span>
+    <span class="score-label">total judge cost</span>
+  </div>
+
+  <table class="card-dims">
+    <caption>Grading-run usage</caption>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Judge calls</td>
+        <td class="mono">{{ entry.judge_calls }}</td>
+      </tr>
+      <tr>
+        <td>Tokens in</td>
+        <td class="mono">{{ "{:,}".format(entry.judge_tokens_in) }}</td>
+      </tr>
+      <tr>
+        <td>Tokens out</td>
+        <td class="mono">{{ "{:,}".format(entry.judge_tokens_out) }}</td>
+      </tr>
+      <tr>
+        <td>Avg cost / call</td>
+        <td class="mono">${{ "%.4f"|format(entry.avg_cost_per_call) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card-cost">
+    <span class="cost-label">Total cost:</span>
+    <span class="cost-value">${{ "%.4f"|format(entry.total_cost) }}</span>
+  </div>
+</article>
+{% else %}
 <article class="model-card{% if entry.model_type == 'baseline' %} model-card--baseline{% endif %}" data-rank="{{ entry.rank }}">
   <div class="card-header">
     <span class="rank-pill rank-{{ entry.rank if entry.rank <= 3 else 'n' }}">{{ entry.rank }}</span>
@@ -125,3 +171,4 @@
     <span class="cost-value">${{ "%.4f"|format(entry.total_cost) }}</span>
   </div>
 </article>
+{% endif %}

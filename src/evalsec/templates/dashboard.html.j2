@@ -2156,6 +2156,11 @@
           {{ model_display.get(entry.model_id, entry.model_id) }}
         </button>
         {% endfor %}
+        {% if judge_entry %}
+        <button class="chip" data-model="{{ judge_entry.model_id }}">
+          {{ model_display.get(judge_entry.model_id, judge_entry.model_id) }}
+        </button>
+        {% endif %}
       </div>
 
       <div class="model-panels">
@@ -2164,6 +2169,11 @@
           {% include "card.html.j2" %}
         </div>
         {% endfor %}
+        {% if judge_entry %}
+        <div class="model-panel" data-model-panel="{{ judge_entry.model_id }}">
+          {% with entry = judge_entry %}{% include "card.html.j2" %}{% endwith %}
+        </div>
+        {% endif %}
       </div>
     </section>
 

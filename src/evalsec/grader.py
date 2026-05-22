@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import re
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -585,10 +586,27 @@ class JudgeGrader:
         )
         self._judge_model_key = judge_model_key
 
+        # Running totals of judge API usage, accumulated across grade() calls.
+        self._total_cost: Decimal = Decimal("0")
+        self._total_tokens_in: int = 0
+        self._total_tokens_out: int = 0
+        self._call_count: int = 0
+
     @property
     def judge_model_key(self) -> str:
         """Return the model key used for judging (e.g. ``claude_opus_47``)."""
         return self._judge_model_key
+
+    @property
+    def cost_summary(self) -> dict[str, Any]:
+        """Total judge API usage accumulated across all ``grade()`` calls."""
+        return {
+            "model_id": self._judge_model_key,
+            "total_cost": float(self._total_cost),
+            "tokens_in": self._total_tokens_in,
+            "tokens_out": self._total_tokens_out,
+            "call_count": self._call_count,
+        }
 
     # ------------------------------------------------------------------
     # Public API
@@ -646,6 +664,12 @@ class JudgeGrader:
         )
 
         response = await self._adapter.complete(request)
+
+        # Accumulate judge API usage so the pipeline can report grading cost.
+        self._call_count += 1
+        self._total_cost += response.cost_usd
+        self._total_tokens_in += response.tokens_in
+        self._total_tokens_out += response.tokens_out
 
         if response.error:
             return 0.0, [], response.error
@@ -984,6 +1008,16 @@ class Grader:
         # 7. Print summary table
         self._print_summary(graded_responses)
 
+        # 7b. Report judge API cost for this grading run
+        if self._judge_grader is not None:
+            cs = self._judge_grader.cost_summary
+            if cs["call_count"] > 0:
+                console.print(
+                    f"\n[bold]Judge cost:[/bold] ${cs['total_cost']:.4f} "
+                    f"over {cs['call_count']} call(s) "
+                    f"({cs['tokens_in']:,} in / {cs['tokens_out']:,} out tokens)"
+                )
+
         # 8. Save scores
         scores_path = self._save_scores(graded_responses, metadata, path)
         console.print(f"\n[green]Scores saved to {scores_path}[/green]")
@@ -1070,6 +1104,10 @@ class Grader:
             if scores:
                 model_averages[mid] = round(sum(scores) / len(scores), 2)
 
+        judge_cost: dict[str, Any] = (
+            self._judge_grader.cost_summary if self._judge_grader is not None else {}
+        )
+
         payload: dict[str, Any] = {
             "metadata": {
                 "task": self.task_name,
@@ -1079,6 +1117,7 @@ class Grader:
                 "source_file": input_path.name,
                 "response_count": len(graded),
                 "model_averages": model_averages,
+                "judge_cost": judge_cost,
             },
             "grades": graded,
         }
