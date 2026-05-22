@@ -1,6 +1,6 @@
 # evalsec
 
-An open-source LLM benchmark for DevSecOps tasks.
+An LLM benchmark for DevSecOps tasks.
 
 > **Status:** v0.1.0 — alpha
 

@@ -1,10 +1,9 @@
 [project]
 name = "evalsec"
 version = "0.1.0"
-description = "An open-source LLM benchmark for DevSecOps tasks"
+description = "An LLM benchmark for DevSecOps tasks"
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "MIT" }
 authors = [
     { name = "Farhan Ngenz", email = "farhan@ngenz.org" },
 ]
@@ -12,7 +11,7 @@ keywords = ["devsecops", "llm", "benchmark", "security"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "Private :: Do Not Upload",
     "Programming Language :: Python :: 3.12",
     "Topic :: Security",
 ]

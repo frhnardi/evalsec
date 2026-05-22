@@ -24,6 +24,21 @@ console = Console()
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 
+# Human-readable display names keyed by model_id. Single source of truth —
+# injected into both the rendered HTML and the dashboard's client-side JS
+# (where it is used for chart labels).
+MODEL_DISPLAY: dict[str, str] = {
+    "claude_sonnet_46": "Claude Sonnet 4.6",
+    "kimi_k2_thinking": "Kimi K2 Thinking",
+    "qwen_3_5": "Qwen 3.5",
+    "deepseek_v4_pro": "DeepSeek V4 Pro",
+    "claude_opus_47": "Claude Opus 4.7 (Judge)",
+    "baseline_cvss": "Baseline: CVSS Sort",
+    "baseline_trivy": "Baseline: Trivy Severity",
+    "baseline_epss": "Baseline: EPSS Score",
+    "baseline_reachability": "Baseline: Reachability",
+}
+
 
 class BuildDashboard:
     """Renders a static HTML dashboard from scores JSON using Jinja2 + Chart.js."""
@@ -100,6 +115,7 @@ class BuildDashboard:
             model_averages=meta.get("model_averages", {}),
             leaderboard=leaderboard,
             dim_names=dim_names,
+            model_display=MODEL_DISPLAY,
         )
 
         # 6. Write to dist/

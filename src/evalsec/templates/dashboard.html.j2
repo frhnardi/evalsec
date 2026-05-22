@@ -1936,17 +1936,20 @@
       {% set top3 = llm_entries[:3] %}
       {% if top3 %}
       <section class="reveal">
-        <h2 class="section-title">Leaderboard at a glance</h2>
-        <p class="section-sub">Top 3 performing models so far.</p>
+        <h2 class="section-title">Top performers</h2>
+        <p class="section-sub">The highest-scoring models so far — full rankings and baseline comparison live on the Leaderboard tab.</p>
         <div class="card card-strong mini-lb">
           {% for entry in top3 %}
           <div class="mini-lb-item" data-model="{{ entry.model_id.split('_')[0] }}">
             <span class="mini-lb-rank">#{{ loop.index }}</span>
             <span class="brand-dot"></span>
-            <span class="mini-lb-name">{{ entry.model_id }}</span>
+            <span class="mini-lb-name">{{ model_display.get(entry.model_id, entry.model_id) }}</span>
             <span class="mini-lb-score">{{ "%.1f"|format(entry.avg_score) }}</span>
           </div>
           {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 1.25rem;">
+          <a href="#" data-tab-link="leaderboard" style="font-size: 0.85rem; font-weight: 500;">View full leaderboard &rarr;</a>
         </div>
       </section>
       {% endif %}
@@ -1960,7 +1963,7 @@
 
       <!-- ── Charts ── -->
       <section class="charts-section reveal">
-        <h2 class="section-title">The leaderboard at a glance</h2>
+        <h2 class="section-title">How the models compare</h2>
         <p class="section-sub">Composite scores and per-dimension strengths across all evaluated LLMs.</p>
 
         <div class="charts-frame">
@@ -1988,12 +1991,12 @@
       <!-- ── LLM Leaderboard ── -->
       <section class="leaderboard-section reveal">
         <aside class="disclaimer" id="prelimDisclaimer">
-          <div class="disclaimer-icon" aria-hidden="true">!</div>
+          <div class="disclaimer-icon" aria-hidden="true">i</div>
           <div class="disclaimer-body">
-            <strong>Preliminary results</strong> — based on
-            <strong><span id="disclaimer-cases">1</span> of 20</strong>
-            test cases. Final rankings may shift significantly with the full benchmark.
-            Full results coming soon.
+            <strong>Live benchmark — in progress.</strong> This snapshot reflects
+            <strong><span id="disclaimer-cases">1</span> of 20</strong> cases.
+            The full suite runs on a weekly schedule; scores and rankings refresh
+            automatically as each run completes.
           </div>
           <button class="disclaimer-close" type="button" aria-label="Dismiss notice" id="dismissDisclaimer">×</button>
         </aside>
@@ -2046,7 +2049,7 @@
                     <span class="rank-pill rank-{{ loop.index if loop.index <= 3 else 'n' }}">{{ loop.index }}</span>
                   </td>
                   <td class="model-name-cell">
-                    <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
+                    <span class="model-display-name" data-id="{{ entry.model_id }}">{{ model_display.get(entry.model_id, entry.model_id) }}</span>
                     {% if is_truncated %}<span class="trunc-badge" title="Response exceeded max_tokens — JSON truncated. Score reflects partial output only.">Truncated</span>{% endif %}
                     {% if has_api_errors %}<span class="err-badge" title="API error — response could not be retrieved.">Error</span>{% endif %}
                     {% if has_skipped %}<span class="skip-badge" title="Context window overflow — case skipped.">Skipped</span>{% endif %}
@@ -2118,7 +2121,7 @@
                 {% for entry in baselines %}
                 <tr data-model-id="{{ entry.model_id }}">
                   <td class="model-name-cell">
-                    <span class="model-display-name" data-id="{{ entry.model_id }}">{{ entry.model_id }}</span>
+                    <span class="model-display-name" data-id="{{ entry.model_id }}">{{ model_display.get(entry.model_id, entry.model_id) }}</span>
                     <span class="model-id-mono">{{ entry.model_id }}</span>
                   </td>
                   <td class="score-cell">
@@ -2150,7 +2153,7 @@
       <div class="model-chips">
         {% for entry in leaderboard %}
         <button class="chip {% if loop.first %}is-active{% endif %}" data-model="{{ entry.model_id }}">
-          {{ entry.model_id }}
+          {{ model_display.get(entry.model_id, entry.model_id) }}
         </button>
         {% endfor %}
       </div>
@@ -2413,17 +2416,8 @@
     }, { passive: true });
 
     // ── Display Name Maps ──
-    const MODEL_DISPLAY = {
-      "claude_sonnet_46":      "Claude Sonnet 4.6",
-      "kimi_k2_thinking":      "Kimi K2.6 Thinking",
-      "qwen_3_5":              "Qwen 3.5",
-      "deepseek_v4_pro":       "DeepSeek V4 Pro",
-      "claude_opus_47":        "Claude Opus 4.7 (Judge)",
-      "baseline_cvss":         "Baseline: CVSS Sort",
-      "baseline_trivy":        "Baseline: Trivy Severity",
-      "baseline_epss":         "Baseline: EPSS Score",
-      "baseline_reachability": "Baseline: Reachability",
-    };
+    // Injected from dashboard.py MODEL_DISPLAY — single source of truth.
+    const MODEL_DISPLAY = {{ model_display | tojson }};
     const displayName = id => MODEL_DISPLAY[id] || id;
 
     const DIM_LABELS = {
@@ -2607,24 +2601,6 @@
       } catch (_) {}
     })();
 
-    // ── Display-name replacement throughout the DOM ──
-    document.querySelectorAll('.model-display-name').forEach(el => {
-      const id = el.dataset.id;
-      if (id) el.textContent = displayName(id);
-    });
-
-    // Update chip names too
-    document.querySelectorAll('.chip[data-model]').forEach(el => {
-      const id = el.dataset.model;
-      if (id) el.textContent = displayName(id);
-    });
-
-    // Update mini-lb names
-    document.querySelectorAll('.mini-lb-name').forEach(el => {
-      const id = el.textContent.trim();
-      if (id) el.textContent = displayName(id);
-    });
-
     // ── Model card enhancement ──
     document.querySelectorAll('.model-card').forEach(card => {
       const rank = parseInt(card.dataset.rank, 10);
@@ -2632,7 +2608,6 @@
       if (!entry) return;
 
       const nameEl = card.querySelector('.model-name');
-      if (nameEl) nameEl.textContent = displayName(entry.model_id);
 
       // Categorise per-detail status using finish_reason (or parse_error fallback)
       const statusByDetail = (entry.details || []).map(d => {
