@@ -11,6 +11,7 @@ The default judge configuration uses **Claude Opus 4.7** ([`src/evalsec/adapters
 **Mitigations:**
 - The pass-1 grader (regex + JSON validation, [`src/evalsec/grader.py:201`](src/evalsec/grader.py:201)) is fully deterministic and bias-free — it checks format compliance, CVE coverage, verdict accuracy, and hallucination counts without any LLM involvement.
 - Cross-family judging is supported: DeepSeek V4 Pro ([`src/evalsec/adapters/__init__.py:56`](src/evalsec/adapters/__init__.py:56)) can be used as the judge via `--judge-model deepseek_v4_pro`.
+- Anti-bias instructions were added to the [`JUDGE_SYSTEM_PROMPT`](src/evalsec/tasks/trivy_triage.py:167) on 2026-05-22 — the judge is now explicitly instructed to evaluate solely on technical merit, avoid stylistic preference, and apply consistent standards across all models.
 - Future releases should adopt a multi-judge ensemble (e.g., Claude + GPT-4.1 + Gemini 2.5) with inter-rater agreement tracking.
 
 ### 1.2 Self-judging (legacy)
@@ -138,4 +139,4 @@ Unlike benchmarks with local model inference (e.g., HumanEval, SWE-bench), evals
 
 ---
 
-*Last updated: 2026-05-18*
+*Last updated: 2026-05-22*

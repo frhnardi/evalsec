@@ -182,6 +182,12 @@ Score each dimension carefully. Return ONLY valid JSON — no markdown fences, n
   ]
 }
 
+Anti-bias guidelines:
+- Judge the response solely on its technical DevSecOps merit and rubric criteria.
+- Do not prefer or penalize any particular writing style, format, verbosity level, or phrasing.
+- Apply the same standards consistently across all responses regardless of which model produced them.
+- Be aware of potential stylistic self-preference: evaluate the content, not how closely it matches a particular output pattern.
+
 Scoring guidelines:
 - reachability_reasoning: Does the model use stack context to determine real exploitability? Full marks for correctly identifying each finding's reachability status.
 - prioritization: Does the model rank findings by real-world urgency, not just CVSS score? Full marks for P0→P3 ordering that matches business impact.
