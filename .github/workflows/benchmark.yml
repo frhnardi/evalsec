@@ -37,7 +37,9 @@ jobs:
     # Timeout: 30 minutes max (benchmarking 5 models × N cases)
     timeout-minutes: 30
     permissions:
-      contents: read
+      # contents: write is required by peter-evans/create-pull-request in step 12
+      # so it can push the temporary `benchmark-scores` branch before opening the PR.
+      contents: write
       id-token: write
       pull-requests: write
 
