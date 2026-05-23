@@ -97,8 +97,12 @@ jobs:
       - name: Grade responses
         if: ${{ github.event.inputs.dry_run != 'true' && github.event.inputs.deploy_only != 'true' }}
         run: |
-          # Find the latest responses file
-          RESPONSES_FILE=$(ls -t outputs/responses_*.json 2>/dev/null | head -1)
+          # Find the latest responses file. Sort by filename rather than `ls -t`
+          # because in a fresh checkout every file shares the same mtime, leaving
+          # `-t` to break ties non-deterministically. Filenames embed
+          # YYYYMMDD_HHMMSS, so lexical sort = chronological. The `*_triage_*`
+          # glob skips synthetic files (e.g. `responses_injected.json`).
+          RESPONSES_FILE=$(ls outputs/responses_*_triage_*.json 2>/dev/null | sort | tail -1)
           if [[ -z "$RESPONSES_FILE" ]]; then
             echo "No responses file found — skipping grade"
             exit 0
@@ -114,13 +118,17 @@ jobs:
       - name: Build dashboard
         if: ${{ github.event.inputs.dry_run != 'true' }}
         run: |
-          SCORES_FILE=$(ls -t outputs/scores_*.json 2>/dev/null | head -1)
+          # Pick the newest scores file by FILENAME (not mtime). Fresh CI
+          # checkouts give every file the same mtime, so `ls -t` ties
+          # non-deterministically. The `*_triage_*` glob also excludes
+          # synthetic files like `scores_injected.json` that aren't real runs.
+          SCORES_FILE=$(ls outputs/scores_*_triage_*.json 2>/dev/null | sort | tail -1)
           if [[ -z "$SCORES_FILE" ]]; then
             echo "No scores file found — skipping build"
             exit 0
           fi
           echo "Building dashboard from: $SCORES_FILE"
-          RESPONSES_FILE=$(ls -t outputs/responses_*.json 2>/dev/null | head -1)
+          RESPONSES_FILE=$(ls outputs/responses_*_triage_*.json 2>/dev/null | sort | tail -1)
           if [[ -n "$RESPONSES_FILE" ]]; then
             uv run evalsec build --scores "$SCORES_FILE" --responses "$RESPONSES_FILE"
           else
