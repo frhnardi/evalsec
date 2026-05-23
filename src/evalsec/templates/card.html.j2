@@ -6,7 +6,7 @@
   </div>
 
   <div class="card-score">
-    <span class="score-value">${{ "%.4f"|format(entry.total_cost) }}</span>
+    <span class="score-value">${{ "%.2f"|format(entry.total_cost) }}</span>
     <span class="score-label">total judge cost</span>
   </div>
 
@@ -33,14 +33,14 @@
       </tr>
       <tr>
         <td>Avg cost / call</td>
-        <td class="mono">${{ "%.4f"|format(entry.avg_cost_per_call) }}</td>
+        <td class="mono">${{ "%.2f"|format(entry.avg_cost_per_call) }}</td>
       </tr>
     </tbody>
   </table>
 
   <div class="card-cost">
     <span class="cost-label">Total cost:</span>
-    <span class="cost-value">${{ "%.4f"|format(entry.total_cost) }}</span>
+    <span class="cost-value">${{ "%.2f"|format(entry.total_cost) }}</span>
   </div>
 </article>
 {% else %}
@@ -128,7 +128,7 @@
       {% endif %}
       <tr>
         <td>Cost</td>
-        <td class="cost-cell">$0.0000</td>
+        <td class="cost-cell">$0.00</td>
       </tr>
     </tbody>
   </table>
@@ -168,7 +168,7 @@
 
   <div class="card-cost">
     <span class="cost-label">Total cost:</span>
-    <span class="cost-value">${{ "%.4f"|format(entry.total_cost) }}</span>
+    <span class="cost-value">${{ "%.2f"|format(entry.total_cost) }}</span>
   </div>
 </article>
 {% endif %}

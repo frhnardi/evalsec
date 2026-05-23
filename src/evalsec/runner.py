@@ -276,7 +276,7 @@ class Runner:
                         "case_id": case.id,
                         "est_input_tokens": est_in,
                         "est_output_tokens": est_out,
-                        "est_cost_usd": str(cost.quantize(Decimal("0.0000001"))),
+                        "est_cost_usd": str(cost.quantize(Decimal("0.01"))),
                         "context_overflow": skipped,
                     }
                 )
@@ -290,7 +290,7 @@ class Runner:
                     "skipped": skipped_count,
                     "est_total_in": total_in,
                     "est_total_out": total_out,
-                    "est_total_cost_usd": str(total_cost.quantize(Decimal("0.0001"))),
+                    "est_total_cost_usd": str(total_cost.quantize(Decimal("0.01"))),
                     "case_estimates": case_estimates,
                 }
             )
@@ -327,7 +327,7 @@ class Runner:
             "",
             "",
             "",
-            f"[bold]${grand_total.quantize(Decimal('0.0001'))}[/bold]",
+            f"[bold]${grand_total.quantize(Decimal('0.01'))}[/bold]",
         )
         console.print(table)
         console.print()

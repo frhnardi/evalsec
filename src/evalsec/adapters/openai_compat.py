@@ -177,7 +177,7 @@ class OpenAICompatAdapter(Adapter):
         output_cost = (
             Decimal(str(tokens_out)) * self.model_config.output_cost_per_1m / Decimal("1_000_000")
         )
-        return (input_cost + output_cost).quantize(Decimal("0.0000001"))
+        return (input_cost + output_cost).quantize(Decimal("0.01"))
 
     def _error_response(self, request: LLMRequest, error: str) -> LLMResponse:
         """Build an LLMResponse for a failed request."""

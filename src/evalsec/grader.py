@@ -1013,7 +1013,7 @@ class Grader:
             cs = self._judge_grader.cost_summary
             if cs["call_count"] > 0:
                 console.print(
-                    f"\n[bold]Judge cost:[/bold] ${cs['total_cost']:.4f} "
+                    f"\n[bold]Judge cost:[/bold] ${cs['total_cost']:.2f} "
                     f"over {cs['call_count']} call(s) "
                     f"({cs['tokens_in']:,} in / {cs['tokens_out']:,} out tokens)"
                 )

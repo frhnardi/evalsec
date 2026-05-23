@@ -281,7 +281,7 @@ def _build_leaderboard(
                 "avg_judge": round(avg_judge, 1),
                 "avg_hallucination_penalty": round(avg_hal, 1),
                 "avg_deterministic_total": round(avg_det_total, 1),
-                "total_cost": round(cost_map.get(mid, 0.0), 4),
+                "total_cost": round(cost_map.get(mid, 0.0), 2),
                 "dimension_scores": dim_avgs,
                 "details": group,
             }
