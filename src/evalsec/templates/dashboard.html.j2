@@ -1214,6 +1214,39 @@
       user-select: none;
     }
 
+    /* Sequential "wave" pulse so the flow visibly moves left-to-right.
+       Pulses via box-shadow ring + arrow color only — leaves border-color
+       and transform free for the existing hover state and mobile rotation.
+       The global prefers-reduced-motion block (top of CSS) instantly
+       neutralises this for users who opt out of motion. */
+    @keyframes flow-node-pulse {
+      0%, 5%, 25%, 100% {
+        box-shadow: 0 0 0 0 rgba(128, 128, 128, 0);
+      }
+      12% {
+        box-shadow: 0 0 0 4px rgba(128, 128, 128, 0.18);
+      }
+      20% {
+        box-shadow: 0 0 0 8px rgba(128, 128, 128, 0);
+      }
+    }
+
+    @keyframes flow-arrow-pulse {
+      0%, 5%, 25%, 100% { color: var(--subtle-foreground); }
+      12%, 18%          { color: var(--foreground); }
+    }
+
+    .flow-node  { animation: flow-node-pulse 4s ease-in-out infinite; }
+    .flow-arrow { animation: flow-arrow-pulse 4s ease-in-out infinite; }
+
+    .flow-node:nth-of-type(1)  { animation-delay: 0s;   }
+    .flow-arrow:nth-of-type(1) { animation-delay: 0.5s; }
+    .flow-node:nth-of-type(2)  { animation-delay: 1s;   }
+    .flow-arrow:nth-of-type(2) { animation-delay: 1.5s; }
+    .flow-node:nth-of-type(3)  { animation-delay: 2s;   }
+    .flow-arrow:nth-of-type(3) { animation-delay: 2.5s; }
+    .flow-node:nth-of-type(4)  { animation-delay: 3s;   }
+
     @media (max-width: 720px) {
       .flow-frame { flex-direction: column; }
       .flow-arrow { transform: rotate(90deg); }
