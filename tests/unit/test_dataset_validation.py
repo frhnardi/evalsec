@@ -1,4 +1,4 @@
-"""Dataset validation — load and validate all YAML test cases.
+"""Dataset validation: load and validate all YAML test cases.
 
 This module verifies that every YAML file in the test data directories:
 - Parses as valid YAML.
@@ -20,7 +20,7 @@ import yaml
 
 from evalsec.tasks.base import FindingDetail, TaskCase
 
-# All task data directories — add new tasks here
+# All task data directories: add new tasks here
 TEST_DATA_DIRS: list[Path] = [
     Path(__file__).parent.parent / "data" / "trivy_triage",
     Path(__file__).parent.parent / "data" / "codeql_triage",
@@ -94,7 +94,7 @@ def all_cases(all_yaml_files: list[Path]) -> list[tuple[str, TaskCase]]:
 
 
 # ---------------------------------------------------------------------------
-# Tests — loading
+# Tests: loading
 # ---------------------------------------------------------------------------
 
 
@@ -132,7 +132,7 @@ class TestDatasetLoading:
 
 
 # ---------------------------------------------------------------------------
-# Tests — cross-field integrity
+# Tests: cross-field integrity
 # ---------------------------------------------------------------------------
 
 
@@ -256,7 +256,7 @@ class TestCrossFieldIntegrity:
 
 
 # ---------------------------------------------------------------------------
-# Tests — ground truth integrity (no hallucinated CVEs)
+# Tests: ground truth integrity (no hallucinated CVEs)
 # ---------------------------------------------------------------------------
 
 
@@ -328,7 +328,7 @@ class TestGroundTruthIntegrity:
 
 
 # ---------------------------------------------------------------------------
-# Tests — runner compatibility
+# Tests: runner compatibility
 # ---------------------------------------------------------------------------
 
 
@@ -361,7 +361,7 @@ class TestRunnerCompatibility:
 
 
 # ---------------------------------------------------------------------------
-# Tests — case listing
+# Tests: case listing
 # ---------------------------------------------------------------------------
 
 

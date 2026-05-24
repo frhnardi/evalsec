@@ -4,19 +4,19 @@
 
 ### 1.1 Same-family bias
 
-The default judge configuration uses **Claude Opus 4.7** ([`src/evalsec/adapters/__init__.py:48`](src/evalsec/adapters/__init__.py:48)) as the pass-2 LLM grader. When benchmarking Claude Sonnet 4.6, this creates a **same-family judging scenario** — both models share the same underlying architecture and training lineage. This may inflate scores due to shared stylistic preferences, prioritization heuristics, and response format biases.
+The default judge configuration uses **Claude Opus 4.7** ([`src/evalsec/adapters/__init__.py:48`](src/evalsec/adapters/__init__.py:48)) as the pass-2 LLM grader. When benchmarking Claude Sonnet 4.6, this creates a **same-family judging scenario**: both models share the same underlying architecture and training lineage. This may inflate scores due to shared stylistic preferences, prioritization heuristics, and response format biases.
 
 **Impact:** A model's score reflects not only its DevSecOps competency but also how well its output aligns with the judge's own preferences. This confounds the measurement.
 
 **Mitigations:**
-- The pass-1 grader (regex + JSON validation, [`src/evalsec/grader.py:201`](src/evalsec/grader.py:201)) is fully deterministic and bias-free — it checks format compliance, CVE coverage, verdict accuracy, and hallucination counts without any LLM involvement.
+- The pass-1 grader (regex + JSON validation, [`src/evalsec/grader.py:201`](src/evalsec/grader.py:201)) is fully deterministic and bias-free: it checks format compliance, CVE coverage, verdict accuracy, and hallucination counts without any LLM involvement.
 - Cross-family judging is supported: DeepSeek V4 Pro ([`src/evalsec/adapters/__init__.py:56`](src/evalsec/adapters/__init__.py:56)) can be used as the judge via `--judge-model deepseek_v4_pro`.
-- Anti-bias instructions were added to the [`JUDGE_SYSTEM_PROMPT`](src/evalsec/tasks/trivy_triage.py:167) on 2026-05-22 — the judge is now explicitly instructed to evaluate solely on technical merit, avoid stylistic preference, and apply consistent standards across all models.
+- Anti-bias instructions were added to the [`JUDGE_SYSTEM_PROMPT`](src/evalsec/tasks/trivy_triage.py:167) on 2026-05-22: the judge is now explicitly instructed to evaluate solely on technical merit, avoid stylistic preference, and apply consistent standards across all models.
 - Future releases should adopt a multi-judge ensemble (e.g., Claude + GPT-4.1 + Gemini 2.5) with inter-rater agreement tracking.
 
 ### 1.2 Self-judging (legacy)
 
-In earlier versions, DeepSeek V4 Pro served as both the benchmarked model and the judge — a direct self-judging scenario. This has been partially addressed by introducing Claude Opus 4.7 as the default judge, but the same-family concern remains for Anthropic models.
+In earlier versions, DeepSeek V4 Pro served as both the benchmarked model and the judge: a direct self-judging scenario. This has been partially addressed by introducing Claude Opus 4.7 as the default judge, but the same-family concern remains for Anthropic models.
 
 ---
 
@@ -28,7 +28,7 @@ All ground truth labels (exploitable / non-exploitable / partial) were initially
 
 ### 2.2 Trivy compact format truncation
 
-**Root cause:** Trivy's compact output format only displays the first CVE line per library. Libraries with multiple CVEs have their additional CVEs present in the full scan artifact but absent from the compact `input:` field. This caused an earlier data quality issue where ground-truth CVEs existed in the YAML but had no corresponding scan line — making them appear to be hallucinations if the model relied on the input alone.
+**Root cause:** Trivy's compact output format only displays the first CVE line per library. Libraries with multiple CVEs have their additional CVEs present in the full scan artifact but absent from the compact `input:` field. This caused an earlier data quality issue where ground-truth CVEs existed in the YAML but had no corresponding scan line: making them appear to be hallucinations if the model relied on the input alone.
 
 **Fix applied:** An injection script ([`scripts/inject_missing_scan_cves.py`](scripts/inject_missing_scan_cves.py)) was run to add the missing compact-format CVE lines into the `input:` field for cases 005 (postgres), 008 (redis), and 018 (vault). The script reads from the full scan files in [`scans/`](scans/) and inserts the relevant lines at the correct anchor position.
 
@@ -50,14 +50,14 @@ Despite the project name "evalsec" suggesting a general security evaluation fram
 |----------|-----------|-------|--------|
 | Container CVE triage | [`trivy_triage`](src/evalsec/tasks/trivy_triage.py) | 20 | ✅ Active |
 | SAST triage | [`codeql_triage`](src/evalsec/tasks/codeql_triage.py) | 3 | ✅ Active |
-| IaC scanning (Checkov, tfsec) | — | 0 | ❌ Not implemented |
-| Secrets detection | — | 0 | ❌ Not implemented |
-| DAST / runtime | — | 0 | ❌ Not implemented |
-| Kubernetes admission | — | 0 | ❌ Not implemented |
-| SBOM validation | — | 0 | ❌ Not implemented |
-| Policy-as-Code (OPA) | — | 0 | ❌ Not implemented |
+| IaC scanning (Checkov, tfsec) |: | 0 | ❌ Not implemented |
+| Secrets detection |: | 0 | ❌ Not implemented |
+| DAST / runtime |: | 0 | ❌ Not implemented |
+| Kubernetes admission |: | 0 | ❌ Not implemented |
+| SBOM validation |: | 0 | ❌ Not implemented |
+| Policy-as-Code (OPA) |: | 0 | ❌ Not implemented |
 
-The CodeQL task covers SQL injection (Django), stored XSS (Express), and path traversal (Spring) — a narrow but representative slice of SAST findings. Expanding to IaC, secrets, and runtime is planned for v0.2.0.
+The CodeQL task covers SQL injection (Django), stored XSS (Express), and path traversal (Spring): a narrow but representative slice of SAST findings. Expanding to IaC, secrets, and runtime is planned for v0.2.0.
 
 ### 3.2 Distribution skew
 
@@ -105,7 +105,7 @@ The cost estimate in [`evalsec run --dry-run`](src/evalsec/runner.py:224) uses a
 | Tokenizer mismatch | ±20–40% variance |
 | Cached input discounts (OpenRouter) | Input costs may be lower than estimated |
 | Long-output cases | Output estimate of 300 tokens/finding × 5 findings may undercount |
-| Judge grading cost | Not included in the run estimate — billed separately per case per model |
+| Judge grading cost | Not included in the run estimate: billed separately per case per model |
 
 ---
 
@@ -123,7 +123,7 @@ All scenarios assume deployment in Indonesia (AWS Jakarta region, Telkom datacen
 
 ## 7. Benchmark Ceiling
 
-The non-LLM baselines (CVSS sort, EPSS sort, Trivy severity sort, reachability heuristic) score between 54–69 out of 100. Early LLM results reach ~85. This leaves limited headroom for demonstrating LLM superiority at the high end. Harder cases — such as ambiguous CVEs, conflicting severity signals, or multi-step reasoning — are needed to push differentiation.
+The non-LLM baselines (CVSS sort, EPSS sort, Trivy severity sort, reachability heuristic) score between 54–69 out of 100. Early LLM results reach ~85. This leaves limited headroom for demonstrating LLM superiority at the high end. Harder cases: such as ambiguous CVEs, conflicting severity signals, or multi-step reasoning: are needed to push differentiation.
 
 ---
 

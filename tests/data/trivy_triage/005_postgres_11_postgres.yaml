@@ -8,7 +8,6 @@ source:
   trivy_version: auto_detected
   url: null
   notes: 'Deployment summary: PostgreSQL 11 di Debian 9 EOL, internal cluster, non-root, seccomp default, NetworkPolicy ketat, menyimpan PII dan MFA secrets.
-
     CVEs requiring manual review (12): CVE-2016-2779, CVE-2018-1000858, CVE-2022-1304, CVE-2018-12886, CVE-2019-12900, CVE-2019-8457, CVE-2021-33560, CVE-2022-29458, CVE-2020-16156, CVE-2019-3843, CVE-2019-3844, CVE-2020-1712'
   total_cves_found: 75
   cves_selected: 8
@@ -20,7 +19,7 @@ ground_truth:
   exploitable_findings:
   - cve: CVE-2025-31133
     verdict: exploitable
-    reasoning: runc container escape via masked path mount race — gosu binary in image, writable filesystem + seccomp default allows exploitation in container escape scenario.
+    reasoning: 'runc container escape via masked path mount race: gosu binary in image, writable filesystem + seccomp default allows exploitation in container escape scenario.'
     action: Rebuild image with gosu updated to runc >= 1.2.8 or 1.3.3.
     cvss_score: null
     epss_percentile: null
@@ -33,7 +32,7 @@ ground_truth:
     internet_facing: null
   - cve: CVE-2025-52565
     verdict: exploitable
-    reasoning: runc container escape via malicious config /dev/console mount — gosu embeds runc, writable filesystem, potential for container breakout.
+    reasoning: 'runc container escape via malicious config /dev/console mount: gosu embeds runc, writable filesystem, potential for container breakout.'
     action: Rebuild image with updated gosu containing runc fix when available.
     cvss_score: null
     epss_percentile: null
@@ -46,7 +45,7 @@ ground_truth:
     internet_facing: null
   - cve: CVE-2025-52881
     verdict: exploitable
-    reasoning: runc container escape via opencontainers/selinux arbitrary write — gosu embeds runc, container escape risk.
+    reasoning: 'runc container escape via opencontainers/selinux arbitrary write: gosu embeds runc, container escape risk.'
     action: Rebuild image with updated gosu containing runc fix when available.
     cvss_score: null
     epss_percentile: null
@@ -59,7 +58,7 @@ ground_truth:
     internet_facing: null
   - cve: CVE-2024-21626
     verdict: exploitable
-    reasoning: runc file descriptor leak — gosu in image, writable filesystem, container escape via leaked fd to host filesystem.
+    reasoning: 'runc file descriptor leak: gosu in image, writable filesystem, container escape via leaked fd to host filesystem.'
     action: Rebuild image with gosu updated to runc >= 1.1.12.
     cvss_score: null
     epss_percentile: null

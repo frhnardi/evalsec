@@ -22,7 +22,7 @@ source:
   trivy_version: 0.50.1
   notes: |
     Scanned locally on macOS. Image was deliberately chosen for
-    log4j-era context — it's old enough to have CVE-2021-44228
+    log4j-era context: it's old enough to have CVE-2021-44228
     via bundled log4j library.
 
 input: |
@@ -199,4 +199,4 @@ rubric:
       No excessive caveats ("In real production, you should also consider...").
       Direct, professional tone.
 
-weight: 1.5   # Flagship case — counts 1.5x because it tests core capability
+weight: 1.5   # Flagship case: counts 1.5x because it tests core capability

@@ -1,4 +1,4 @@
-"""Static HTML dashboard builder — Jinja2 + Chart.js.
+"""Static HTML dashboard builder: Jinja2 + Chart.js.
 
 Loads a scores JSON file (from ``evalsec grade``) and renders a
 self-contained ``dist/index.html`` with all data baked in at build time.
@@ -109,7 +109,7 @@ class BuildDashboard:
         # 5. Render template
         template = self._env.get_template("dashboard.html.j2")
         html = template.render(
-            title=f"evalsec — {meta.get('task', 'unknown')}",
+            title=f"evalsec: {meta.get('task', 'unknown')}",
             task=meta.get("task", "unknown"),
             prompt_version=meta.get("prompt_version", "?"),
             judge_model=meta.get("judge_model", "?"),
@@ -176,7 +176,7 @@ def _build_judge_entry(meta: dict[str, Any]) -> dict[str, Any] | None:
     """Build a synthetic judge-cost card entry from recorded judge usage.
 
     The judge (e.g. Claude Opus 4.7) never performs the triage task, so it
-    has no score and is not part of the leaderboard ranking — this entry
+    has no score and is not part of the leaderboard ranking: this entry
     exists only to surface grading-infrastructure cost on the Models tab.
 
     Returns ``None`` when no judge usage was recorded (mock data, or a run
@@ -244,7 +244,7 @@ def _build_leaderboard(
         avg_hal = sum(hal_scores) / len(hal_scores) if hal_scores else 0.0
         avg_det_total = sum(det_totals) / len(det_totals) if det_totals else 0.0
 
-        # Collect per-dimension scores — rubric dimensions + deterministic dimensions
+        # Collect per-dimension scores: rubric dimensions + deterministic dimensions
         dim_scores: dict[str, list[float]] = {}
         for s in scores:
             for rs in s.get("rubric_scores", []):
@@ -287,7 +287,7 @@ def _build_leaderboard(
             }
         )
 
-    # Sort by avg_score descending (LLMs and baselines mixed — template separates)
+    # Sort by avg_score descending (LLMs and baselines mixed: template separates)
     leaderboard.sort(key=lambda x: x["avg_score"], reverse=True)
 
     # Add rank

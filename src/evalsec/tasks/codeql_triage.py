@@ -1,4 +1,4 @@
-"""Task definition for codeql_triage — SAST triage (CodeQL output).
+"""Task definition for codeql_triage: SAST triage (CodeQL output).
 
 Prompt templates and output schema for the CodeQL SAST triage task.
 Models receive CodeQL SARIF-like output + deployment context and must
@@ -12,19 +12,19 @@ from __future__ import annotations
 from typing import Any
 
 # ---------------------------------------------------------------------------
-# Version — stamped on every graded response for audit trail
+# Version: stamped on every graded response for audit trail
 # ---------------------------------------------------------------------------
 PROMPT_VERSION = "codeql_triage/v1"
 
 # ---------------------------------------------------------------------------
-# Pass 1 — System Prompt (shown to the benchmarked model)
+# Pass 1: System Prompt (shown to the benchmarked model)
 # ---------------------------------------------------------------------------
 SYSTEM_PROMPT = """You are a senior DevSecOps engineer at a financial services company operating under NIST SP 800-53 (US security standard) and PCI-DSS v4.0 (payment card industry) regulatory frameworks.
 
 Your task is to analyze a CodeQL SAST scan output and produce a prioritised remediation plan in VEX (Vulnerability Exploitability eXchange) format. You will receive:
 
-1. CodeQL scan output — a list of security findings with rule IDs, severity levels (error/warning/note), file locations, line numbers, and descriptions.
-2. Stack context — application architecture, input validation controls, WAF rules, and data sensitivity classification.
+1. CodeQL scan output: a list of security findings with rule IDs, severity levels (error/warning/note), file locations, line numbers, and descriptions.
+2. Stack context: application architecture, input validation controls, WAF rules, and data sensitivity classification.
 
 CodeQL findings represent code-level security bugs detected via semantic analysis. Each finding has:
 - A rule ID (e.g. py/sql-injection, js/xss, java/path-injection)
@@ -56,7 +56,7 @@ You MUST respond in this exact VEX JSON format:
 Priority definitions:
 - P0 = Exploitable from public internet, no compensating controls, high data sensitivity. Remediate within 72 hours.
 - P1 = Reachable but limited blast radius or partial controls exist. Remediate this sprint.
-- P2 = Theoretical risk — attack requires preconditions (auth bypass, internal access). Remediate this sprint.
+- P2 = Theoretical risk: attack requires preconditions (auth bypass, internal access). Remediate this sprint.
 - P3 = Protected by compensating controls / false positive. Remediate next quarter.
 
 Justification values (required when status is not_affected):
@@ -73,7 +73,7 @@ Rules:
 - Conciseness critical: You have a limited token budget for the entire response. Keep each statement to 1-2 sentences max. Prioritize the most impactful findings."""
 
 # ---------------------------------------------------------------------------
-# Pass 1 — User Prompt Template
+# Pass 1: User Prompt Template
 # ---------------------------------------------------------------------------
 USER_PROMPT_TEMPLATE = """## CodeQL SAST Scan Output
 
@@ -87,7 +87,7 @@ USER_PROMPT_TEMPLATE = """## CodeQL SAST Scan Output
 Analyze the findings above. Output JSON only."""
 
 # ---------------------------------------------------------------------------
-# Expected output schema (VEX format — same as trivy_triage for compatibility)
+# Expected output schema (VEX format: same as trivy_triage for compatibility)
 # ---------------------------------------------------------------------------
 EXPECTED_OUTPUT_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -150,7 +150,7 @@ VEX_STATUS_TO_VERDICT: dict[str, str] = {
 }
 
 # ---------------------------------------------------------------------------
-# Pass 2 — Judge System Prompt (shown to the grader LLM)
+# Pass 2: Judge System Prompt (shown to the grader LLM)
 # ---------------------------------------------------------------------------
 JUDGE_SYSTEM_PROMPT = """You are a strict DevSecOps evaluator grading a model's SAST triage response.
 
@@ -159,7 +159,7 @@ You will receive:
 2. The model's response
 3. A rubric with 4 dimensions, each scored 0-25 (total 100)
 
-Score each dimension carefully. Return ONLY valid JSON — no markdown fences, no extra text:
+Score each dimension carefully. Return ONLY valid JSON: no markdown fences, no extra text:
 
 {
   "rubric_scores": [
@@ -177,7 +177,7 @@ Scoring guidelines:
 - conciseness: Response is focused. No preamble, no disclaimers, no irrelevant details."""
 
 # ---------------------------------------------------------------------------
-# Pass 2 — Judge User Prompt Template
+# Pass 2: Judge User Prompt Template
 # ---------------------------------------------------------------------------
 JUDGE_USER_PROMPT_TEMPLATE = """## Task
 
@@ -202,7 +202,7 @@ JUDGE_USER_PROMPT_TEMPLATE = """## Task
 Grade the response. JSON only."""
 
 # ---------------------------------------------------------------------------
-# Task registry — maps task names to their prompt configs
+# Task registry: maps task names to their prompt configs
 # ---------------------------------------------------------------------------
 
 TASK_CONFIGS: dict[str, dict[str, Any]] = {

@@ -39,7 +39,7 @@ logger = structlog.get_logger(__name__)
 console = Console()
 
 # ---------------------------------------------------------------------------
-# Weights — can be overridden by CLI flags
+# Weights: can be overridden by CLI flags
 # ---------------------------------------------------------------------------
 PASS1_WEIGHT: float = 0.20
 PASS2_WEIGHT: float = 0.80
@@ -62,7 +62,7 @@ REGEX_WEIGHT: float = 0.10
 HALLUCINATION_PENALTY_MAX: float = 20.0  # max points deducted for hallucinated CVEs
 
 # ---------------------------------------------------------------------------
-# Pydantic data models (legacy exports — used by external tools)
+# Pydantic data models (legacy exports: used by external tools)
 # ---------------------------------------------------------------------------
 
 
@@ -195,7 +195,7 @@ class GradedResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Pass 1 — Regex Grader
+# Pass 1: Regex Grader
 # ---------------------------------------------------------------------------
 
 
@@ -235,7 +235,7 @@ class RegexGrader:
 
 
 # ---------------------------------------------------------------------------
-# JSON Validator — Pass 1.5 structural grading
+# JSON Validator: Pass 1.5 structural grading
 # ---------------------------------------------------------------------------
 
 
@@ -277,7 +277,7 @@ class JsonValidationResult:
 class JsonValidator:
     """Validates model VEX JSON output against ground truth.
 
-    This is the structural grading pass (1.5) — evaluates:
+    This is the structural grading pass (1.5): evaluates:
       - JSON validity and VEX schema conformance (format_score)
       - CVE coverage vs ground truth (coverage_score)
       - Verdict accuracy via VEX status mapping (verdict_score)
@@ -447,7 +447,7 @@ class JsonValidator:
 
         format_score = sum(item_scores) / len(item_scores) if item_scores else 0.0
 
-        # 5. CVE coverage — which ground-truth CVEs did the model address?
+        # 5. CVE coverage: which ground-truth CVEs did the model address?
         ground_truth_cves: list[str] = list(gt_cves.keys())
         model_cves: list[str] = [c["cve"] for c in parsed_cves]
         model_cve_set: set[str] = set(model_cves)
@@ -546,7 +546,7 @@ class JsonValidator:
 
 
 # ---------------------------------------------------------------------------
-# Pass 2 — Judge Grader (LLM-as-judge via Claude Opus 4.7 / OpenRouter)
+# Pass 2: Judge Grader (LLM-as-judge via Claude Opus 4.7 / OpenRouter)
 # ---------------------------------------------------------------------------
 
 
@@ -779,7 +779,7 @@ class JudgeGrader:
 
 
 # ---------------------------------------------------------------------------
-# Grader — Orchestrator
+# Grader: Orchestrator
 # ---------------------------------------------------------------------------
 
 
@@ -916,7 +916,7 @@ class Grader:
                     rubric=case.rubric,
                 )
             else:
-                judge_error = "Empty response text — skipped judge grading"
+                judge_error = "Empty response text: skipped judge grading"
 
             pass2_weighted = pass2_raw * self.pass2_weight
             total_score = pass1_weighted + pass2_weighted

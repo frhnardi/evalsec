@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# evalsec dashboard infrastructure — S3 + CloudFront + Route 53 + ACM
+# evalsec dashboard infrastructure: S3 + CloudFront + Route 53 + ACM
 # ---------------------------------------------------------------------------
 # Architecture:
 #   S3 (private) ← Origin Access Control (OAC) ← CloudFront ← Route 53
@@ -9,7 +9,7 @@
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
-# ACM Certificate (us-east-1 — required by CloudFront)
+# ACM Certificate (us-east-1: required by CloudFront)
 # ---------------------------------------------------------------------------
 resource "aws_acm_certificate" "dashboard" {
   provider          = aws.us_east_1
@@ -24,14 +24,14 @@ resource "aws_acm_certificate" "dashboard" {
 }
 
 # # ---------------------------------------------------------------------------
-# # Route 53 Hosted Zone (disabled — using Cloudflare instead)
+# # Route 53 Hosted Zone (disabled: using Cloudflare instead)
 # # ---------------------------------------------------------------------------
 # data "aws_route53_zone" "main" {
 #   name         = var.domain_name
 #   private_zone = false
 # }
 
-# # DNS validation records for ACM certificate (disabled — Cloudflare)
+# # DNS validation records for ACM certificate (disabled: Cloudflare)
 # resource "aws_route53_record" "cert_validation" {
 #   for_each = {
 #     for dvo in aws_acm_certificate.dashboard.domain_validation_options : dvo.domain_name => {
@@ -49,7 +49,7 @@ resource "aws_acm_certificate" "dashboard" {
 #   zone_id         = data.aws_route53_zone.main.zone_id
 # }
 
-# # ACM certificate validation (disabled — manual via Cloudflare DNS)
+# # ACM certificate validation (disabled: manual via Cloudflare DNS)
 # resource "aws_acm_certificate_validation" "dashboard" {
 #   provider                = aws.us_east_1
 #   certificate_arn         = aws_acm_certificate.dashboard.arn
@@ -57,7 +57,7 @@ resource "aws_acm_certificate" "dashboard" {
 # }
 
 # ---------------------------------------------------------------------------
-# S3 Bucket (private — no public access)
+# S3 Bucket (private: no public access)
 # ---------------------------------------------------------------------------
 resource "aws_s3_bucket" "dashboard" {
   bucket = var.s3_bucket_name != "" ? var.s3_bucket_name : null
@@ -110,7 +110,7 @@ resource "aws_cloudfront_origin_access_control" "dashboard" {
 }
 
 # ---------------------------------------------------------------------------
-# S3 bucket policy — grants s3:GetObject only to the specific CloudFront
+# S3 bucket policy: grants s3:GetObject only to the specific CloudFront
 # distribution via Origin Access Control
 # ---------------------------------------------------------------------------
 resource "aws_s3_bucket_policy" "dashboard" {
@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "dashboard_bucket_policy" {
 resource "aws_cloudfront_distribution" "dashboard" {
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "evalsec dashboard — ${var.domain_name}"
+  comment             = "evalsec dashboard: ${var.domain_name}"
   default_root_object = "index.html"
   price_class         = var.cloudfront_price_class
 
@@ -180,7 +180,7 @@ resource "aws_cloudfront_distribution" "dashboard" {
     origin_access_control_id = aws_cloudfront_origin_access_control.dashboard.id
   }
 
-  # Default cache behavior (index.html — short TTL for fast iteration)
+  # Default cache behavior (index.html: short TTL for fast iteration)
   default_cache_behavior {
     target_origin_id = "s3-dashboard"
 
@@ -190,7 +190,7 @@ resource "aws_cloudfront_distribution" "dashboard" {
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
 
-    # Short TTL for index.html — deploy updates quickly
+    # Short TTL for index.html: deploy updates quickly
     min_ttl     = 0
     default_ttl = var.index_ttl_seconds
     max_ttl     = var.index_ttl_seconds * 2
@@ -214,7 +214,7 @@ resource "aws_cloudfront_distribution" "dashboard" {
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
 
-    # Long TTL for hashed assets — they never change
+    # Long TTL for hashed assets: they never change
     min_ttl     = 0
     default_ttl = var.static_ttl_seconds
     max_ttl     = var.static_ttl_seconds
@@ -237,7 +237,7 @@ resource "aws_cloudfront_distribution" "dashboard" {
 }
 
 # # ---------------------------------------------------------------------------
-# # Route 53 DNS record pointing to CloudFront (disabled — Cloudflare CNAME)
+# # Route 53 DNS record pointing to CloudFront (disabled: Cloudflare CNAME)
 # # ---------------------------------------------------------------------------
 # resource "aws_route53_record" "dashboard" {
 #   zone_id = data.aws_route53_zone.main.zone_id

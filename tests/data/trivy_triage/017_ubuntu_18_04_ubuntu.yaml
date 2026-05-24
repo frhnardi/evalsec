@@ -46,7 +46,7 @@ stack_context: 'Service: ci-build-pipeline
 
   Usage: Ubuntu 18.04 base image used in legacy CI/CD build pipeline.
 
-  Only used for CI/CD builds — NEVER deployed to production.
+  Only used for CI/CD builds: NEVER deployed to production.
 
   Compiled artifacts are copied to a fresh distroless image for production.
 
@@ -59,8 +59,8 @@ ground_truth:
   non_exploitable_findings:
   - cve: NONE
     verdict: not_exploitable
-    reasoning: Ubuntu 18.04 CI/CD builder image — clean scan. No vulnerabilities detected
-      by Trivy. Builder image tidak pernah di-deploy ke produksi.
+    reasoning: 'Ubuntu 18.04 CI/CD builder image: clean scan. No vulnerabilities detected
+      by Trivy. Builder image tidak pernah di-deploy ke produksi.'
     action: null
     cvss_score: null
     epss_percentile: null

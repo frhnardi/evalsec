@@ -42,7 +42,7 @@ input: |
   Finding 1: java/path-injection [ERROR]
   ═════════════════════════════════════════
   Location: src/controller/DocController.java:67
-  Message: Path traversal — file path is constructed with user input.
+  Message: Path traversal: file path is constructed with user input.
 
   Vulnerable code:
     65    @GetMapping("/documents/{filename}")
@@ -53,9 +53,9 @@ input: |
     70    }
 
   Code flow:
-    (1) DocController.java:65 — User-controlled filename from URL path
-    (2) DocController.java:67 — filename concatenated into Paths.get()
-    (3) DocController.java:68 — FileSystemResource loads arbitrary file
+    (1) DocController.java:65: User-controlled filename from URL path
+    (2) DocController.java:67: filename concatenated into Paths.get()
+    (3) DocController.java:68: FileSystemResource loads arbitrary file
 
   Finding 2: java/unsafe-deserialization [ERROR]
   ════════════════════════════════════════════════
@@ -130,7 +130,7 @@ stack_context: |
     - java/ldap-injection: NOT REACHABLE. LDAP authentication is performed
       only for service-to-service calls within the mesh. The username is
       extracted from the mTLS client certificate, not from user input.
-      The CodeQL finding is a false positive — the code pattern matches but
+      The CodeQL finding is a false positive: the code pattern matches but
       the data flow prevents injection.
 
   Regulatory context: NIST SP 800-53 controls SI-10 (information input
@@ -189,10 +189,10 @@ ground_truth:
         Deploy this sprint.
 
   priority_order:
-    - java/xxe                        # P2 — this sprint, genuine gap
-    - java/path-injection             # P3 — next quarter (WAF-compensated)
-    - java/unsafe-deserialization     # P3 — next quarter (not reachable)
-    - java/ldap-injection             # P3 — next quarter (false positive)
+    - java/xxe                        # P2: this sprint, genuine gap
+    - java/path-injection             # P3: next quarter (WAF-compensated)
+    - java/unsafe-deserialization     # P3: next quarter (not reachable)
+    - java/ldap-injection             # P3: next quarter (false positive)
 
 expected_response_includes:
   - "(?i)path.traversal|WAF|compensating|internal.*only"
@@ -221,7 +221,7 @@ rubric:
     max_score: 25
     description: |
       Does the model correctly deprioritize compensated findings?
-      Expected order: XXE first (P2, this sprint — genuine gap), then path
+      Expected order: XXE first (P2, this sprint: genuine gap), then path
       traversal (P3, WAF-compensated), then the other two (P3, not reachable).
 
       Penalize if it puts path traversal above XXE.
@@ -244,4 +244,4 @@ rubric:
       Response is under 15 sentences. No preamble.
       Correctly focuses on XXE as the only real action item.
 
-weight: 1.4   # Tests compensating controls reasoning — key differentiator
+weight: 1.4   # Tests compensating controls reasoning: key differentiator

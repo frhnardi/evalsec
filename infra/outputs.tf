@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# Outputs — values to set as GitHub Actions Secrets / variables
+# Outputs: values to set as GitHub Actions Secrets / variables
 # ---------------------------------------------------------------------------
 
 output "s3_bucket_name" {

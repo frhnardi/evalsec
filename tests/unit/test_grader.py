@@ -1,4 +1,4 @@
-"""Unit tests for the enhanced grader — JsonValidator, scoring, and grading pipeline."""
+"""Unit tests for the enhanced grader: JsonValidator, scoring, and grading pipeline."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ from evalsec.grader import (
 from evalsec.tasks.base import FindingDetail, GroundTruth
 
 # ---------------------------------------------------------------------------
-# Fixtures — shared test data
+# Fixtures: shared test data
 # ---------------------------------------------------------------------------
 
 
@@ -229,7 +229,7 @@ class TestExtractJson:
         assert parsed == {"document": {"type": "vex"}, "statements": []}
 
     def test_no_closing_fence(self) -> None:
-        """Missing closing fence — extracts everything after opening fence."""
+        """Missing closing fence: extracts everything after opening fence."""
         text = '```json\n{"document": {"type": "vex"}, "statements": []}'
         result = JsonValidator._extract_json(text)
         parsed = json.loads(result)
@@ -237,7 +237,7 @@ class TestExtractJson:
 
 
 # ---------------------------------------------------------------------------
-# Tests: JsonValidator.validate — format validation
+# Tests: JsonValidator.validate: format validation
 # ---------------------------------------------------------------------------
 
 
@@ -387,7 +387,7 @@ class TestJsonValidatorFormat:
 
 
 # ---------------------------------------------------------------------------
-# Tests: JsonValidator.validate — CVE coverage
+# Tests: JsonValidator.validate: CVE coverage
 # ---------------------------------------------------------------------------
 
 
@@ -470,7 +470,7 @@ class TestJsonValidatorCoverage:
 
 
 # ---------------------------------------------------------------------------
-# Tests: JsonValidator.validate — verdict accuracy
+# Tests: JsonValidator.validate: verdict accuracy
 # ---------------------------------------------------------------------------
 
 
@@ -507,7 +507,7 @@ class TestJsonValidatorVerdict:
 
 
 # ---------------------------------------------------------------------------
-# Tests: JsonValidator.validate — hallucination detection
+# Tests: JsonValidator.validate: hallucination detection
 # ---------------------------------------------------------------------------
 
 
@@ -576,7 +576,7 @@ class TestJsonValidatorHallucination:
 
 
 # ---------------------------------------------------------------------------
-# Tests: JsonValidator.validate — priority accuracy
+# Tests: JsonValidator.validate: priority accuracy
 # ---------------------------------------------------------------------------
 
 
@@ -599,7 +599,7 @@ class TestJsonValidatorPriority:
 
 
 # ---------------------------------------------------------------------------
-# Tests: JsonValidator.validate — regex score passthrough
+# Tests: JsonValidator.validate: regex score passthrough
 # ---------------------------------------------------------------------------
 
 

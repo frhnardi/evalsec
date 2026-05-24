@@ -1,4 +1,4 @@
-"""Benchmark runner — load YAML cases, call models, save responses.
+"""Benchmark runner: load YAML cases, call models, save responses.
 
 Orchestrates the core benchmark workflow:
   1. Load and filter YAML test cases
@@ -83,9 +83,9 @@ def _is_json_truncated(text: str) -> bool:
 
     try:
         json.loads(stripped)
-        return False  # Valid JSON — not truncated
+        return False  # Valid JSON: not truncated
     except json.JSONDecodeError:
-        return True  # Invalid JSON — likely truncated
+        return True  # Invalid JSON: likely truncated
 
 
 # ---------------------------------------------------------------------------
@@ -165,7 +165,7 @@ class Runner:
         return path
 
     # ------------------------------------------------------------------
-    # Internal — loading
+    # Internal: loading
     # ------------------------------------------------------------------
 
     def _load_cases(self) -> list[TaskCase]:
@@ -196,7 +196,7 @@ class Runner:
         return cases
 
     # ------------------------------------------------------------------
-    # Internal — adapters
+    # Internal: adapters
     # ------------------------------------------------------------------
 
     async def _build_adapters(self) -> dict[str, OpenAICompatAdapter]:
@@ -207,7 +207,7 @@ class Runner:
             api_key = _resolve_api_key(model_config.provider)
             if not api_key:
                 console.print(
-                    f"[yellow]Skipping {model_key} — no API key for "
+                    f"[yellow]Skipping {model_key}: no API key for "
                     f"provider '{model_config.provider}'[/yellow]"
                 )
                 continue
@@ -218,7 +218,7 @@ class Runner:
         return adapters
 
     # ------------------------------------------------------------------
-    # Internal — cost estimation
+    # Internal: cost estimation
     # ------------------------------------------------------------------
 
     def _estimate_cost(
@@ -247,7 +247,7 @@ class Runner:
                 output_tokens = 300 * 5
 
                 # Check context limit using same chars/2 conservative estimate
-                # as _run_cases() — mark as skipped if it would overflow.
+                # as _run_cases(): mark as skipped if it would overflow.
                 total_chars = len(case.input + case.stack_context)
                 est_input_chars2 = total_chars // 2
                 context_overflow = (
@@ -333,7 +333,7 @@ class Runner:
         console.print()
 
     # ------------------------------------------------------------------
-    # Internal — execution
+    # Internal: execution
     # ------------------------------------------------------------------
 
     async def _run_cases(
@@ -390,7 +390,7 @@ class Runner:
                         console.print(
                             f"  [yellow]⚠ {case.id} est. {est_input_tokens:,} in + "
                             f"{request_max_tokens:,} out exceeds {model_key} context "
-                            f"limit ({max_ctx:,}) — skipping[/yellow]"
+                            f"limit ({max_ctx:,}): skipping[/yellow]"
                         )
                         model_responses.append(
                             {
@@ -440,7 +440,7 @@ class Runner:
                     # Fix C: Truncation detection + auto-retry with doubled max_tokens
                     # Two triggers:
                     #   1. finish_reason == "length" (API-level truncation)
-                    #   2. _is_json_truncated() — some providers return "stop" even when
+                    #   2. _is_json_truncated(): some providers return "stop" even when
                     #      the response is cut mid-JSON at max_tokens
                     max_retries = 2
                     retry_count = 0
@@ -461,7 +461,7 @@ class Runner:
                         )
                         console.print(
                             f"  [yellow]⚠ {case_id} truncated ({response.tokens_out}/{request.max_tokens})"
-                            f" — retrying with max_tokens={retry_max_tokens}[/yellow]"
+                            f": retrying with max_tokens={retry_max_tokens}[/yellow]"
                         )
                         retry_request = LLMRequest(
                             model_id=request.model_id,
@@ -534,7 +534,7 @@ class Runner:
         return all_responses
 
     # ------------------------------------------------------------------
-    # Internal — persistence
+    # Internal: persistence
     # ------------------------------------------------------------------
 
     def _save_responses(

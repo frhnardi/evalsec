@@ -6,7 +6,7 @@ Pipeline:
      deployment persona via filename prefix.
   2. Send the raw scan output + persona-specific deployment context to
      DeepSeek V4 Pro (via the OpenAI-compatible API).
-  3. Parse the JSON response — retry with exponential backoff if invalid.
+  3. Parse the JSON response: retry with exponential backoff if invalid.
   4. Validate verdict distribution; warn if >40 % of CVEs need manual review.
   5. Build a :class:`TaskCase` Pydantic model matching the project schema.
   6. Serialise to YAML and save under ``tests/data/trivy_triage/`` with the
@@ -339,7 +339,7 @@ PERSONA_DEFS: dict[str, dict[str, str]] = {
         "stack_context": (
             "Service: base-image-evaluation\n"
             "Image: alpine:3.14\n"
-            "Exposure: Not deployed — security review phase\n"
+            "Exposure: Not deployed: security review phase\n"
             "Container runtime: EKS 1.28 (planned) with:\n"
             "  - restricted PSS\n"
             "  - runAsNonRoot\n"
@@ -414,7 +414,7 @@ PERSONA_DEFS: dict[str, dict[str, str]] = {
             "\n"
             "Usage: Company engineering blog CMS.\n"
             "Admin panel can deploy arbitrary content. SSO via Auth0 for admin.\n"
-            "No customer data — marketing site only.\n"
+            "No customer data: marketing site only.\n"
             "\n"
             "Regulatory context: Non-financial, non-PII. Marketing site only."
         ),
@@ -461,7 +461,7 @@ PERSONA_DEFS: dict[str, dict[str, str]] = {
             "Usage: Manages secrets for all microservices via Vault Agent injector.\n"
             "Storage backend: Consul on separate cluster. TLS enabled with internal CA.\n"
             "Audit log to encrypted S3. Kubernetes auth method.\n"
-            "Critical infrastructure — compromise = total secrets disclosure.\n"
+            "Critical infrastructure: compromise = total secrets disclosure.\n"
             "\n"
             "Regulatory context: OJK POJK 22/2023. Critical infrastructure."
         ),
@@ -476,7 +476,7 @@ PERSONA_DEFS: dict[str, dict[str, str]] = {
             "Container runtime: GitHub Actions ephemeral runner\n"
             "\n"
             "Usage: Ubuntu 18.04 base image used in legacy CI/CD build pipeline.\n"
-            "Only used for CI/CD builds — NEVER deployed to production.\n"
+            "Only used for CI/CD builds: NEVER deployed to production.\n"
             "Compiled artifacts are copied to a fresh distroless image for production.\n"
             "Isolated from production environment.\n"
             "\n"
@@ -550,7 +550,7 @@ FILENAME_TO_IMAGE: dict[str, str] = {
 }
 
 # ---------------------------------------------------------------------------
-# System prompt for DeepSeek — instructs the model to reason about
+# System prompt for DeepSeek: instructs the model to reason about
 # exploitability in the given deployment context.
 #
 # CRITICAL: DeepSeek output is limited to 8192 tokens (~30K chars).
@@ -580,7 +580,7 @@ Pertimbangan: internet-facing?, code reachability?, security controls (NetworkPo
   "total_cves_analyzed": 42
 }
 
-**KRITIS — Batasan 8000 token output:**
+**KRITIS: Batasan 8000 token output:**
 Output JSON Anda TIDAK boleh melebihi 8000 token (~30.000 karakter). Jika melebihi, JSON akan dipotong dan dianggap gagal.
 
 Untuk scan dengan 50+ CVE, lakukan:
@@ -588,7 +588,7 @@ Untuk scan dengan 50+ CVE, lakukan:
 2. Grouping: untuk CVE OS base image yang massal (Debian, Alpine, Oracle Linux) dan jelas not_exploitable, buat SATU entry representative dengan format: {"cve":"CVE-PERTAMA","verdict":"not_exploitable","reasoning":"dan {N} CVE {paket} Debian OS lainnya. Alasan: ...","action":"..."}
 3. Prioritaskan CVE aplikasi (log4j, openssl, libcurl, dll) untuk entry individual.
 4. Jika masih tidak muat, masukkan CVE paling tidak menarik ke `needs_review`.
-5. Hanya output JSON — tanpa markdown, tanpa ```json, tanpa teks lain.
+5. Hanya output JSON: tanpa markdown, tanpa ```json, tanpa teks lain.
 
 Aturan:
 - `expected_response_includes`: 3-4 regex dengan (?i)
@@ -690,7 +690,7 @@ def _parse_total_cves(scan_text: str) -> int:
 
 
 # ---------------------------------------------------------------------------
-# CVE selection filter — keep YAML files small (max ~10 CVEs per case)
+# CVE selection filter: keep YAML files small (max ~10 CVEs per case)
 # ---------------------------------------------------------------------------
 
 SELECTION_CRITERIA = "top 4 exploitable + 2 partial + 4 not_exploitable (interesting)"
@@ -702,7 +702,7 @@ def _select_cves(parsed: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]
     Selection priority:
     1. All exploitable CVEs (max 4)
     2. All partial CVEs (max 2)
-    3. Most *interesting* not_exploitable CVEs — prefer those with
+    3. Most *interesting* not_exploitable CVEs: prefer those with
        ``attack_vector="Network"``, then by descending ``cvss_score`` (max 4).
 
     Returns *(filtered_parsed, selection_stats)* where *selection_stats* contains
@@ -721,13 +721,13 @@ def _select_cves(parsed: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]
 
     total_before = len(all_cves)
 
-    # Step 1: exploitable — keep ALL (max 4)
+    # Step 1: exploitable: keep ALL (max 4)
     selected_exploitable = exploitable[:4]
 
-    # Step 2: partial — keep ALL (max 2)
+    # Step 2: partial: keep ALL (max 2)
     selected_partial = partial[:2]
 
-    # Step 3: not_exploitable — pick most interesting (max 4)
+    # Step 3: not_exploitable: pick most interesting (max 4)
     # Sort: Network attack_vector first, then by cvss_score descending
     def _interest_key(item: dict[str, Any]) -> tuple:
         av = str(item.get("attack_vector", "") or "")
@@ -780,7 +780,7 @@ def _select_cves(parsed: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]
 
 
 # ---------------------------------------------------------------------------
-# Scan-text filter — keep only Trivy output lines for selected CVEs
+# Scan-text filter: keep only Trivy output lines for selected CVEs
 # ---------------------------------------------------------------------------
 
 _CVE_PATTERN = re.compile(r"CVE-\d+-\d+")
@@ -831,7 +831,7 @@ def _condense_cve_line(group_lines: list[str]) -> str:
     elif len(cols) >= 6:
         installed = cols[5].strip()
 
-    # Clean up — remove empty/box-drawing-only results
+    # Clean up: remove empty/box-drawing-only results
     installed = re.sub(r"[^\w.~+\-:,;/ ]", "", installed).strip()
     fixed = re.sub(r"[^\w.~+\-:,;/ ]", "", fixed).strip()
 
@@ -941,7 +941,7 @@ def _filter_scan_text(scan_text: str, selected_cves: set[str]) -> str:
     """Filter Trivy scan output to only include lines for selected CVEs.
 
     Non-table lines (timestamps, section headers, the Report-Summary table)
-    are kept as-is.  Vulnerability tables are parsed and condensed — each
+    are kept as-is.  Vulnerability tables are parsed and condensed: each
     selected CVE produces one compact line:
 
         Library | CVE-ID | SEVERITY | status | installed -> fixed | URL
@@ -1041,7 +1041,7 @@ async def _call_deepseek(
     finish_reason = response.choices[0].finish_reason
     raw_text = response.choices[0].message.content or ""
 
-    # Detect truncation — if the response was cut off, the JSON is guaranteed
+    # Detect truncation: if the response was cut off, the JSON is guaranteed
     # to be invalid. Raise json.JSONDecodeError to trigger a tenacity retry.
     if finish_reason == "length":
         raise json.JSONDecodeError(
@@ -1136,7 +1136,7 @@ def _build_task_case(
     """
     persona = PERSONA_DEFS[persona_key]
     image_name = FILENAME_TO_IMAGE.get(stem, stem.replace("_", ":"))
-    image_safe = stem  # e.g. ``redis_5_0`` — safe for filenames
+    image_safe = stem  # e.g. ``redis_5_0``: safe for filenames
 
     # Convert needs_review items into a notes string
     needs_review_list = parsed.get("needs_review", [])
@@ -1147,7 +1147,7 @@ def _build_task_case(
             f"{', '.join(needs_review_cves)}"
         )
 
-    # Build the ground truth — skip needs_review items
+    # Build the ground truth: skip needs_review items
     exploitable = [
         _build_finding_detail(item, "exploitable")
         for item in parsed.get("exploitable_findings", [])
@@ -1167,7 +1167,7 @@ def _build_task_case(
         priority_order=parsed.get("priority_order", []),
     )
 
-    # expected_response_includes — use what DeepSeek returned, or sensible defaults
+    # expected_response_includes: use what DeepSeek returned, or sensible defaults
     expected_includes: list[str] = parsed.get("expected_response_includes", [])
     if not expected_includes:
         expected_includes = [
@@ -1297,7 +1297,7 @@ def _check_needs_review_ratio(parsed: dict[str, Any], persona_name: str) -> str 
         pct = (needs_review / total) * 100
         return (
             f"[yellow]WARNING[/yellow] {persona_name}: {needs_review}/{total} "
-            f"({pct:.0f}%) CVEs marked 'needs_review' — verifying results is advised."
+            f"({pct:.0f}%) CVEs marked 'needs_review': verifying results is advised."
         )
     return None
 
@@ -1369,7 +1369,7 @@ async def _process_scan(
         stack_context = persona["stack_context"]
         image_name = FILENAME_TO_IMAGE.get(stem, stem.replace("_", ":"))
 
-        _print_info(f"  {display_name} ({image_name}) — calling DeepSeek ...")
+        _print_info(f"  {display_name} ({image_name}): calling DeepSeek ...")
 
         # ── 2. Read scan file ───────────────────────────────────────────
         scan_text = scan_path.read_text(encoding=DEFAULT_ENCODING, errors="replace")
@@ -1420,7 +1420,7 @@ async def _process_scan(
         if selected_cve_ids:
             filtered_scan_text = _filter_scan_text(scan_text, selected_cve_ids)
         else:
-            # No CVEs found (e.g. rabbitmq clean scan) — keep minimal header
+            # No CVEs found (e.g. rabbitmq clean scan): keep minimal header
             filtered_scan_text = scan_text
 
         # ── 7. Build TaskCase ───────────────────────────────────────────
@@ -1509,7 +1509,7 @@ def _print_summary(results: list[dict[str, Any]], warnings: list[str]) -> None:
 
     if console and _table_class is not None:
         table = _table_class(
-            title="[bold]Trivy Triage — Test Case Generation Summary[/bold]",
+            title="[bold]Trivy Triage: Test Case Generation Summary[/bold]",
             show_header=True,
             header_style="bold cyan",
         )
@@ -1543,7 +1543,7 @@ def _print_summary(results: list[dict[str, Any]], warnings: list[str]) -> None:
     else:
         # Fallback plain-text table
         print("\n" + "=" * 110)
-        print("Trivy Triage — Test Case Generation Summary")
+        print("Trivy Triage: Test Case Generation Summary")
         print("=" * 110)
         header = (
             f"{'#':>3}  {'File':<45} {'Persona':<28} {'Img':<18} "

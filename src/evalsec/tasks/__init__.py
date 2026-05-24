@@ -1,4 +1,4 @@
-"""Task registry — central hub for all benchmark tasks.
+"""Task registry: central hub for all benchmark tasks.
 
 Each task module (``trivy_triage``, ``codeql_triage``, etc.) registers its
 prompt configs in ``TASK_CONFIGS``. This module merges them into a single
@@ -18,7 +18,7 @@ from typing import Any
 from evalsec.tasks.base import GroundTruth
 
 # ---------------------------------------------------------------------------
-# Mutable merged registry — populated by each task module's TASK_CONFIGS
+# Mutable merged registry: populated by each task module's TASK_CONFIGS
 # ---------------------------------------------------------------------------
 
 TASK_CONFIGS: dict[str, Any] = {}
@@ -65,7 +65,7 @@ def get_prompt_version(task_name: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Public API — generic prompt builders
+# Public API: generic prompt builders
 # ---------------------------------------------------------------------------
 
 

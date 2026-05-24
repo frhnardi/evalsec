@@ -50,7 +50,7 @@ packages = ["src/evalsec"]
 # All dependencies are from PyPI; no local sources for v0.1.0
 
 ###############################################################################
-# Tool: ruff — linting + formatting (replaces black, isort, flake8)
+# Tool: ruff: linting + formatting (replaces black, isort, flake8)
 ###############################################################################
 [tool.ruff]
 line-length = 100
@@ -76,7 +76,7 @@ ignore = [
 ]
 
 ###############################################################################
-# Tool: mypy — strict type checking
+# Tool: mypy: strict type checking
 ###############################################################################
 [tool.mypy]
 strict = true

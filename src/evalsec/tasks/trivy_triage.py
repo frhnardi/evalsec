@@ -1,4 +1,4 @@
-"""Task definition for trivy_triage — the core DevSecOps benchmark task.
+"""Task definition for trivy_triage: the core DevSecOps benchmark task.
 
 Prompt templates and output schema for the trivy vulnerability triage task.
 Models receive a Trivy scan output + deployment context and must produce
@@ -14,19 +14,19 @@ from typing import Any
 from evalsec.tasks.base import GroundTruth
 
 # ---------------------------------------------------------------------------
-# Version — stamped on every graded response for audit trail
+# Version: stamped on every graded response for audit trail
 # ---------------------------------------------------------------------------
 PROMPT_VERSION = "trivy_triage/v1"
 
 # ---------------------------------------------------------------------------
-# Pass 1 — System Prompt (shown to the benchmarked model)
+# Pass 1: System Prompt (shown to the benchmarked model)
 # ---------------------------------------------------------------------------
 SYSTEM_PROMPT = """You are a senior DevSecOps engineer at a financial services company operating under NIST SP 800-53 (US security standard) and PCI-DSS v4.0 (payment card industry) regulatory frameworks.
 
 Your task is to analyze a container image vulnerability scan and produce a prioritised remediation plan in VEX (Vulnerability Exploitability eXchange) format. You will receive:
 
-1. Trivy scan output — a table of vulnerable packages with CVE IDs, severity ratings, and library versions.
-2. Stack context — deployment architecture, code reachability analysis, runtime hardening controls, and regulatory requirements.
+1. Trivy scan output: a table of vulnerable packages with CVE IDs, severity ratings, and library versions.
+2. Stack context: deployment architecture, code reachability analysis, runtime hardening controls, and regulatory requirements.
 
 You MUST respond in this exact VEX JSON format:
 
@@ -51,7 +51,7 @@ You MUST respond in this exact VEX JSON format:
 Priority definitions:
 - P0 = Actively exploited in the wild AND reachable from this deployment (e.g. Log4Shell with public HTTP exposure). Remediate within 72 hours.
 - P1 = Reachable but no known active exploitation. Remediate this sprint.
-- P2 = Partial — some mitigating controls exist but risk is not fully eliminated. Remediate this sprint.
+- P2 = Partial: some mitigating controls exist but risk is not fully eliminated. Remediate this sprint.
 - P3 = Not reachable / false positive. Remediate next quarter during normal dependency cycle.
 
 Justification values (required when status is not_affected):
@@ -68,7 +68,7 @@ Rules:
 - Conciseness critical: You have a limited token budget for the entire response. Keep each statement to 1-2 sentences max. Prioritize the most impactful CVEs."""
 
 # ---------------------------------------------------------------------------
-# Pass 1 — User Prompt Template
+# Pass 1: User Prompt Template
 # ---------------------------------------------------------------------------
 USER_PROMPT_TEMPLATE = """## Trivy Scan Output
 
@@ -99,7 +99,7 @@ CVE_METADATA_TEMPLATE = """- {cve}:
     Internet-Facing: {facing}"""
 
 # ---------------------------------------------------------------------------
-# Expected output schema (VEX format — CSAF standard, Pass 1 regex grader)
+# Expected output schema (VEX format: CSAF standard, Pass 1 regex grader)
 # ---------------------------------------------------------------------------
 EXPECTED_OUTPUT_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -162,7 +162,7 @@ VEX_STATUS_TO_VERDICT: dict[str, str] = {
 }
 
 # ---------------------------------------------------------------------------
-# Pass 2 — Judge System Prompt (shown to Claude Opus 4.7 grader)
+# Pass 2: Judge System Prompt (shown to Claude Opus 4.7 grader)
 # ---------------------------------------------------------------------------
 JUDGE_SYSTEM_PROMPT = """You are a strict DevSecOps evaluator grading a model's vulnerability triage response.
 
@@ -171,7 +171,7 @@ You will receive:
 2. The model's response
 3. A rubric with 4 dimensions, each scored 0-25 (total 100)
 
-Score each dimension carefully. Return ONLY valid JSON — no markdown fences, no extra text:
+Score each dimension carefully. Return ONLY valid JSON: no markdown fences, no extra text:
 
 {
   "rubric_scores": [
@@ -195,7 +195,7 @@ Scoring guidelines:
 - conciseness: Response is focused. No preamble, no disclaimers, no irrelevant details."""
 
 # ---------------------------------------------------------------------------
-# Pass 2 — Judge User Prompt Template
+# Pass 2: Judge User Prompt Template
 # ---------------------------------------------------------------------------
 JUDGE_USER_PROMPT_TEMPLATE = """## Task
 
@@ -220,7 +220,7 @@ JUDGE_USER_PROMPT_TEMPLATE = """## Task
 Grade the response. JSON only."""
 
 # ---------------------------------------------------------------------------
-# Task registry — maps task names to their prompt configs
+# Task registry: maps task names to their prompt configs
 # ---------------------------------------------------------------------------
 
 TASK_CONFIGS: dict[str, dict[str, Any]] = {

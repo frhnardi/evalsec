@@ -38,6 +38,6 @@ class Settings(BaseSettings):
     )
 
 
-# Module-level singleton — instantiated once on import.
+# Module-level singleton: instantiated once on import.
 # Call settings.xxx anywhere in the codebase.
 settings = Settings()  # type: ignore[call-arg]

@@ -6,16 +6,16 @@
   <meta name="description" content="Measuring how well LLMs triage real container vulnerability scans using deployment context, not just CVSS.">
   <meta name="theme-color" content="#ffffff">
 
-  <meta property="og:title" content="evalsec — DevSecOps LLM Benchmark">
+  <meta property="og:title" content="evalsec: DevSecOps LLM Benchmark">
   <meta property="og:description" content="Measuring how well LLMs triage real container vulnerability scans using deployment context, not just CVSS.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://evalsec.farhan.ngenz.org">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="evalsec — DevSecOps LLM Benchmark">
+  <meta name="twitter:title" content="evalsec: DevSecOps LLM Benchmark">
   <meta name="twitter:description" content="Measuring how well LLMs triage real container vulnerability scans using deployment context, not just CVSS.">
 
-  <title>evalsec — DevSecOps LLM Benchmark</title>
+  <title>evalsec: DevSecOps LLM Benchmark</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,12 +27,12 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ─────────────────────────────────────────────
-       THEME — Light mode (default)
+       THEME: Light mode (default)
        ───────────────────────────────────────────── */
     :root {
       color-scheme: light;
 
-      /* Surface — pure white */
+      /* Surface: pure white */
       --background: #FFFFFF;
       --foreground: #171717;
       --muted-foreground: rgba(23, 23, 23, 0.65);
@@ -40,13 +40,13 @@
       --disabled-foreground: rgba(23, 23, 23, 0.30);
       --border: rgba(0, 0, 0, 0.10);
 
-      /* Primary — pure black */
+      /* Primary: pure black */
       --primary: #000000;
       --primary-hover: #1F1F1F;
       --primary-border-hover: #000000;
       --primary-foreground: #FFFFFF;
 
-      /* Secondary — neutral surface */
+      /* Secondary: neutral surface */
       --secondary: rgba(0, 0, 0, 0.04);
       --secondary-hover: #F5F5F5;
       --secondary-border-hover: #000000;
@@ -59,17 +59,17 @@
       /* Grid */
       --grid: rgba(0, 0, 0, 0.85);
 
-      /* Shadows — neutral */
+      /* Shadows: neutral */
       --shadow-primary: rgba(0, 0, 0, 0.25);
       --shadow-secondary: rgba(0, 0, 0, 0.15);
 
-      /* Semantic status colors — preserved (used by charts/badges) */
+      /* Semantic status colors: preserved (used by charts/badges) */
       --success: #22C55E;
       --warning: #f59e0b;
       --danger:  #EF4444;
       --info:    #6B7280;
 
-      /* Brand colors — constant across light/dark, never change on theme toggle */
+      /* Brand colors: constant across light/dark, never change on theme toggle */
       --brand-deepseek:      #4D6BFE;
       --brand-claude:        #D97757;
       --brand-kimi:          #10B981;
@@ -89,12 +89,12 @@
     }
 
     /* ─────────────────────────────────────────────
-       THEME — Dark mode
+       THEME: Dark mode
        ───────────────────────────────────────────── */
     html.dark {
       color-scheme: dark;
 
-      /* Surface — pure black */
+      /* Surface: pure black */
       --background: #000000;
       --foreground: #EDEDED;
       --muted-foreground: rgba(237, 237, 237, 0.65);
@@ -102,7 +102,7 @@
       --disabled-foreground: rgba(237, 237, 237, 0.30);
       --border: rgba(255, 255, 255, 0.12);
 
-      /* Primary — pure white */
+      /* Primary: pure white */
       --primary: #FFFFFF;
       --primary-hover: #E5E5E5;
       --primary-border-hover: #FFFFFF;
@@ -152,7 +152,7 @@
          (positioned behind body via z-index: -1) remains visible through
          the transparent body. */
       background: transparent;
-      /* overflow-clip is cheaper than hidden — no scroll container created */
+      /* overflow-clip is cheaper than hidden: no scroll container created */
       overflow-x: clip;
     }
 
@@ -200,7 +200,7 @@
     }
 
     /* ─────────────────────────────────────────────
-       SITE BACKGROUND — Infinite SVG Grid + Orbs
+       SITE BACKGROUND: Infinite SVG Grid + Orbs
        ───────────────────────────────────────────── */
     .site-bg {
       position: fixed;
@@ -257,7 +257,7 @@
 
 
     /* ─────────────────────────────────────────────
-       NAVBAR — Glow Menu (adapted from nav.md concept)
+       NAVBAR: Glow Menu (adapted from nav.md concept)
        ───────────────────────────────────────────── */
     .navbar {
       position: sticky;
@@ -280,7 +280,7 @@
       transition: border-color 0.3s ease;
     }
 
-    /* Nav-wide glow — radial gradient overlay on hover */
+    /* Nav-wide glow: radial gradient overlay on hover */
     .navbar::before {
       content: '';
       position: absolute;
@@ -344,7 +344,7 @@
       -webkit-perspective: 600px;
     }
 
-    /* ── Glow layer — scales 2× on hover (nav.md glowVariants) ── */
+    /* ── Glow layer: scales 2× on hover (nav.md glowVariants) ── */
     .nav-tab-glow {
       position: absolute;
       inset: -4px;
@@ -362,7 +362,7 @@
       transform: scale(2);
     }
 
-    /* Per-tab glow colours — blue, green, orange, red (nav.md menuItems.gradient) */
+    /* Per-tab glow colours: blue, green, orange, red (nav.md menuItems.gradient) */
     .nav-tab:nth-child(1) .nav-tab-glow { background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%); }
     .nav-tab:nth-child(2) .nav-tab-glow { background: radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 70%); }
     .nav-tab:nth-child(3) .nav-tab-glow { background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%); }
@@ -414,7 +414,7 @@
       color: var(--foreground);
     }
 
-    /* ── Active (selected) tab — solid bg, no glow, no flip ── */
+    /* ── Active (selected) tab: solid bg, no glow, no flip ── */
     .nav-tab.is-active {
       color: var(--primary-foreground);
       background: var(--primary);
@@ -667,7 +667,7 @@
       font-family: var(--font-mono);
     }
 
-    /* Monospace IDs (deepseek_v4_pro, baseline_cvss, dll) — subtle tier */
+    /* Monospace IDs (deepseek_v4_pro, baseline_cvss, dll): subtle tier */
     .model-id-mono,
     code,
     .model-id,
@@ -676,14 +676,14 @@
       font-family: var(--font-mono);
     }
 
-    /* Section descriptions / captions — muted tier */
+    /* Section descriptions / captions: muted tier */
     .section-subtitle,
     .card-subtitle,
     .caption {
       color: var(--muted-foreground);
     }
 
-    /* Table headers (uppercase RANK, MODEL, SCORE) — muted tier */
+    /* Table headers (uppercase RANK, MODEL, SCORE): muted tier */
     th,
     .table-header {
       color: var(--muted-foreground);
@@ -832,7 +832,7 @@
     }
 
     /* ─────────────────────────────────────────────
-       DIMENSION CARD GRID — judge rubric explainer
+       DIMENSION CARD GRID: judge rubric explainer
        Used above the LLM Rankings table (inline legend)
        and inside Methodology > How We Score (replaces bullets).
        ───────────────────────────────────────────── */
@@ -929,7 +929,7 @@
       .dim-grid--5 { grid-template-columns: 1fr; }
     }
 
-    /* "How We Score" — Pass 1 / Pass 2 sub-section structure. */
+    /* "How We Score": Pass 1 / Pass 2 sub-section structure. */
     .method-panel .pass-section {
       margin-top: 1.6rem;
     }
@@ -975,11 +975,11 @@
     }
 
     /* ─────────────────────────────────────────────
-       OVERVIEW — Question callout + Differentiators + Flow
+       OVERVIEW: Question callout + Differentiators + Flow
        Three sections rendered between the hero and the stats grid.
        ───────────────────────────────────────────── */
 
-    /* "The question we measure" — stat pill + pull-quote body */
+    /* "The question we measure": stat pill + pull-quote body */
     .question-callout {
       max-width: 56rem;
       margin: 0 auto 6rem;
@@ -1064,7 +1064,7 @@
       line-height: 1.15;
     }
 
-    /* "What makes this benchmark different" — 3 differentiator cards */
+    /* "What makes this benchmark different": 3 differentiator cards */
     .diff-section { margin-bottom: 6rem; }
 
     .diff-grid {
@@ -1137,7 +1137,7 @@
 
     .diff-card-body strong { color: var(--foreground); font-weight: 600; }
 
-    /* Architecture flow — Trivy scan → LLM → Grader → Score */
+    /* Architecture flow: Trivy scan → LLM → Grader → Score */
     .flow-section { margin-bottom: 6rem; }
 
     .flow-frame {
@@ -1215,7 +1215,7 @@
     }
 
     /* Sequential "wave" pulse so the flow visibly moves left-to-right.
-       Pulses via box-shadow ring + arrow color only — leaves border-color
+       Pulses via box-shadow ring + arrow color only: leaves border-color
        and transform free for the existing hover state and mobile rotation.
        The global prefers-reduced-motion block (top of CSS) instantly
        neutralises this for users who opt out of motion. */
@@ -1424,7 +1424,7 @@
     }
 
     /* ─────────────────────────────────────────────
-       BRAND COLOR ACCENTS — Patch v5
+       BRAND COLOR ACCENTS: Patch v5
        Colors are constant across light/dark themes.
        Applied ONLY to LLM rows (not baselines).
        ───────────────────────────────────────────── */
@@ -1446,7 +1446,7 @@
     .leaderboard tbody tr[data-model="kimi"]:hover     { background: var(--brand-kimi-soft); }
     .leaderboard tbody tr[data-model="qwen"]:hover     { background: var(--brand-qwen-soft); }
 
-    /* Rank pill — brand colored (overrides rank-1/2/3 monochrome) */
+    /* Rank pill: brand colored (overrides rank-1/2/3 monochrome) */
     tr[data-model="deepseek"] .rank-pill {
       background: var(--brand-deepseek);
       border-color: var(--brand-deepseek);
@@ -1472,13 +1472,13 @@
       box-shadow: 0 0 14px -2px rgba(236, 72, 153, 0.45);
     }
 
-    /* Score bar — brand gradient */
+    /* Score bar: brand gradient */
     tr[data-model="deepseek"] .score-bar { background: linear-gradient(90deg, rgba(77,107,254,0.6), var(--brand-deepseek)); }
     tr[data-model="claude"]   .score-bar { background: linear-gradient(90deg, rgba(217,119,87,0.6), var(--brand-claude)); }
     tr[data-model="kimi"]     .score-bar { background: linear-gradient(90deg, rgba(16,185,129,0.6), var(--brand-kimi)); }
     tr[data-model="qwen"]     .score-bar { background: linear-gradient(90deg, rgba(236,72,153,0.6), var(--brand-qwen)); }
 
-    /* Brand dot — mini-lb and other inline accents */
+    /* Brand dot: mini-lb and other inline accents */
     .brand-dot {
       display: inline-block;
       width: 8px;
@@ -1509,7 +1509,7 @@
       white-space: nowrap;
       vertical-align: middle;
 
-      /* Amber soft — warm warning, not harsh */
+      /* Amber soft: warm warning, not harsh */
       background: rgba(251, 191, 36, 0.10);
       border: 1px solid rgba(251, 191, 36, 0.30);
       color: #D97706;
@@ -1543,7 +1543,7 @@
       color: rgba(251, 191, 36, 0.75);
     }
 
-    /* ── Error badge (API errors — red) ── */
+    /* ── Error badge (API errors: red) ── */
     .err-badge {
       display: inline-flex;
       align-items: center;
@@ -1591,7 +1591,7 @@
       color: rgba(252, 165, 165, 0.75);
     }
 
-    /* ── Skip badge (context overflow — gray) ── */
+    /* ── Skip badge (context overflow: gray) ── */
     .skip-badge {
       display: inline-flex;
       align-items: center;
@@ -2359,7 +2359,7 @@
 
   </div>
 
-  <!-- ── Navbar (Glow Menu — adapted from nav.md) ── -->
+  <!-- ── Navbar (Glow Menu: adapted from nav.md) ── -->
   <header class="navbar">
     <a class="brand" href="#">evalsec.</a>
 
@@ -2447,7 +2447,7 @@
           Yet most container scanners rank findings by CVSS and ask you to patch them all.
           <strong>evalsec</strong> measures whether an LLM can do what a senior DevSecOps engineer does:
           read the scan, read the deployment context, and decide which findings actually need a
-          3am page — and which can wait for the next dependency cycle.
+          3am page, and which can wait for the next dependency cycle.
         </p>
         <p class="question-callout-source">Source: Cyentia Institute / EPSS exploitability research · CISA KEV catalog</p>
       </section>
@@ -2466,7 +2466,7 @@
             </div>
             <h3 class="diff-card-title">Verbatim Trivy output</h3>
             <p class="diff-card-body">
-              Every case starts with raw scan output from a real container — <code>nginx</code>,
+              Every case starts with raw scan output from a real container: <code>nginx</code>,
               <code>redis</code>, <code>postgres</code>, <code>vault</code>, <code>ghost</code>.
               Not curated CVE lists, not synthetic findings, not "Imagine a Log4j vulnerability."
               The same noise a model would see if you piped Trivy into a prompt today.
@@ -2482,7 +2482,7 @@
               Every case ships with a <code>stack_context</code> block: network exposure, runtime
               hardening (seccomp, read-only rootfs, non-root), call-graph reachability, regulatory
               framework. The model has to use it. A CRITICAL CVE in dead code should come back
-              <strong>not_affected</strong> — not P0.
+              <strong>not_affected</strong>: not P0.
             </p>
           </article>
 
@@ -2500,7 +2500,7 @@
         </div>
       </section>
 
-      <!-- ── Architecture flow — from container scan to score ── -->
+      <!-- ── Architecture flow: from container scan to score ── -->
       <section class="flow-section reveal">
         <div class="section-eyebrow-heading">
           <span class="section-eyebrow">How a run works</span>
@@ -2578,7 +2578,7 @@
       {% if top3 %}
       <section class="reveal">
         <h2 class="section-title">Top performers</h2>
-        <p class="section-sub">The highest-scoring models so far — full rankings and baseline comparison live on the Leaderboard tab.</p>
+        <p class="section-sub">The highest-scoring models so far: full rankings and baseline comparison live on the Leaderboard tab.</p>
         <div class="card card-strong mini-lb">
           {% for entry in top3 %}
           <div class="mini-lb-item" data-model="{{ entry.model_id.split('_')[0] }}">
@@ -2614,7 +2614,7 @@
               <div class="chart-sub">Higher is better · 0–100 scale</div>
               <canvas id="barChart"></canvas>
               <div class="chart-fallback" id="barChartFallback">
-                Chart requires Chart.js — check browser console for details.
+                Chart requires Chart.js: check browser console for details.
               </div>
             </div>
             <div class="chart-card">
@@ -2622,7 +2622,7 @@
               <div class="chart-sub">Strengths across rubric dimensions</div>
               <canvas id="radarChart"></canvas>
               <div class="chart-fallback" id="radarChartFallback">
-                Chart requires Chart.js — check browser console for details.
+                Chart requires Chart.js: check browser console for details.
               </div>
             </div>
           </div>
@@ -2635,7 +2635,7 @@
         <aside class="disclaimer" id="prelimDisclaimer">
           <div class="disclaimer-icon" aria-hidden="true">i</div>
           <div class="disclaimer-body">
-            <strong>Live benchmark — in progress.</strong> This snapshot reflects
+            <strong>Live benchmark: in progress.</strong> This snapshot reflects
             <strong><span id="disclaimer-cases">1</span> of 20</strong> cases.
             The full suite runs on a weekly schedule; scores and rankings refresh
             automatically as each run completes.
@@ -2692,18 +2692,18 @@
                   </td>
                   <td class="model-name-cell">
                     <span class="model-display-name" data-id="{{ entry.model_id }}">{{ model_display.get(entry.model_id, entry.model_id) }}</span>
-                    {% if is_truncated %}<span class="trunc-badge" title="Response exceeded max_tokens — JSON truncated. Score reflects partial output only.">Truncated</span>{% endif %}
-                    {% if has_api_errors %}<span class="err-badge" title="API error — response could not be retrieved.">Error</span>{% endif %}
-                    {% if has_skipped %}<span class="skip-badge" title="Context window overflow — case skipped.">Skipped</span>{% endif %}
+                    {% if is_truncated %}<span class="trunc-badge" title="Response exceeded max_tokens: JSON truncated. Score reflects partial output only.">Truncated</span>{% endif %}
+                    {% if has_api_errors %}<span class="err-badge" title="API error: response could not be retrieved.">Error</span>{% endif %}
+                    {% if has_skipped %}<span class="skip-badge" title="Context window overflow: case skipped.">Skipped</span>{% endif %}
                     <span class="model-id-mono">{{ entry.model_id }}</span>
                     {% if is_truncated %}
-                    <div class="trunc-note">Response exceeded max_tokens — JSON truncated. Score reflects partial output only.</div>
+                    <div class="trunc-note">Response exceeded max_tokens: JSON truncated. Score reflects partial output only.</div>
                     {% endif %}
                     {% if has_api_errors %}
-                    <div class="err-note">API error — response could not be retrieved. Score is 0.</div>
+                    <div class="err-note">API error: response could not be retrieved. Score is 0.</div>
                     {% endif %}
                     {% if has_skipped %}
-                    <div class="skip-note">Context window overflow — case was skipped. Score is 0.</div>
+                    <div class="skip-note">Context window overflow: case was skipped. Score is 0.</div>
                     {% endif %}
                   </td>
                   <td class="score-cell">
@@ -2738,7 +2738,7 @@
               <div class="chart-sub">Deterministic methods · for reference only, not directly comparable to LLMs</div>
               <canvas id="baselineBarChart"></canvas>
               <div class="chart-fallback" id="baselineBarChartFallback">
-                Chart requires Chart.js — check browser console for details.
+                Chart requires Chart.js: check browser console for details.
               </div>
             </div>
           </div>
@@ -2837,12 +2837,12 @@
             <h3>What We Test</h3>
             <p>
               20 test cases, each built around a real Trivy scan from a container image you'd
-              actually run in prod — nginx, redis, postgres, vault, and others. Every case
+              actually run in prod: nginx, redis, postgres, vault, and others. Every case
               comes with a Kubernetes/EKS deployment context: network exposure, whether the
               service is internet-facing, runtime reachability, any compensating controls in place.
             </p>
             <p>
-              Models must produce a <strong>VEX-format triage report</strong> — call each CVE
+              Models must produce a <strong>VEX-format triage report</strong>: call each CVE
               exploitable or not, back it up, assign a P0–P3 priority, and give concrete
               remediation steps. The bar isn't knowing the CVSS score. It's making the call a
               real engineer would make.
@@ -2854,13 +2854,13 @@
             <p>Every response runs through two passes. Pass 1 catches mechanical failures; Pass 2 evaluates reasoning.</p>
 
             <div class="pass-section">
-              <h4 class="pass-title">Pass 1 — Deterministic <span class="pass-weight">20% of total</span></h4>
+              <h4 class="pass-title">Pass 1: Deterministic <span class="pass-weight">20% of total</span></h4>
               <p class="pass-desc">No LLM involved. Format checks and direct comparisons against the ground truth.</p>
               {{ dim_cards_pass1() }}
             </div>
 
             <div class="pass-section">
-              <h4 class="pass-title">Pass 2 — LLM Judge <span class="pass-weight">80% of total</span></h4>
+              <h4 class="pass-title">Pass 2: LLM Judge <span class="pass-weight">80% of total</span></h4>
               <p class="pass-desc">Claude Opus 4.7 evaluates the reasoning across four rubric dimensions.</p>
               {{ dim_cards() }}
             </div>
@@ -2872,7 +2872,7 @@
             <h3>Why It Matters</h3>
             <p>
               CVSS scores are public. Any script can sort by severity. The hard part is knowing
-              whether a CRITICAL CVE actually matters for <em>your</em> specific service — given
+              whether a CRITICAL CVE actually matters for <em>your</em> specific service: given
               your network topology, what's exposed, and what an attacker could realistically reach.
             </p>
             <p>
@@ -3006,7 +3006,7 @@
     let gridSize = 40;
     let offsetX = 0;
     let offsetY = 0;
-    const speedX = 0.4;  // slightly slower — reads as elegant, not busy
+    const speedX = 0.4;  // slightly slower: reads as elegant, not busy
     const speedY = 0.4;
     let rafId = null;
     let isVisible = true;
@@ -3033,18 +3033,18 @@
       rafId = requestAnimationFrame(animateGrid);
     }
 
-    // Pause grid work when the tab is hidden — cuts idle CPU to ~0.
+    // Pause grid work when the tab is hidden: cuts idle CPU to ~0.
     document.addEventListener('visibilitychange', () => {
       isVisible = !document.hidden;
     });
 
-    // Respect prefers-reduced-motion — no grid drift at all.
+    // Respect prefers-reduced-motion: no grid drift at all.
     const gridReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (!gridReducedMotion.matches) {
       animateGrid();
     }
 
-    // ── Mouse Spotlight — rAF-throttled ──
+    // ── Mouse Spotlight: rAF-throttled ──
     // pointermove fires 100+×/s; without throttling each fire triggers a
     // CSS recalc on the spotlight mask → main-thread jank during scroll.
     let mouseMoveScheduled = false;
@@ -3066,7 +3066,7 @@
     }, { passive: true });
 
     // ── Display Name Maps ──
-    // Injected from dashboard.py MODEL_DISPLAY — single source of truth.
+    // Injected from dashboard.py MODEL_DISPLAY: single source of truth.
     const MODEL_DISPLAY = {{ model_display | tojson }};
     const displayName = id => MODEL_DISPLAY[id] || id;
 
@@ -3106,7 +3106,7 @@
     const FONT_MONO = '"JetBrains Mono", "SFMono-Regular", Consolas, monospace';
 
     // ============================================
-    // CHART.JS THEMING — sync dengan CSS variables
+    // CHART.JS THEMING: sync dengan CSS variables
     // ============================================
     function getThemeColors() {
       const isDark = document.documentElement.classList.contains('dark');
@@ -3142,17 +3142,17 @@
       applyChartDefaults();
       chartLoaded = true;
     } catch (_) {
-      console.warn('Chart.js failed to load — chart canvas elements will show fallback message.');
+      console.warn('Chart.js failed to load: chart canvas elements will show fallback message.');
       ['barChart', 'radarChart', 'baselineBarChart'].forEach(id => {
         const fb = document.getElementById(id + 'Fallback');
         if (fb) fb.classList.add('visible');
       });
     }
 
-    // ── Chart Instances registry — for re-render on theme toggle ──
+    // ── Chart Instances registry: for re-render on theme toggle ──
     const chartInstances = [];
 
-    // ── Dynamic palette — computed from current theme ──
+    // ── Dynamic palette: computed from current theme ──
     function getInk()      { return isDarkMode() ? '#EDEDED' : '#171717'; }
     function getInkHi()    { return isDarkMode() ? '#E2E2E2' : '#2A2A2A'; }
     function getInkDim()   { return isDarkMode() ? '#B4B4B4' : '#4C4C4C'; }
@@ -3239,7 +3239,7 @@
     const llmEntries      = leaderboard.filter(e => e.model_type === "llm");
     const baselineEntries = leaderboard.filter(e => e.model_type === "baseline");
 
-    // ── Format graded_at date — ISO → "Month DD, YYYY" ──
+    // ── Format graded_at date: ISO → "Month DD, YYYY" ──
     (function() {
       const el = document.getElementById('graded-at-display');
       if (!el) return;
@@ -3278,21 +3278,21 @@
           const badge = document.createElement('span');
           badge.className = 'trunc-badge';
           badge.textContent = 'Truncated';
-          badge.title = 'Response exceeded max_tokens — JSON truncated.';
+          badge.title = 'Response exceeded max_tokens: JSON truncated.';
           nameEl.appendChild(badge);
         }
         if (hasError) {
           const badge = document.createElement('span');
           badge.className = 'err-badge';
           badge.textContent = 'Error';
-          badge.title = 'API error — response could not be retrieved.';
+          badge.title = 'API error: response could not be retrieved.';
           nameEl.appendChild(badge);
         }
         if (hasSkipped) {
           const badge = document.createElement('span');
           badge.className = 'skip-badge';
           badge.textContent = 'Skipped';
-          badge.title = 'Context window overflow — case skipped.';
+          badge.title = 'Context window overflow: case skipped.';
           nameEl.appendChild(badge);
         }
       }
@@ -3302,19 +3302,19 @@
         if (hasTruncated) {
           const note = document.createElement('div');
           note.className = 'trunc-note';
-          note.textContent = 'Response exceeded max_tokens — JSON truncated. Score reflects partial output only.';
+          note.textContent = 'Response exceeded max_tokens: JSON truncated. Score reflects partial output only.';
           scoreEl.appendChild(note);
         }
         if (hasError) {
           const note = document.createElement('div');
           note.className = 'err-note';
-          note.textContent = 'API error — response could not be retrieved. Score is 0.';
+          note.textContent = 'API error: response could not be retrieved. Score is 0.';
           scoreEl.appendChild(note);
         }
         if (hasSkipped) {
           const note = document.createElement('div');
           note.className = 'skip-note';
-          note.textContent = 'Context window overflow — case was skipped. Score is 0.';
+          note.textContent = 'Context window overflow: case was skipped. Score is 0.';
           scoreEl.appendChild(note);
         }
       }
@@ -3376,7 +3376,7 @@
     const bestValueEl = document.getElementById('stat-best-value');
     const bestValueLabelEl = document.getElementById('stat-best-value-label');
     if (llmWithCost.length === 0) {
-      // No cost data — show top model name instead
+      // No cost data: show top model name instead
       if (llmEntries.length > 0) {
         const top = llmEntries.reduce((acc, e) => e.avg_score > acc.avg_score ? e : acc);
         bestValueEl.textContent = displayName(top.model_id);
@@ -3491,7 +3491,7 @@
       chartInstances.push(compositeChart);
     }
 
-    // ── Brand color map — constant, never change on theme toggle ──
+    // ── Brand color map: constant, never change on theme toggle ──
     const BRAND_COLORS = {
       deepseek_v4_pro:  { stroke: '#4D6BFE', fill: 'rgba(77, 107, 254, 0.15)' },
       claude_sonnet_46: { stroke: '#D97757', fill: 'rgba(217, 119, 87, 0.15)' },
@@ -3668,18 +3668,18 @@
       chartInstances.push(baselineChart);
     }
 
-    // ── Chart theme update on toggle — re-render all chart instances ──
+    // ── Chart theme update on toggle: re-render all chart instances ──
     function updateAllCharts() {
       if (!chartLoaded) return;
       applyChartDefaults();
       const c = getThemeColors();
       chartInstances.forEach(chart => {
-        // Update datasets — radar keeps brand colors constant, only bar gets theme update
+        // Update datasets: radar keeps brand colors constant, only bar gets theme update
         chart.data.datasets.forEach((ds, idx) => {
           if (chart.config.type === 'bar') {
             ds.backgroundColor = idx === 0 ? c.barPrimary : c.barMuted;
           }
-          // radar: brand colors are constant — do NOT overwrite on theme toggle
+          // radar: brand colors are constant: do NOT overwrite on theme toggle
         });
 
         // Update scales

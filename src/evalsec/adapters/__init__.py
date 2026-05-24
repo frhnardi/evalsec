@@ -1,4 +1,4 @@
-"""LLM model registry — hardcoded model configs for v0.1.0.
+"""LLM model registry: hardcoded model configs for v0.1.0.
 
 Pricing is hardcoded here (not configurable via YAML) to reduce surface area.
 Prices are per 1M tokens in USD, sourced from provider pricing pages.

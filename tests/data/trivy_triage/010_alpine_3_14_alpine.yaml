@@ -36,7 +36,7 @@ input: '
 
   '
 stack_context: "Service: base-image-evaluation\nImage: alpine:3.14\nExposure: Not\
-  \ deployed — security review phase\nContainer runtime: EKS 1.28 (planned) with:\n\
+  \ deployed: security review phase\nContainer runtime: EKS 1.28 (planned) with:\n\
   \  - restricted PSS\n  - runAsNonRoot\n  - no shell access in production\n  - IRSA\
   \ for AWS API access\n\nUsage: Empty Alpine base image being evaluated for use as\
   \ base\nfor new microservices. Not yet deployed to production.\n\nRegulatory context:\
@@ -46,7 +46,7 @@ ground_truth:
   non_exploitable_findings:
   - cve: NONE
     verdict: not_exploitable
-    reasoning: 'Alpine 3.14 base image — clean scan. No vulnerabilities detected by
+    reasoning: 'Alpine 3.14 base image: clean scan. No vulnerabilities detected by
       Trivy. Sesuai ekspektasi: base image minimal dengan permukaan serang kecil.'
     action: null
     cvss_score: null

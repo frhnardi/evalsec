@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One-off test script for Phase 3.4 checkpoint — judge model via OpenRouter.
+"""One-off test script for Phase 3.4 checkpoint: judge model via OpenRouter.
 
 Sends a sample grading prompt to Claude Opus 4.7 and attempts to parse
 the response as a JSON Score object. This simulates what the Pass 2
@@ -113,13 +113,13 @@ async def test_judge() -> None:
     print()
 
     if response.error:
-        print(f"  ✘ FAILED — judge error: {response.error}")
+        print(f"  ✘ FAILED: judge error: {response.error}")
         return
 
     # Attempt to extract JSON from the response
     json_str = _extract_json(response.text)
     if not json_str:
-        print("  ✘ FAILED — no valid JSON found in judge response.")
+        print("  ✘ FAILED: no valid JSON found in judge response.")
         return
 
     try:
@@ -141,9 +141,9 @@ async def test_judge() -> None:
         total = sum(s.get("score", 0) for s in scores)
         print(f"  Total score  : {total}/100")
         print()
-        print("  ✔ SUCCESS — judge returned valid Score object.")
+        print("  ✔ SUCCESS: judge returned valid Score object.")
     except json.JSONDecodeError as exc:
-        print(f"  ✘ FAILED — JSON parse error: {exc}")
+        print(f"  ✘ FAILED: JSON parse error: {exc}")
         print(f"  Extracted JSON string: {json_str[:300]}")
 
 

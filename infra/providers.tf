@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # Terraform providers for evalsec infrastructure
 # ---------------------------------------------------------------------------
-# Default provider: ap-southeast-3 (Jakarta region — principal workload)
+# Default provider: ap-southeast-3 (Jakarta region: principal workload)
 # Aliased provider: us-east-1 (required by CloudFront for ACM certificates)
 # ---------------------------------------------------------------------------
 

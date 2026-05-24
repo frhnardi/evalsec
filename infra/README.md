@@ -1,4 +1,4 @@
-# evalsec — AWS Infrastructure
+# evalsec: AWS Infrastructure
 
 This directory contains Terraform configurations for the evalsec dashboard
 infrastructure: S3 (private) → CloudFront (CDN) → DNS via Cloudflare.
@@ -48,7 +48,7 @@ terraform apply \
   -var="github_repo=evalsec"
 ```
 
-## After Apply — Manual DNS via Cloudflare
+## After Apply: Manual DNS via Cloudflare
 
 Terraform creates the ACM certificate and CloudFront distribution, but Route 53
 blocks are **disabled** (commented out). You must validate the certificate and
@@ -65,7 +65,7 @@ terraform output cloudfront_domain_name
 
 1. Go to **AWS Console → Certificate Manager** (us-east-1 region)
 2. Find the certificate for `dashboard.evalsec.farhan.ngenz.org`
-3. Expand **Domain validation records** — you'll see CNAME records like:
+3. Expand **Domain validation records**: you'll see CNAME records like:
    ```
    _xxx.dashboard.evalsec.farhan.ngenz.org → _yyy.acm-validations.aws
    ```

@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# GitHub Actions OIDC — IAM role with minimum permissions
+# GitHub Actions OIDC: IAM role with minimum permissions
 # ---------------------------------------------------------------------------
 # Allows GitHub Actions (from the specified repo + branch) to:
 #   - Upload files to the dashboard S3 bucket
@@ -24,7 +24,7 @@ resource "aws_iam_openid_connect_provider" "github" {
 }
 
 # ---------------------------------------------------------------------------
-# IAM Role — assumed by GitHub Actions
+# IAM Role: assumed by GitHub Actions
 # ---------------------------------------------------------------------------
 resource "aws_iam_role" "github_actions" {
   name               = "evalsec-github-actions"
@@ -33,7 +33,7 @@ resource "aws_iam_role" "github_actions" {
   tags = var.tags
 }
 
-# Trust policy — constrain by repo AND branch
+# Trust policy: constrain by repo AND branch
 data "aws_iam_policy_document" "github_actions_trust" {
   statement {
     sid    = "GitHubActionsOIDC"
@@ -63,7 +63,7 @@ data "aws_iam_policy_document" "github_actions_trust" {
 }
 
 # ---------------------------------------------------------------------------
-# IAM Policy — minimum permissions for deployment
+# IAM Policy: minimum permissions for deployment
 # ---------------------------------------------------------------------------
 resource "aws_iam_policy" "github_actions_deploy" {
   name        = "evalsec-deploy"

@@ -1,4 +1,4 @@
-"""evalsec CLI — Typer entry point."""
+"""evalsec CLI: Typer entry point."""
 
 import asyncio
 from collections.abc import Coroutine
@@ -35,7 +35,7 @@ def main(
         is_eager=True,
     ),
 ) -> None:
-    """evalsec — LLM benchmark for DevSecOps tasks."""
+    """evalsec: LLM benchmark for DevSecOps tasks."""
     pass
 
 

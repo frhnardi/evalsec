@@ -1,7 +1,7 @@
 """Pydantic data models for task (test case) definitions.
 
 All test cases are loaded from YAML files in `tests/data/<task>/`.
-Every field uses strict mode + extra=forbid — Pydantic will fail loudly
+Every field uses strict mode + extra=forbid: Pydantic will fail loudly
 if YAML structure drifts from these schemas.
 """
 
@@ -48,10 +48,10 @@ class SourceInfo(BaseModel):
 
 
 class FindingDetail(BaseModel):
-    """A single CVE finding in the ground truth — exploitable or not.
+    """A single CVE finding in the ground truth: exploitable or not.
 
     Risk metadata fields (cvss_score, epss_percentile, etc.) are all optional.
-    Existing dataset files remain fully compatible — they simply omit these keys.
+    Existing dataset files remain fully compatible: they simply omit these keys.
     """
 
     model_config = ConfigDict(strict=True, extra="forbid")
@@ -65,7 +65,7 @@ class FindingDetail(BaseModel):
     action: str | None = Field(default=None, description="Recommended remediation action")
 
     # ------------------------------------------------------------------
-    # Risk metadata (all optional — backward-compatible)
+    # Risk metadata (all optional: backward-compatible)
     # ------------------------------------------------------------------
     cvss_score: float | None = Field(
         default=None,
@@ -172,7 +172,7 @@ class Rubric(BaseModel):
 
 
 class TaskCase(BaseModel):
-    """A complete test case — one YAML file's worth of data.
+    """A complete test case: one YAML file's worth of data.
 
     This is the primary schema that all test case YAML files must conform to.
     """

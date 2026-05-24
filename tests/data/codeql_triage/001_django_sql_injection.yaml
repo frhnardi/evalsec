@@ -40,7 +40,7 @@ input: |
   Finding 1: py/sql-injection [ERROR]
   ═══════════════════════════════════════
   Location: src/reconciliation/views.py:142
-  Message: Query built with string interpolation — possible SQL injection.
+  Message: Query built with string interpolation: possible SQL injection.
 
   Vulnerable code:
     140   def reconcile(request: HttpRequest) -> JsonResponse:
@@ -49,9 +49,9 @@ input: |
     143       rows = cursor.fetchall()
 
   Code flow:
-    (1) src/reconciliation/views.py:141 — User input enters via request.GET
-    (2) src/reconciliation/views.py:142 — Input flows directly into cursor.execute()
-    (3) src/reconciliation/views.py:142 — No sanitization, no parameterized query
+    (1) src/reconciliation/views.py:141: User input enters via request.GET
+    (2) src/reconciliation/views.py:142: Input flows directly into cursor.execute()
+    (3) src/reconciliation/views.py:142: No sanitization, no parameterized query
 
   Finding 2: py/clear-text-storage-sensitive-data [WARNING]
   ════════════════════════════════════════════════════════════
@@ -165,10 +165,10 @@ ground_truth:
         Remove traceback from error response. Log to structured logger instead.
 
   priority_order:
-    - py/sql-injection          # P0 — 72 hours, PCI-DSS 6.4
-    - py/hardcoded-credentials  # P2 — this sprint, PCI-DSS 8.3.2
-    - py/clear-text-storage-sensitive-data  # P2 — this sprint
-    - py/stack-trace-exposure   # P3 — next quarter
+    - py/sql-injection          # P0: 72 hours, PCI-DSS 6.4
+    - py/hardcoded-credentials  # P2: this sprint, PCI-DSS 8.3.2
+    - py/clear-text-storage-sensitive-data  # P2: this sprint
+    - py/stack-trace-exposure   # P3: next quarter
 
 expected_response_includes:
   - "(?i)sql.injection|cursor.execute|parameterized"
@@ -220,4 +220,4 @@ rubric:
       Response is under 15 sentences. No preamble. No disclaimers.
       Direct, professional tone.
 
-weight: 1.3   # Core SAST capability — premium weighting
+weight: 1.3   # Core SAST capability: premium weighting

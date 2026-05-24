@@ -102,9 +102,9 @@ async def test_model(model_key: str) -> None:
     print()
 
     if response.error:
-        print("  ✘ FAILED — see error above.")
+        print("  ✘ FAILED: see error above.")
     elif response.text.strip():
-        print("  ✔ SUCCESS — response received with cost attached.")
+        print("  ✔ SUCCESS: response received with cost attached.")
     else:
         print("  ⚠ Empty response text (no error, but no content either).")
 

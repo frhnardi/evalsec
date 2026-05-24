@@ -2,7 +2,7 @@
 
 An LLM benchmark for DevSecOps tasks.
 
-> **Status:** v0.1.0 — alpha
+> **Status:** v0.1.0: alpha
 
 ## Quick start
 
@@ -23,10 +23,10 @@ uv run evalsec --help
 | Model | Average Score | Judge |
 |-------|:------------:|-------|
 | **deepseek_v4_pro** | **85.16** | DeepSeek V4 Pro |
-| baseline_reachability | 68.84 | — |
-| baseline_cvss | 61.72 | — |
-| baseline_epss | 61.72 | — |
-| baseline_trivy | 54.69 | — |
+| baseline_reachability | 68.84 |: |
+| baseline_cvss | 61.72 |: |
+| baseline_epss | 61.72 |: |
+| baseline_trivy | 54.69 |: |
 
 *20 trivy_triage cases. See `dist/index.html` for full dashboard. CodeQL results pending.*
 
@@ -36,10 +36,10 @@ uv run evalsec --help
 
 See [`LIMITATIONS.md`](LIMITATIONS.md) for a detailed discussion of:
 
-- **Judge-model bias** — same-family judging (Claude Opus → Claude Sonnet) and the legacy self-judging issue
-- **Ground truth quality** — LLM-assisted labels, the Trivy compact-format truncation fix, and synthetic deployment contexts
-- **Scope** — only 2 of 8 planned DevSecOps categories covered
-- **Dataset size** — 23 cases is insufficient for statistical significance
-- **Reproducibility** — API-dependent, no frozen model snapshots
-- **Cost estimation** — naive token heuristic, judge costs excluded
-- **Regulatory context** — Indonesian regulation friction in English prompts
+- **Judge-model bias**: same-family judging (Claude Opus → Claude Sonnet) and the legacy self-judging issue
+- **Ground truth quality**: LLM-assisted labels, the Trivy compact-format truncation fix, and synthetic deployment contexts
+- **Scope**: only 2 of 8 planned DevSecOps categories covered
+- **Dataset size**: 23 cases is insufficient for statistical significance
+- **Reproducibility**: API-dependent, no frozen model snapshots
+- **Cost estimation**: naive token heuristic, judge costs excluded
+- **Regulatory context**: Indonesian regulation friction in English prompts

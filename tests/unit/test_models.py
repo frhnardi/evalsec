@@ -1,4 +1,4 @@
-"""Unit tests for Pydantic data models — Phase 3.2 checkpoint."""
+"""Unit tests for Pydantic data models: Phase 3.2 checkpoint."""
 
 from pathlib import Path
 

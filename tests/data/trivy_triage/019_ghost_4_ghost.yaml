@@ -42,7 +42,7 @@ stack_context: "Service: engineering-blog-v1\nImage: ghost:4 (Ubuntu 22.04)\nExp
   \ ALB + CloudFront\nContainer runtime: EKS 1.28 with:\n  - read-only root filesystem\n  - non-root user\
   \ (uid 1000)\n  - seccomp default profile\n  - Pod Security Standard: restricted\n  - NetworkPolicy:\
   \ ingress from ALB only\n\nUsage: Company engineering blog CMS.\nAdmin panel can deploy arbitrary content.\
-  \ SSO via Auth0 for admin.\nNo customer data — marketing site only.\n\nRegulatory context: Non-financial,\
+  \ SSO via Auth0 for admin.\nNo customer data: marketing site only.\n\nRegulatory context: Non-financial,\
   \ non-PII. Marketing site only."
 ground_truth:
   exploitable_findings:

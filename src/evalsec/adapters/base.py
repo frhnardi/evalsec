@@ -14,7 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class ModelConfig(BaseModel):
-    """Configuration for a single model — pricing, endpoint, provider."""
+    """Configuration for a single model: pricing, endpoint, provider."""
 
     model_config = ConfigDict(strict=True, extra="forbid")
 
@@ -76,8 +76,8 @@ class Adapter(Protocol):
     """Protocol that all LLM adapters must satisfy.
 
     Implementations:
-    - `OpenAICompatAdapter` — OpenRouter + DeepSeek via openai-compatible API
-    - `AnthropicDirectAdapter` — Claude Opus via Anthropic SDK
+    - `OpenAICompatAdapter`: OpenRouter + DeepSeek via openai-compatible API
+    - `AnthropicDirectAdapter`: Claude Opus via Anthropic SDK
     """
 
     model_config: ModelConfig

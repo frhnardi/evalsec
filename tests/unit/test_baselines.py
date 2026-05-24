@@ -1,4 +1,4 @@
-"""Unit tests for non-LLM baselines — Issue 10.
+"""Unit tests for non-LLM baselines: Issue 10.
 
 Tests cover:
 - Each baseline generator produces valid VEX JSON matching the expected schema.
@@ -29,7 +29,7 @@ from evalsec.baselines import (
 from evalsec.tasks.base import FindingDetail, GroundTruth
 
 # ---------------------------------------------------------------------------
-# Fixtures — shared test data
+# Fixtures: shared test data
 # ---------------------------------------------------------------------------
 
 
@@ -119,7 +119,7 @@ def ground_truth_no_metadata() -> GroundTruth:
 
 @pytest.fixture
 def ground_truth_empty() -> GroundTruth:
-    """Ground truth with zero findings — edge case."""
+    """Ground truth with zero findings: edge case."""
     return GroundTruth(
         exploitable_findings=[],
         non_exploitable_findings=[],

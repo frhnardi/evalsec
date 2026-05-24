@@ -44,8 +44,8 @@ ground_truth:
   non_exploitable_findings:
   - cve: NONE
     verdict: not_exploitable
-    reasoning: RabbitMQ 3.8 (Ubuntu 20.04 EOL) — clean scan. No vulnerabilities detected
-      by Trivy. Namun OS EOL perlu dimitigasi dengan upgrade atau additional support.
+    reasoning: 'RabbitMQ 3.8 (Ubuntu 20.04 EOL): clean scan. No vulnerabilities detected
+      by Trivy. Namun OS EOL perlu dimitigasi dengan upgrade atau additional support.'
     action: null
     cvss_score: null
     epss_percentile: null

@@ -38,7 +38,7 @@ input: |
   Finding 1: js/xss-through-dom [ERROR]
   ════════════════════════════════════════
   Location: src/routes/comments.ts:88
-  Message: User input from database rendered directly as HTML — possible XSS.
+  Message: User input from database rendered directly as HTML: possible XSS.
 
   Vulnerable code:
      86     const comment = await Comment.findById(req.params.id);
@@ -49,9 +49,9 @@ input: |
      91     res.send(html);
 
   Code flow:
-    (1) src/routes/comments.ts:86 — Comment body loaded from MongoDB
-    (2) src/routes/comments.ts:87-91 — Template literal builds HTML directly
-    (3) src/routes/comments.ts:91 — res.send() returns raw HTML to browser
+    (1) src/routes/comments.ts:86: Comment body loaded from MongoDB
+    (2) src/routes/comments.ts:87-91: Template literal builds HTML directly
+    (3) src/routes/comments.ts:91: res.send() returns raw HTML to browser
 
   Finding 2: js/unsafe-deserialization [WARNING]
   ════════════════════════════════════════════════
@@ -101,7 +101,7 @@ stack_context: |
     - js/xss-through-dom: PARTIALLY PROTECTED. The WAF blocks common XSS
       payloads (<script>, onerror=, etc.) but WAF rules have known bypasses
       (UTF-16 encoding, polyglots). The CSP allows scripts from 'self' and
-      one CDN — if an attacker uploads a malicious JS file to the same origin,
+      one CDN: if an attacker uploads a malicious JS file to the same origin,
       CSP won't prevent execution. This is a real but partially mitigated risk.
     - js/unsafe-deserialization: NOT REACHABLE. The cache key is built from
       internal route parameters, not user input. The cached value is always
@@ -126,7 +126,7 @@ ground_truth:
       reasoning: |
         Stored XSS in comment body rendering. While WAF blocks common
         payloads, WAF bypasses exist. CSP allows scripts from 'self' and
-        one CDN — insufficient to prevent all XSS variants. User-generated
+        one CDN: insufficient to prevent all XSS variants. User-generated
         content is rendered without sanitization in template literals.
       action: |
         Replace template literal HTML construction with DOMPurify.sanitize():
@@ -170,10 +170,10 @@ ground_truth:
         Deploy this sprint.
 
   priority_order:
-    - js/xss-through-dom          # P0 — 72 hours, active bypass risk
-    - js/request-forgery          # P2 — this sprint, defense-in-depth
-    - js/unsafe-deserialization   # P3 — next quarter (documented exception)
-    - js/missing-rate-limiting    # P3 — next quarter (compensated by WAF)
+    - js/xss-through-dom          # P0: 72 hours, active bypass risk
+    - js/request-forgery          # P2: this sprint, defense-in-depth
+    - js/unsafe-deserialization   # P3: next quarter (documented exception)
+    - js/missing-rate-limiting    # P3: next quarter (compensated by WAF)
 
 expected_response_includes:
   - "(?i)xss|stored.*xss|DOMPurify|sanitize"
@@ -221,4 +221,4 @@ rubric:
       Response is under 15 sentences. No preamble.
       Prioritizes the XSS finding with appropriate detail.
 
-weight: 1.2   # XSS detection — important SAST capability
+weight: 1.2   # XSS detection: important SAST capability

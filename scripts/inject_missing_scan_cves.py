@@ -138,7 +138,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2025-31133",
                 "verdict": "exploitable",
                 "reasoning": (
-                    "runc container escape via masked path mount race — gosu binary in image,"
+                    "runc container escape via masked path mount race: gosu binary in image,"
                     " writable filesystem + seccomp default allows exploitation in container escape scenario."
                 ),
                 "action": "Rebuild image with gosu updated to runc >= 1.2.8 or 1.3.3.",
@@ -147,7 +147,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2025-52565",
                 "verdict": "exploitable",
                 "reasoning": (
-                    "runc container escape via malicious config /dev/console mount — gosu embeds runc,"
+                    "runc container escape via malicious config /dev/console mount: gosu embeds runc,"
                     " writable filesystem, potential for container breakout."
                 ),
                 "action": "Rebuild image with updated gosu containing runc fix when available.",
@@ -165,7 +165,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2024-21626",
                 "verdict": "exploitable",
                 "reasoning": (
-                    "runc file descriptor leak — gosu in image, writable filesystem,"
+                    "runc file descriptor leak: gosu in image, writable filesystem,"
                     " container escape via leaked fd to host filesystem."
                 ),
                 "action": "Rebuild image with gosu updated to runc >= 1.1.12.",
@@ -184,7 +184,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2024-21626",
                 "verdict": "exploitable",
                 "reasoning": (
-                    "runc file descriptor leak — gosu binary in image with writable cache dirs,"
+                    "runc file descriptor leak: gosu binary in image with writable cache dirs,"
                     " potential container escape via leaked fd."
                 ),
                 "action": "Rebuild image with gosu updated to runc >= 1.1.12.",
@@ -193,7 +193,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2025-31133",
                 "verdict": "exploitable",
                 "reasoning": (
-                    "runc container escape via masked path mount race — gosu embeds runc,"
+                    "runc container escape via masked path mount race: gosu embeds runc,"
                     " container breakout risk with writable temp directories."
                 ),
                 "action": "Rebuild image with gosu updated to runc >= 1.2.8 or 1.3.3.",
@@ -230,7 +230,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2025-6000",
                 "verdict": "exploitable",
                 "reasoning": (
-                    "Vault Plugin Code Execution — Vault core vuln, critical infra dengan NetworkPolicy"
+                    "Vault Plugin Code Execution: Vault core vuln, critical infra dengan NetworkPolicy"
                     " allow all inbound, dampak total secrets disclosure."
                 ),
                 "action": "Segera upgrade Vault ke versi 1.20.1+.",
@@ -239,7 +239,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2023-24999",
                 "verdict": "exploitable",
                 "reasoning": (
-                    "Vault fails to verify Approle SecretID belongs to role — auth bypass,"
+                    "Vault fails to verify Approle SecretID belongs to role: auth bypass,"
                     " akses NetworkPolicy luas, dampak kritis untuk secrets manager."
                 ),
                 "action": "Segera upgrade Vault ke versi 1.10.11+, 1.11.8+, atau 1.12.4+.",
@@ -248,7 +248,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2025-5999",
                 "verdict": "exploitable",
                 "reasoning": (
-                    "Vault Identity Token Privilege Escalation — Vault core vuln,"
+                    "Vault Identity Token Privilege Escalation: Vault core vuln,"
                     " memungkinkan privesc, dampak kritis pada platform secrets."
                 ),
                 "action": "Segera upgrade Vault ke versi 1.20.0+.",
@@ -259,7 +259,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2026-5807",
                 "verdict": "not_exploitable",
                 "reasoning": (
-                    "Vault DoS via unauthenticated root token generation — DoS only,"
+                    "Vault DoS via unauthenticated root token generation: DoS only,"
                     " tidak menyebabkan kebocoran data, Vault di internal cluster."
                 ),
                 "action": "Monitor untuk patch selanjutnya.",
@@ -268,7 +268,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2026-3605",
                 "verdict": "not_exploitable",
                 "reasoning": (
-                    "Vault DoS via unauthorized secret deletion — DoS only,"
+                    "Vault DoS via unauthorized secret deletion: DoS only,"
                     " Vault diaudit, terdeteksi, dampak terbatas."
                 ),
                 "action": "Monitor untuk patch selanjutnya.",
@@ -286,7 +286,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2026-33413",
                 "verdict": "not_exploitable",
                 "reasoning": (
-                    "etcd authorization bypass — etcd embedded, Vault tidak expose etcd API,"
+                    "etcd authorization bypass: etcd embedded, Vault tidak expose etcd API,"
                     " tidak dapat dieksploitasi dari luar."
                 ),
                 "action": "Monitor untuk patch selanjutnya.",
@@ -297,7 +297,7 @@ RESTORE_FINDINGS: dict = {
                 "cve": "CVE-2023-24540",
                 "verdict": "partial",
                 "reasoning": (
-                    "HTML template JS whitespace handling — Go stdlib vuln,"
+                    "HTML template JS whitespace handling: Go stdlib vuln,"
                     " Vault kemungkinan tidak render user HTML, tapi ada resiko XSS jika template digunakan."
                 ),
                 "action": "Upgrade Go, verifikasi template usage.",
