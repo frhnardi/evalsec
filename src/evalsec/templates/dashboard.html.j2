@@ -912,6 +912,68 @@
       color: var(--muted-foreground);
     }
 
+    /* 5-column variant used by the Pass 1 dimension grid. */
+    .dim-grid--5 {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    @media (max-width: 1100px) {
+      .dim-grid--5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .dim-grid--5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 520px) {
+      .dim-grid--5 { grid-template-columns: 1fr; }
+    }
+
+    /* "How We Score" — Pass 1 / Pass 2 sub-section structure. */
+    .method-panel .pass-section {
+      margin-top: 1.6rem;
+    }
+
+    .method-panel .pass-section:first-of-type {
+      margin-top: 0.5rem;
+    }
+
+    .method-panel .pass-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+      margin-bottom: 0.3rem;
+    }
+
+    .method-panel .pass-title .pass-weight {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted-foreground);
+      font-weight: 500;
+      margin-left: 0.6rem;
+      vertical-align: middle;
+    }
+
+    .method-panel .pass-desc {
+      font-size: 0.88rem;
+      color: var(--muted-foreground);
+      margin-bottom: 0.85rem;
+      max-width: 60ch;
+    }
+
+    .method-panel .pass-footnote {
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--muted-foreground);
+      padding-left: 0.85rem;
+      border-left: 2px solid var(--border);
+      max-width: 60ch;
+    }
+
     /* ─────────────────────────────────────────────
        STATS GRID
        ───────────────────────────────────────────── */
@@ -1937,6 +1999,64 @@
   </div>
   {% endmacro %}
 
+  {# ── Pass 1 deterministic dimensions (5 cards) ──
+     Used only inside Methodology > How We Score; the Leaderboard table
+     columns are judge-only, so its inline legend stays as dim_cards(). #}
+  {% macro dim_cards_pass1() %}
+  <div class="dim-grid dim-grid--5">
+    <div class="dim-card">
+      <div class="dim-card-header">
+        <span class="dim-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>
+        </span>
+        <span class="dim-card-title">Format</span>
+        <span class="dim-card-weight">/ 10</span>
+      </div>
+      <div class="dim-card-desc">Is the output valid JSON matching the VEX schema?</div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-card-header">
+        <span class="dim-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
+        </span>
+        <span class="dim-card-title">Coverage</span>
+        <span class="dim-card-weight">/ 30</span>
+      </div>
+      <div class="dim-card-desc">Did the model address every CVE from the scan?</div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-card-header">
+        <span class="dim-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/></svg>
+        </span>
+        <span class="dim-card-title">Verdict</span>
+        <span class="dim-card-weight">/ 30</span>
+      </div>
+      <div class="dim-card-desc">How accurate are the affected / not-affected calls vs ground truth?</div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-card-header">
+        <span class="dim-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+        </span>
+        <span class="dim-card-title">Priority</span>
+        <span class="dim-card-weight">/ 20</span>
+      </div>
+      <div class="dim-card-desc">How accurate is the P0–P3 ordering vs ground truth?</div>
+    </div>
+    <div class="dim-card">
+      <div class="dim-card-header">
+        <span class="dim-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="m21 19-1.9-1.9"/></svg>
+        </span>
+        <span class="dim-card-title">Regex</span>
+        <span class="dim-card-weight">/ 10</span>
+      </div>
+      <div class="dim-card-desc">Does the response mention keywords a good answer should include?</div>
+    </div>
+  </div>
+  {% endmacro %}
+
   <!-- ── Site Background: Infinite SVG Grid + Spotlight + Orbs ── -->
   <div class="site-bg" aria-hidden="true">
     <svg class="grid grid-base" aria-hidden="true"
@@ -2340,18 +2460,21 @@
 
           <div class="method-panel" data-panel="how">
             <h3>How We Score</h3>
-            <p>Every response runs through two passes:</p>
-            <ul>
-              <li>
-                <strong>Pass 1 — deterministic (20%)</strong> · Is the JSON valid? Does it cover
-                all CVEs from the scan? Do the fields and format match the expected schema?
-              </li>
-              <li>
-                <strong>Pass 2 — LLM judge (80%)</strong> · Claude Opus 4.7 evaluates the
-                reasoning across four dimensions, each scored out of 25:
-              </li>
-            </ul>
-            {{ dim_cards() }}
+            <p>Every response runs through two passes. Pass 1 catches mechanical failures; Pass 2 evaluates reasoning.</p>
+
+            <div class="pass-section">
+              <h4 class="pass-title">Pass 1 — Deterministic <span class="pass-weight">20% of total</span></h4>
+              <p class="pass-desc">No LLM involved. Format checks and direct comparisons against the ground truth.</p>
+              {{ dim_cards_pass1() }}
+            </div>
+
+            <div class="pass-section">
+              <h4 class="pass-title">Pass 2 — LLM Judge <span class="pass-weight">80% of total</span></h4>
+              <p class="pass-desc">Claude Opus 4.7 evaluates the reasoning across four rubric dimensions.</p>
+              {{ dim_cards() }}
+            </div>
+
+            <p class="pass-footnote">Hallucinated CVEs not in the scan incur up to a −20 penalty applied to the Pass 1 score.</p>
           </div>
 
           <div class="method-panel" data-panel="why">
