@@ -975,6 +975,251 @@
     }
 
     /* ─────────────────────────────────────────────
+       OVERVIEW — Question callout + Differentiators + Flow
+       Three sections rendered between the hero and the stats grid.
+       ───────────────────────────────────────────── */
+
+    /* "The question we measure" — stat pill + pull-quote body */
+    .question-callout {
+      max-width: 56rem;
+      margin: 0 auto 6rem;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    .question-callout-stat-wrap {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.7rem;
+      margin-bottom: 1.5rem;
+      padding: 0.55rem 1.25rem;
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+    }
+
+    .question-callout-stat {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--foreground);
+      line-height: 1;
+    }
+
+    .question-callout-stat-label {
+      font-size: 0.78rem;
+      color: var(--muted-foreground);
+      letter-spacing: -0.005em;
+    }
+
+    .question-callout-body {
+      font-size: clamp(1.15rem, 2.3vw, 1.45rem);
+      line-height: 1.55;
+      letter-spacing: -0.018em;
+      color: var(--foreground);
+      font-weight: 450;
+      margin: 0 auto 1.1rem;
+      max-width: 50rem;
+    }
+
+    .question-callout-body strong {
+      color: var(--foreground);
+      font-weight: 650;
+    }
+
+    .question-callout-source {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--subtle-foreground);
+      margin: 0;
+    }
+
+    /* Shared "eyebrow + title" heading for the differentiator and flow sections */
+    .section-eyebrow-heading {
+      text-align: center;
+      margin-bottom: 1.85rem;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      margin-bottom: 0.55rem;
+    }
+
+    .section-eyebrow-title {
+      font-size: clamp(1.65rem, 3.5vw, 2.25rem);
+      font-weight: 650;
+      letter-spacing: -0.04em;
+      color: var(--foreground);
+      max-width: 38rem;
+      margin: 0 auto;
+      line-height: 1.15;
+    }
+
+    /* "What makes this benchmark different" — 3 differentiator cards */
+    .diff-section { margin-bottom: 6rem; }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .diff-grid { grid-template-columns: 1fr; }
+    }
+
+    .diff-card {
+      position: relative;
+      background: var(--card-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem 1.65rem 1.5rem;
+      backdrop-filter: blur(16px);
+      transition: border-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .diff-card:hover {
+      border-color: var(--foreground);
+      transform: translateY(-3px);
+      box-shadow: 0 24px 50px -28px var(--shadow-secondary);
+    }
+
+    .diff-card-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--foreground);
+      margin-bottom: 1.1rem;
+    }
+
+    .diff-card-icon svg { width: 18px; height: 18px; }
+
+    .diff-card-title {
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.025em;
+      color: var(--foreground);
+      margin-bottom: 0.6rem;
+      line-height: 1.25;
+    }
+
+    .diff-card-body {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--muted-foreground);
+      margin: 0;
+    }
+
+    .diff-card-body code {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      padding: 0.08rem 0.35rem;
+      background: var(--secondary);
+      border-radius: 4px;
+      color: var(--foreground);
+    }
+
+    .diff-card-body strong { color: var(--foreground); font-weight: 600; }
+
+    /* Architecture flow — Trivy scan → LLM → Grader → Score */
+    .flow-section { margin-bottom: 6rem; }
+
+    .flow-frame {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1.65rem 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(12px);
+    }
+
+    .flow-node {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.7rem 1rem;
+      background: var(--card-strong);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: border-color 220ms ease, transform 220ms ease;
+    }
+
+    .flow-node:hover {
+      border-color: var(--foreground);
+      transform: translateY(-1px);
+    }
+
+    .flow-node-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--foreground);
+      flex-shrink: 0;
+    }
+
+    .flow-node-icon svg { width: 14px; height: 14px; }
+
+    .flow-node-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .flow-node-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--foreground);
+    }
+
+    .flow-node-sub {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      color: var(--muted-foreground);
+      margin-top: 0.15rem;
+    }
+
+    .flow-arrow {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      line-height: 1;
+      color: var(--subtle-foreground);
+      padding: 0 0.15rem;
+      user-select: none;
+    }
+
+    @media (max-width: 720px) {
+      .flow-frame { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+
+    /* ─────────────────────────────────────────────
        STATS GRID
        ───────────────────────────────────────────── */
     .stats-section { margin-bottom: 6rem; }
@@ -2158,6 +2403,119 @@
           </span>
         </div>
       </div>
+
+      <!-- ── The question we measure (pull-quote callout) ── -->
+      <section class="question-callout reveal">
+        <span class="question-callout-stat-wrap">
+          <span class="question-callout-stat">~2%</span>
+          <span class="question-callout-stat-label">of published CVEs are ever exploited in the wild</span>
+        </span>
+        <p class="question-callout-body">
+          Yet most container scanners rank findings by CVSS and ask you to patch them all.
+          <strong>evalsec</strong> measures whether an LLM can do what a senior DevSecOps engineer does:
+          read the scan, read the deployment context, and decide which findings actually need a
+          3am page — and which can wait for the next dependency cycle.
+        </p>
+        <p class="question-callout-source">Source: Cyentia Institute / EPSS exploitability research · CISA KEV catalog</p>
+      </section>
+
+      <!-- ── What makes this benchmark different (3 differentiator cards) ── -->
+      <section class="diff-section reveal">
+        <div class="section-eyebrow-heading">
+          <span class="section-eyebrow">What makes this different</span>
+          <h2 class="section-eyebrow-title">Three things most LLM benchmarks don't do.</h2>
+        </div>
+
+        <div class="diff-grid">
+          <article class="diff-card">
+            <div class="diff-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7.7c0-.6-.4-1.2-.8-1.5l-6.3-3.9a1.72 1.72 0 0 0-1.7 0l-10.3 6c-.5.2-.9.8-.9 1.4v6.6c0 .5.4 1.2.8 1.5l6.3 3.9a1.72 1.72 0 0 0 1.7 0l10.3-6c.5-.3.9-1 .9-1.5Z"/><path d="M10 21.9V14L2.1 9.1"/><path d="m10 14 11.9-6.9"/><path d="M14 19.8v-8.1"/><path d="M18 17.5V9.4"/></svg>
+            </div>
+            <h3 class="diff-card-title">Verbatim Trivy output</h3>
+            <p class="diff-card-body">
+              Every case starts with raw scan output from a real container — <code>nginx</code>,
+              <code>redis</code>, <code>postgres</code>, <code>vault</code>, <code>ghost</code>.
+              Not curated CVE lists, not synthetic findings, not "Imagine a Log4j vulnerability."
+              The same noise a model would see if you piped Trivy into a prompt today.
+            </p>
+          </article>
+
+          <article class="diff-card">
+            <div class="diff-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
+            </div>
+            <h3 class="diff-card-title">Context, not severity</h3>
+            <p class="diff-card-body">
+              Every case ships with a <code>stack_context</code> block: network exposure, runtime
+              hardening (seccomp, read-only rootfs, non-root), call-graph reachability, regulatory
+              framework. The model has to use it. A CRITICAL CVE in dead code should come back
+              <strong>not_affected</strong> — not P0.
+            </p>
+          </article>
+
+          <article class="diff-card">
+            <div class="diff-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+            </div>
+            <h3 class="diff-card-title">Real floors, not just LLMs</h3>
+            <p class="diff-card-body">
+              Four non-LLM baselines (CVSS sort, EPSS sort, Trivy severity, reachability heuristic)
+              share the leaderboard. The honest question: is the LLM actually beating
+              <code>sort -k severity</code>, or is it expensive theatre?
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ── Architecture flow — from container scan to score ── -->
+      <section class="flow-section reveal">
+        <div class="section-eyebrow-heading">
+          <span class="section-eyebrow">How a run works</span>
+          <h2 class="section-eyebrow-title">From container scan to composite score.</h2>
+        </div>
+
+        <div class="flow-frame">
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+            </span>
+            <span class="flow-node-text">
+              <span class="flow-node-label">Trivy scan</span>
+              <span class="flow-node-sub">+ stack context</span>
+            </span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+            </span>
+            <span class="flow-node-text">
+              <span class="flow-node-label">LLM triage</span>
+              <span class="flow-node-sub">VEX JSON</span>
+            </span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/></svg>
+            </span>
+            <span class="flow-node-text">
+              <span class="flow-node-label">Two-pass grade</span>
+              <span class="flow-node-sub">det. + judge</span>
+            </span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+            </span>
+            <span class="flow-node-text">
+              <span class="flow-node-label">Composite score</span>
+              <span class="flow-node-sub">0–100</span>
+            </span>
+          </div>
+        </div>
+      </section>
 
       <!-- ── Stats ── -->
       <section class="stats-section">
