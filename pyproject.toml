@@ -8,10 +8,11 @@ authors = [
     { name = "Farhan Ngenz", email = "farhan@ngenz.org" },
 ]
 keywords = ["devsecops", "llm", "benchmark", "security"]
+license = { text = "MIT" }
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "Private :: Do Not Upload",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.12",
     "Topic :: Security",
 ]
